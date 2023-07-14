@@ -7,9 +7,7 @@
 
 import Foundation
 
-public struct WebSocketMessageHeader: Codable, WebSocketMessage {
-    /// Command ID if exists
+public struct WebSocketMessageHeader: Decodable {
     public let id: Int?
-    /// Request/Response type of message
     public let type: WebSocketMessageType
 }

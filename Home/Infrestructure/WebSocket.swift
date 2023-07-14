@@ -20,7 +20,8 @@ class WebSocket: NSObject {
 
     private let url: URL
     private let token: String
-    private var webSocketMessage: PassthroughSubject<WebSocketMessageWrapper, Never> = .init()
+
+    private var topic: PassthroughSubject<WebSocketMessage, Never> = .init()
     private lazy var session = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
     private lazy var webSocket = session.webSocketTask(with: url)
     private var responseCancellable: AnyCancellable?
@@ -44,8 +45,13 @@ extension WebSocket {
         webSocket.resume()
         listenWebSocketMessages()
     }
+}
 
-    func listenWebSocketMessages() {
+// MARK: - Private Methods
+
+extension WebSocket {
+
+    private func listenWebSocketMessages() {
         Task {
             do {
                 for try await message in webSocket.stream {
@@ -63,11 +69,6 @@ extension WebSocket {
             }
         }
     }
-}
-
-// MARK: - Private Methods
-
-extension WebSocket {
 
     private func handleMessage(_ message: String) async {
         guard let data = message.data(using: .utf8) else { return }
@@ -75,23 +76,27 @@ extension WebSocket {
     }
 
     private func handleMessage(_ message: Data) async {
-        guard let header = WebSocketMessageHeader(data: message) else {
+        guard let header = try? WebSocketMessageHeader(data: message) else {
             return
         }
 
         switch header.type {
         case .authRequired:
-            do {
-                let message = try AuthenticationMessage(accessToken: token).toJSON()
-                let wsMessage = URLSessionWebSocketTask.Message.string(message)
-                try await webSocket.send(wsMessage)
-            } catch let error as DecodingError {
-                Logger.log(level: .error, "Error encoding authentication message: \(error.localizedDescription)")
-            } catch {
-                Logger.log(level: .error, "Error sending access token: \(error.localizedDescription)")
-            }
+            await authenticate()
         default:
-            webSocketMessage.send((header, message))
+            topic.send((header, message))
+        }
+    }
+
+    private func authenticate() async {
+        do {
+            let message = try AuthenticationMessage(accessToken: token).toJSON()
+            let wsMessage = URLSessionWebSocketTask.Message.string(message)
+            try await webSocket.send(wsMessage)
+        } catch let error as DecodingError {
+            Logger.log(level: .error, "Error encoding authentication message: \(error.localizedDescription)")
+        } catch {
+            Logger.log(level: .error, "Error sending access token: \(error.localizedDescription)")
         }
     }
 }
@@ -117,46 +122,53 @@ extension WebSocket: URLSessionWebSocketDelegate {
 
 extension WebSocket: WebSocketProvider {
 
-    var messageReceived: AnyPublisher<WebSocketMessageWrapper, Never> {
-        webSocketMessage.eraseToAnyPublisher()
+    var messageReceived: AnyPublisher<WebSocketMessage, Never> {
+        topic.eraseToAnyPublisher()
     }
 
-    func send<Message: Encodable & WebSocketMessage, Response: Decodable>(
+    func send<Message: Encodable, Response: Decodable>(
         message: Message
     ) async throws -> ResultWebSocketMessage<Response> {
+        let message = WebSocketSendMessageWrapper(id: UUID().uuidString.hash, messageData: message)
+        let data = try message.toJSON()
+        try await webSocket.send(.string(data))
+
         let wrapper: (CheckedContinuation<ResultWebSocketMessage<Response>, Error>) -> Void  = { [self] continuation in
-            responseCancellable = webSocketMessage
-                .timeout(.seconds(5), scheduler: DispatchQueue.main)
-                .filter { $0.header.id == message.id }
-                .compactMap { ResultWebSocketMessage<Response>(data: $0.data) }
+            var hasValue = false
+            responseCancellable = topic
+                .timeout(.seconds(10), scheduler: DispatchQueue.global())
+                .filter { $0.header.id == message.id && $0.header.type == .result }
+                .tryCompactMap { try ResultWebSocketMessage<Response>(data: $0.data) }
                 .sink(receiveCompletion: { completion in
                     switch completion {
                     case .finished:
-                        break
+                        if !hasValue {
+                            continuation.resume(throwing: WebSocketError.timeOut)
+                        }
                     case .failure:
                         continuation.resume(throwing: WebSocketError.timeOut)
                     }
-                }, receiveValue: { [weak self] messageData in
-                    continuation.resume(with: .success(messageData))
-                    self?.responseCancellable?.cancel()
-                    self?.responseCancellable = nil
+                }, receiveValue: { messageData in
+                    continuation.resume(returning: messageData)
+                    hasValue = true
                 })
         }
         return try await withCheckedThrowingContinuation(wrapper)
     }
 }
 
+
 // MARK: - Decodable+init
 
 private extension Decodable {
 
-    init?(data: Data) {
-        guard let header = try? JSONDecoder().decode(Self.self, from: data) else { return nil }
+    init(data: Data) throws {
+        let header = try JSONDecoder().decode(Self.self, from: data)
         self = header
     }
 }
 
-// MARK: - Encodable+JSON Inline
+// MARK: - Encodable+toJSON
 
 private extension Encodable {
 
