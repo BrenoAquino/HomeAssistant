@@ -95,9 +95,9 @@
 		55C25BA62A60FB5200E52C5F /* Infrestructure */ = {
 			isa = PBXGroup;
 			children = (
+				55E63B222A61E7D7002068A5 /* Models */,
 				55C25BA72A60FB6B00E52C5F /* WebSocket.swift */,
 				55E63B172A617164002068A5 /* URLSessionWebSocketTask+Stream.swift */,
-				55E63B192A618C88002068A5 /* AuthenticationMessage.swift */,
 			);
 			path = Infrestructure;
 			sourceTree = "<group>";
@@ -115,6 +115,14 @@
 				55E63B202A619059002068A5 /* Logger.swift */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		55E63B222A61E7D7002068A5 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				55E63B192A618C88002068A5 /* AuthenticationMessage.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
