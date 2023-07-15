@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		558D15B02A623C9B0075B9FB /* EmptyDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558D15AF2A623C9B0075B9FB /* EmptyDecodable.swift */; };
 		55C25B952A60D8C700E52C5F /* HomeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C25B942A60D8C700E52C5F /* HomeApp.swift */; };
 		55C25B972A60D8C700E52C5F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C25B962A60D8C700E52C5F /* ContentView.swift */; };
 		55C25B992A60D8C800E52C5F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55C25B982A60D8C800E52C5F /* Assets.xcassets */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		558D15AF2A623C9B0075B9FB /* EmptyDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyDecodable.swift; sourceTree = "<group>"; };
 		55C25B912A60D8C700E52C5F /* Home.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Home.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		55C25B942A60D8C700E52C5F /* HomeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeApp.swift; sourceTree = "<group>"; };
 		55C25B962A60D8C700E52C5F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				55E63B192A618C88002068A5 /* AuthenticationMessage.swift */,
+				558D15AF2A623C9B0075B9FB /* EmptyDecodable.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -199,6 +202,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				558D15B02A623C9B0075B9FB /* EmptyDecodable.swift in Sources */,
 				55E63B1A2A618C88002068A5 /* AuthenticationMessage.swift in Sources */,
 				55E63B212A619059002068A5 /* Logger.swift in Sources */,
 				55C25B972A60D8C700E52C5F /* ContentView.swift in Sources */,

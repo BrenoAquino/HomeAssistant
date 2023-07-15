@@ -10,11 +10,17 @@ import Combine
 
 public typealias WebSocketMessage = (header: WebSocketMessageHeader, data: Data)
 
+public enum WebSocketProviderError: Error {
+    case unknown
+}
+
 public protocol WebSocketProvider {
     /// Publisher to post all new messages received
     var messageReceived: AnyPublisher<WebSocketMessage, Never> { get }
-    /// Send a message and try to receive an response
+    /// Send a message without a data response
+    func send<Message: Encodable>(message: Message) async throws
+    /// Send a message and get an response
     func send<Message: Encodable, Response: Decodable>(
         message: Message
-    ) async throws -> ResultWebSocketMessage<Response>
+    ) async throws -> Response
 }

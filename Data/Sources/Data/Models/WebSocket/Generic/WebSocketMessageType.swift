@@ -16,4 +16,6 @@ public enum WebSocketMessageType: String, Codable {
     case auth
     /// When we send data to request states
     case getStates = "get_states"
+    /// Subscribe to events
+    case subscribeToEvents = "subscribe_events"
 }

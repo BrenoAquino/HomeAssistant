@@ -11,6 +11,7 @@ import Foundation
 
 enum WebSocketError: Error {
     case invalidURL
+    case emptyData
     case timeOut
 }
 
@@ -126,9 +127,13 @@ extension WebSocket: WebSocketProvider {
         topic.eraseToAnyPublisher()
     }
 
+    func send<Message: Encodable>(message: Message) async throws {
+        let _: EmptyDecodable = try await send(message: message)
+    }
+
     func send<Message: Encodable, Response: Decodable>(
         message: Message
-    ) async throws -> ResultWebSocketMessage<Response> {
+    ) async throws -> Response {
         let message = WebSocketSendMessageWrapper(id: UUID().uuidString.hash, messageData: message)
         let data = try message.toJSON()
         try await webSocket.send(.string(data))
@@ -153,7 +158,12 @@ extension WebSocket: WebSocketProvider {
                     hasValue = true
                 })
         }
-        return try await withCheckedThrowingContinuation(wrapper)
+        
+        if let result = try await withCheckedThrowingContinuation(wrapper).result {
+            return result
+        } else {
+            throw WebSocketError.emptyData
+        }
     }
 }
 
