@@ -12,12 +12,13 @@ let package = Package(
             targets: ["Data"]),
     ],
     dependencies: [
-        .package(name: "Common", path: "../Common")
+        .package(name: "Common", path: "../Common"),
+        .package(name: "Domain", path: "../Domain"),
     ],
     targets: [
         .target(
             name: "Data",
-            dependencies: ["Common"]),
+            dependencies: ["Common", "Domain"]),
         .testTarget(
             name: "DataTests",
             dependencies: ["Data"]),
