@@ -35,13 +35,3 @@ struct CallServiceMessage<T: Encodable>: Encodable {
         try targetContainer.encode(entityID, forKey: .entityID)
     }
 }
-
-extension CallServiceMessage where T == EmptyCodable {
-
-    init(domain: String, service: String, entityID: String?) {
-        self.domain = domain
-        self.service = service
-        self.entityID = entityID
-        self.serviceData = nil
-    }
-}

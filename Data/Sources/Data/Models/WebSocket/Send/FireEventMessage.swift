@@ -20,11 +20,3 @@ struct FireEventMessage<T: Encodable>: Encodable {
         case eventData = "event_data"
     }
 }
-
-extension FireEventMessage where T == EmptyCodable {
-
-    init(eventType: String) {
-        self.eventType = eventType
-        eventData = nil
-    }
-}
