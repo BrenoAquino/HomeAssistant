@@ -22,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5550ACCF2A64B4AA00534E39 /* Data.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Data.xctestplan; sourceTree = "<group>"; };
 		558D15AF2A623C9B0075B9FB /* EmptyDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyDecodable.swift; sourceTree = "<group>"; };
 		5594C06E2A6388750015AE11 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = text; path = Domain; sourceTree = SOURCE_ROOT; };
 		55C25B912A60D8C700E52C5F /* Home.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Home.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -54,6 +55,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5550ACD02A64B4BD00534E39 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				5550ACCF2A64B4AA00534E39 /* Data.xctestplan */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
 		55C25B882A60D8C700E52C5F = {
 			isa = PBXGroup;
 			children = (
@@ -63,6 +72,7 @@
 				55C25B932A60D8C700E52C5F /* Home */,
 				55C25B922A60D8C700E52C5F /* Products */,
 				55C25BA92A60FD8D00E52C5F /* Frameworks */,
+				5550ACD02A64B4BD00534E39 /* Tests */,
 			);
 			sourceTree = "<group>";
 		};

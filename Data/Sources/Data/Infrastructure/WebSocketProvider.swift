@@ -18,7 +18,7 @@ public protocol WebSocketProvider {
     /// Publisher to post all new messages received
     var messageReceived: AnyPublisher<WebSocketMessage, Never> { get }
     /// Send a message without a data response
-    func send<Message: Encodable>(message: Message) async throws -> Int
+    @discardableResult func send<Message: Encodable>(message: Message) async throws -> Int
     /// Send a message and get an response
     func send<Message: Encodable, Response: Decodable>(
         message: Message

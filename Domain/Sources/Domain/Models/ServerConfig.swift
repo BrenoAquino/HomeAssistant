@@ -16,4 +16,9 @@ public struct ServerConfig {
 
     public let locationName: String
     public let state: ServerState
+
+    public init(locationName: String, state: ServerState) {
+        self.locationName = locationName
+        self.state = state
+    }
 }
