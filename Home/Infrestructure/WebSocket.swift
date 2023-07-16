@@ -15,14 +15,17 @@ enum WebSocketError: Error {
     case timeOut
 }
 
-class WebSocket: NSObject {
+actor WebSocket: NSObject {
 
     // MARK: Variables
 
     private let url: URL
     private let token: String
 
-    private var topic: PassthroughSubject<WebSocketMessage, Never> = .init()
+    private var latestID: Int = .zero
+    private let dispatchQueue: DispatchQueue = .init(label: "WebSocket")
+
+    nonisolated private let topic: PassthroughSubject<WebSocketMessage, Never> = .init()
     private lazy var session = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
     private lazy var webSocket = session.webSocketTask(with: url)
     private var responseCancellable: AnyCancellable?
@@ -106,35 +109,37 @@ extension WebSocket {
 
 extension WebSocket: URLSessionWebSocketDelegate {
 
-    func urlSession(
+    private func urlSession(
         _ session: URLSession,
         webSocketTask: URLSessionWebSocketTask,
         didOpenWithProtocol protocol: String?
-    ) {}
+    ) async {}
 
-    func urlSession(
+    private func urlSession(
         _ session: URLSession,
         webSocketTask: URLSessionWebSocketTask,
         didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?
-    ) {}
+    ) async {}
 }
 
 // MARK: - Data.WebSocketProvider
 
 extension WebSocket: WebSocketProvider {
 
-    var messageReceived: AnyPublisher<WebSocketMessage, Never> {
+    nonisolated var messageReceived: AnyPublisher<WebSocketMessage, Never> {
         topic.eraseToAnyPublisher()
     }
 
-    func send<Message: Encodable>(message: Message) async throws {
-        let _: EmptyDecodable = try await send(message: message)
+    func send<Message: Encodable>(message: Message) async throws -> Int {
+        let (id, _): (Int, EmptyDecodable) = try await send(message: message)
+        return id
     }
 
     func send<Message: Encodable, Response: Decodable>(
         message: Message
-    ) async throws -> Response {
-        let message = WebSocketSendMessageWrapper(id: UUID().uuidString.hash, messageData: message)
+    ) async throws -> (id: Int, response: Response) {
+        let id = latestID
+        let message = WebSocketSendMessageWrapper(id: id, messageData: message)
         let data = try message.toJSON()
         try await webSocket.send(.string(data))
 
@@ -160,7 +165,7 @@ extension WebSocket: WebSocketProvider {
         }
         
         if let result = try await withCheckedThrowingContinuation(wrapper).result {
-            return result
+            return (id, result)
         } else {
             throw WebSocketError.emptyData
         }
