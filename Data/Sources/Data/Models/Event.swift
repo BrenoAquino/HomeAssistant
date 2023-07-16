@@ -14,10 +14,12 @@ public struct StateChanged: Decodable {
     let newState: EntityState
 
     enum CodingKeys: String, CodingKey {
-        case eventType, data
+        case data
+        case eventType = "event_type"
 
         enum DataCodingKeys: String, CodingKey {
-            case oldState, newState
+            case oldState = "old_state"
+            case newState = "new_state"
         }
     }
 
