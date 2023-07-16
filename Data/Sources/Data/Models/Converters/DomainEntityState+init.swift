@@ -13,7 +13,7 @@ extension Domain.EntityState {
     var string: String {
         switch self {
         default:
-            return String(reflecting: self)
+            return String(describing: self)
         }
     }
 

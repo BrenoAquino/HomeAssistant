@@ -5,6 +5,7 @@
 //  Created by Breno Aquino on 16/07/23.
 //
 
+import Common
 import Domain
 import Foundation
 
@@ -21,11 +22,16 @@ public class CommandRepositoryImpl {
 
 extension CommandRepositoryImpl: CommandRepository {
 
-    public func fireEvent<T: Encodable>(eventType: String, eventData: T) async throws {
+    public func fireEvent<T: Encodable>(eventType: String, eventData: T? = EmptyCodable.nil) async throws {
         try await commandRemoteDataSource.fireEvent(eventType: eventType, eventData: eventData)
     }
 
-    public func callService<T: Encodable>(domain: EntityDomain, service: EntityService, entityID: String?, serviceData: T) async throws {
+    public func callService<T: Encodable>(
+        domain: EntityDomain,
+        service: EntityService,
+        entityID: String?,
+        serviceData: T? = EmptyCodable.nil
+    ) async throws {
         try await commandRemoteDataSource.callService(
             domain: domain.string,
             service: service.string,
