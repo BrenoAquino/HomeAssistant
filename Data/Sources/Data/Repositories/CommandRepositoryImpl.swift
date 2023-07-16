@@ -21,20 +21,8 @@ public class CommandRepositoryImpl {
 
 extension CommandRepositoryImpl: CommandRepository {
 
-    public func fireEvent(eventType: String) async throws {
-        try await commandRemoteDataSource.fireEvent(eventType: eventType)
-    }
-
     public func fireEvent<T: Encodable>(eventType: String, eventData: T) async throws {
         try await commandRemoteDataSource.fireEvent(eventType: eventType, eventData: eventData)
-    }
-
-    public func callService(domain: EntityDomain, service: EntityService, entityID: String?) async throws {
-        try await commandRemoteDataSource.callService(
-            domain: domain.string,
-            service: service.string,
-            entityID: entityID
-        )
     }
 
     public func callService<T: Encodable>(domain: EntityDomain, service: EntityService, entityID: String?, serviceData: T) async throws {

@@ -22,20 +22,7 @@ final class CommandRemoteDataSourceImplTests: XCTestCase {
         subject = CommandRemoteDataSourceImpl(webSocketProvider: webSocketMock)
     }
 
-    func testFireEventWithoutEventData() async throws {
-        // When
-        try await subject.fireEvent(eventType: "event type")
-
-        // Then
-        guard let message = webSocketMock.messageSent as? FireEventMessage<EmptyCodable> else {
-            XCTFail("message must be an FireEventMessage<EmptyCodable>")
-            return
-        }
-        XCTAssertEqual(message.eventType, "event type")
-        XCTAssertNil(message.eventData)
-    }
-
-    func testFireEventWithEventData() async throws {
+    func testFireEvent() async throws {
         // Given
         struct EventData: Encodable { let test = "test" }
 
@@ -51,22 +38,7 @@ final class CommandRemoteDataSourceImplTests: XCTestCase {
         XCTAssertEqual(message.eventData?.test, "test")
     }
 
-    func testCallServiceWithoutServiceData() async throws {
-        // When
-        try await subject.callService(domain: "domain", service: "service", entityID: "entity")
-
-        // Then
-        guard let message = webSocketMock.messageSent as? CallServiceMessage<EmptyCodable> else {
-            XCTFail("message must be an CallServiceMessage<EmptyCodable>")
-            return
-        }
-        XCTAssertEqual(message.domain, "domain")
-        XCTAssertEqual(message.service, "service")
-        XCTAssertEqual(message.entityID, "entity")
-        XCTAssertNil(message.serviceData)
-    }
-
-    func testCallServiceWithServiceData() async throws {
+    func testCallService() async throws {
         // Given
         struct ServiceData: Encodable { let test = "test" }
 
@@ -82,32 +54,5 @@ final class CommandRemoteDataSourceImplTests: XCTestCase {
         XCTAssertEqual(message.service, "service")
         XCTAssertEqual(message.entityID, "entity")
         XCTAssertEqual(message.serviceData?.test, "test")
-    }
-}
-
-// MARK: - WebSocketProviderMock
-
-class WebSocketProviderMock {
-
-    var messageSent: Any?
-    var topic: PassthroughSubject<WebSocketMessage, Never> = .init()
-}
-
-extension WebSocketProviderMock: WebSocketProvider {
-
-    var messageReceived: AnyPublisher<WebSocketMessage, Never> {
-        topic.eraseToAnyPublisher()
-    }
-
-    @discardableResult
-    func send<Message: Encodable>(message: Message) async throws -> Int {
-        messageSent = message
-        return .zero
-    }
-
-    func send<Message: Encodable, Response: Decodable>(
-        message: Message
-    ) async throws -> (id: Int, response: Response) {
-        throw NSError()
     }
 }
