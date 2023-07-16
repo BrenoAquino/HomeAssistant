@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct StateChanged: Decodable {
+public struct StateChangedEvent: Decodable {
 
     let eventType: String
     let oldState: EntityState

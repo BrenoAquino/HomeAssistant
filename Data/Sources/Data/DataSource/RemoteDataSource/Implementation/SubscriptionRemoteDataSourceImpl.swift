@@ -22,11 +22,11 @@ public class SubscriptionRemoteDataSourceImpl {
 
 extension SubscriptionRemoteDataSourceImpl: SubscriptionRemoteDataSource {
 
-    public var event: AnyPublisher<EventWebSocketMessage, Error> {
+    public var event: AnyPublisher<Data, Never> {
         webSocketProvider
             .messageReceived
             .filter { $0.header.type == .event }
-            .tryCompactMap { try EventWebSocketMessage(jsonData: $0.data) }
+            .map { $0.data }
             .eraseToAnyPublisher()
     }
 
