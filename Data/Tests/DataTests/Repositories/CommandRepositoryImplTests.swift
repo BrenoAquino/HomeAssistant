@@ -12,7 +12,7 @@ import XCTest
 
 final class CommandRepositoryImplTests: XCTestCase {
 
-    var commandRemoteDataSourceMock: CommandRemoteDataSourceMock!
+    private var commandRemoteDataSourceMock: CommandRemoteDataSourceMock!
     var subject: CommandRepositoryImpl!
 
     override func setUp() {
@@ -77,7 +77,7 @@ final class CommandRepositoryImplTests: XCTestCase {
 
 // MARK: - CommandRemoteDataSourceMock
 
-class CommandRemoteDataSourceMock: CommandRemoteDataSource {
+private class CommandRemoteDataSourceMock: CommandRemoteDataSource {
 
     var fireEventParamsCalled: (eventType: String, eventData: Any?)?
     var callServiceParamsCalled: (domain: String, service: String, entityID: String?, serviceData: Any?)?
