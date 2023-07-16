@@ -136,7 +136,7 @@ extension WebSocket: WebSocketProvider {
         topic.eraseToAnyPublisher()
     }
 
-    func send<Message: Encodable>(message: Message) async throws -> Int {
+    @discardableResult func send<Message: Encodable>(message: Message) async throws -> Int {
         let (id, _): (Int, EmptyDecodable) = try await send(message: message)
         return id
     }
@@ -181,17 +181,6 @@ extension WebSocket: WebSocketProvider {
         } else {
             throw WebSocketError.emptyData
         }
-    }
-}
-
-
-// MARK: - Decodable+init
-
-private extension Decodable {
-
-    init(data: Data) throws {
-        let header = try JSONDecoder().decode(Self.self, from: data)
-        self = header
     }
 }
 

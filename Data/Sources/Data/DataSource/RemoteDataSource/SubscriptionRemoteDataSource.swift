@@ -10,8 +10,8 @@ import Foundation
 
 public protocol SubscriptionRemoteDataSource {
 
-    var event: AnyPublisher<EventWebSocketMessage, Never> { get }
+    var event: AnyPublisher<EventWebSocketMessage, Error> { get }
 
     func unsubscribe(operationID: Int) async throws
-    func subscribeToEvents(eventType: String) async throws
+    func subscribeToEvents(eventType: String) async throws -> Int
 }

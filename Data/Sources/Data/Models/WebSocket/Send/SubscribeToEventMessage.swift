@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct SubscribeToStateChanged: Encodable {
+struct SubscribeToEventMessage: Encodable {
 
     let type: WebSocketMessageType = .subscribeToEvents
-    let eventType: String = "state_changed"
+    let eventType: String?
 
     enum CodingKeys: String, CodingKey {
         case type

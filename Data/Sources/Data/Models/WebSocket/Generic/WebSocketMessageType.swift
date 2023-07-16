@@ -8,26 +8,32 @@
 import Foundation
 
 public enum WebSocketMessageType: String, Codable {
-    /// When the message is a result
-    case result
-    /// When the server requires an authentication
-    case authRequired = "auth_required"
-    /// When we send an access token
-    case auth
-    /// Subscribe to events
-    case subscribeToEvents = "subscribe_events"
-    /// Call a service
-    case callService = "call_service"
-    /// Ping
-    case ping
-    /// Pong
-    case pong
-    /// Receive an event (e.g. states_changed)
-    case event
 
-    // MARK: Fetch
+    // MARK: Sending
+    /// Send the access token to get an authenticated web socket session
+    case auth
     /// Request all entities states
     case fetchStates = "get_states"
     /// Request server config
     case fetchConfig = "get_config"
+    /// Request to run a service
+    case callService = "call_service"
+    /// Subscribe to receive messages when some event happens
+    case subscribeToEvents = "subscribe_events"
+    /// Unsubscribe to receive messages when some event happens
+    case unsubscribeToEvents = "unsubscribe_events"
+
+    // MARK: Receiving
+    /// When the server requires an authentication
+    case authRequired = "auth_required"
+    /// When the message is a response of a request
+    case result
+    /// Some thing did happen in the server (e.g. states_changed)
+    case event
+
+    // MARK: Health Check
+    /// Ping
+    case ping
+    /// Pong
+    case pong
 }
