@@ -18,6 +18,8 @@ public enum WebSocketMessageType: String, Codable {
     case fetchConfig = "get_config"
     /// Request to run a service
     case callService = "call_service"
+    /// Run an event in the server side
+    case fireEvent = "fire_event"
     /// Subscribe to receive messages when some event happens
     case subscribeToEvents = "subscribe_events"
     /// Unsubscribe to receive messages when some event happens
