@@ -10,7 +10,6 @@ import Foundation
 public enum EntityDomain {
     case light
     case `switch`
-    case unknown
 }
 
 public enum EntityState {
