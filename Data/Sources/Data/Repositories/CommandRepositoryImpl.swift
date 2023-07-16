@@ -27,8 +27,8 @@ extension CommandRepositoryImpl: CommandRepository {
     }
 
     public func callService<T: Encodable>(
-        domain: EntityDomain,
-        service: EntityService,
+        domain: Domain.EntityDomain,
+        service: Domain.EntityService,
         entityID: String?,
         serviceData: T? = EmptyCodable.nil
     ) async throws {

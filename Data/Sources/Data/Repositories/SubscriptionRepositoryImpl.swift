@@ -11,10 +11,10 @@ import Foundation
 
 public class SubscriptionRepositoryImpl {
 
-    private let subscriptionRemoteDateSource: SubscriptionRemoteDataSource
+    private let subscriptionRemoteDataSource: SubscriptionRemoteDataSource
 
-    public init(subscriptionRemoteDateSource: SubscriptionRemoteDataSource) {
-        self.subscriptionRemoteDateSource = subscriptionRemoteDateSource
+    public init(subscriptionRemoteDataSource: SubscriptionRemoteDataSource) {
+        self.subscriptionRemoteDataSource = subscriptionRemoteDataSource
     }
 }
 
@@ -23,18 +23,19 @@ public class SubscriptionRepositoryImpl {
 extension SubscriptionRepositoryImpl: SubscriptionRepository {
 
     public var stateChangedEvent: AnyPublisher<Domain.StateChangedEvent, Error> {
-        subscriptionRemoteDateSource
+        subscriptionRemoteDataSource
             .event
             .decode(type: StateChangedEvent.self, decoder: JSONDecoder())
+            .filter { $0.eventType == Domain.EventType.stateChanged.string }
             .tryMap { try $0.toDomain() }
             .eraseToAnyPublisher()
     }
 
     public func unsubscribe(operationID: Int) async throws {
-        try await subscriptionRemoteDateSource.unsubscribe(operationID: operationID)
+        try await subscriptionRemoteDataSource.unsubscribe(operationID: operationID)
     }
 
-    public func subscribeToEvents(eventType: EventType) async throws -> Int {
-        try await subscriptionRemoteDateSource.subscribeToEvents(eventType: eventType.string)
+    public func subscribeToEvents(eventType: Domain.EventType) async throws -> Int {
+        try await subscriptionRemoteDataSource.subscribeToEvents(eventType: eventType.string)
     }
 }
