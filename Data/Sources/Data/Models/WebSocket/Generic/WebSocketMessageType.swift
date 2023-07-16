@@ -14,8 +14,6 @@ public enum WebSocketMessageType: String, Codable {
     case authRequired = "auth_required"
     /// When we send an access token
     case auth
-    /// When we send data to request states
-    case getStates = "get_states"
     /// Subscribe to events
     case subscribeToEvents = "subscribe_events"
     /// Call a service
@@ -26,4 +24,10 @@ public enum WebSocketMessageType: String, Codable {
     case pong
     /// Receive an event (e.g. states_changed)
     case event
+
+    // MARK: Fetch
+    /// Request all entities states
+    case fetchStates = "get_states"
+    /// Request server config
+    case fetchConfig = "get_config"
 }

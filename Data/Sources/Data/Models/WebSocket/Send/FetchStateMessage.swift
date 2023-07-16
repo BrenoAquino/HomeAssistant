@@ -9,5 +9,5 @@ import Foundation
 
 struct FetchStateMessage: Encodable {
 
-    let type: WebSocketMessageType = .getStates
+    let type: WebSocketMessageType = .fetchStates
 }
