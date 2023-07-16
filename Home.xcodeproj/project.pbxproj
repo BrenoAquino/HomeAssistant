@@ -23,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		558D15AF2A623C9B0075B9FB /* EmptyDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyDecodable.swift; sourceTree = "<group>"; };
+		5594C06E2A6388750015AE11 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = text; path = Domain; sourceTree = SOURCE_ROOT; };
 		55C25B912A60D8C700E52C5F /* Home.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Home.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		55C25B942A60D8C700E52C5F /* HomeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeApp.swift; sourceTree = "<group>"; };
 		55C25B962A60D8C700E52C5F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -58,6 +59,7 @@
 			children = (
 				55E63B1B2A618FC0002068A5 /* Common */,
 				55C25BA32A60D8F200E52C5F /* Data */,
+				5594C06E2A6388750015AE11 /* Domain */,
 				55C25B932A60D8C700E52C5F /* Home */,
 				55C25B922A60D8C700E52C5F /* Products */,
 				55C25BA92A60FD8D00E52C5F /* Frameworks */,
