@@ -7,12 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		558D15B02A623C9B0075B9FB /* EmptyDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558D15AF2A623C9B0075B9FB /* EmptyDecodable.swift */; };
 		55C25B952A60D8C700E52C5F /* HomeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C25B942A60D8C700E52C5F /* HomeApp.swift */; };
 		55C25B972A60D8C700E52C5F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C25B962A60D8C700E52C5F /* ContentView.swift */; };
 		55C25B992A60D8C800E52C5F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55C25B982A60D8C800E52C5F /* Assets.xcassets */; };
 		55C25B9D2A60D8C800E52C5F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55C25B9C2A60D8C800E52C5F /* Preview Assets.xcassets */; };
 		55C25BA82A60FB6B00E52C5F /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C25BA72A60FB6B00E52C5F /* WebSocket.swift */; };
 		55C25BAB2A60FD8D00E52C5F /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = 55C25BAA2A60FD8D00E52C5F /* Data */; };
+		55CED2412A62F2C40070B851 /* PingMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55CED2402A62F2C40070B851 /* PingMessage.swift */; };
 		55E63B182A617164002068A5 /* URLSessionWebSocketTask+Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E63B172A617164002068A5 /* URLSessionWebSocketTask+Stream.swift */; };
 		55E63B1A2A618C88002068A5 /* AuthenticationMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E63B192A618C88002068A5 /* AuthenticationMessage.swift */; };
 		55E63B1D2A619025002068A5 /* Common in Frameworks */ = {isa = PBXBuildFile; productRef = 55E63B1C2A619025002068A5 /* Common */; };
@@ -20,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		558D15AF2A623C9B0075B9FB /* EmptyDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyDecodable.swift; sourceTree = "<group>"; };
 		55C25B912A60D8C700E52C5F /* Home.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Home.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		55C25B942A60D8C700E52C5F /* HomeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeApp.swift; sourceTree = "<group>"; };
 		55C25B962A60D8C700E52C5F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -30,6 +33,7 @@
 		55C25BA42A60DA0A00E52C5F /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		55C25BA52A60DB8B00E52C5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		55C25BA72A60FB6B00E52C5F /* WebSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
+		55CED2402A62F2C40070B851 /* PingMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingMessage.swift; sourceTree = "<group>"; };
 		55E63B172A617164002068A5 /* URLSessionWebSocketTask+Stream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSessionWebSocketTask+Stream.swift"; sourceTree = "<group>"; };
 		55E63B192A618C88002068A5 /* AuthenticationMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationMessage.swift; sourceTree = "<group>"; };
 		55E63B1B2A618FC0002068A5 /* Common */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Common; sourceTree = "<group>"; };
@@ -121,6 +125,8 @@
 			isa = PBXGroup;
 			children = (
 				55E63B192A618C88002068A5 /* AuthenticationMessage.swift */,
+				55CED2402A62F2C40070B851 /* PingMessage.swift */,
+				558D15AF2A623C9B0075B9FB /* EmptyDecodable.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -199,12 +205,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				558D15B02A623C9B0075B9FB /* EmptyDecodable.swift in Sources */,
 				55E63B1A2A618C88002068A5 /* AuthenticationMessage.swift in Sources */,
 				55E63B212A619059002068A5 /* Logger.swift in Sources */,
 				55C25B972A60D8C700E52C5F /* ContentView.swift in Sources */,
 				55C25BA82A60FB6B00E52C5F /* WebSocket.swift in Sources */,
 				55C25B952A60D8C700E52C5F /* HomeApp.swift in Sources */,
 				55E63B182A617164002068A5 /* URLSessionWebSocketTask+Stream.swift in Sources */,
+				55CED2412A62F2C40070B851 /* PingMessage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

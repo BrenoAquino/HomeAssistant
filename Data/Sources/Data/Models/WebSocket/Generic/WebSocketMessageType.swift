@@ -16,4 +16,14 @@ public enum WebSocketMessageType: String, Codable {
     case auth
     /// When we send data to request states
     case getStates = "get_states"
+    /// Subscribe to events
+    case subscribeToEvents = "subscribe_events"
+    /// Call a service
+    case callService = "call_service"
+    /// Ping
+    case ping
+    /// Pong
+    case pong
+    /// Receive an event (e.g. states_changed)
+    case event
 }

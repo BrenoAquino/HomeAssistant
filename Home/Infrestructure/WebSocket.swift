@@ -11,17 +11,23 @@ import Foundation
 
 enum WebSocketError: Error {
     case invalidURL
+    case emptyData
     case timeOut
+    case decodingError
+    case unknown
 }
 
-class WebSocket: NSObject {
+actor WebSocket: NSObject {
 
     // MARK: Variables
 
     private let url: URL
     private let token: String
 
-    private var topic: PassthroughSubject<WebSocketMessage, Never> = .init()
+    private var latestID: Int = 1
+    private let dispatchQueue: DispatchQueue = .init(label: "WebSocket")
+
+    nonisolated private let topic: PassthroughSubject<WebSocketMessage, Never> = .init()
     private lazy var session = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
     private lazy var webSocket = session.webSocketTask(with: url)
     private var responseCancellable: AnyCancellable?
@@ -105,31 +111,42 @@ extension WebSocket {
 
 extension WebSocket: URLSessionWebSocketDelegate {
 
-    func urlSession(
+    private func urlSession(
         _ session: URLSession,
         webSocketTask: URLSessionWebSocketTask,
         didOpenWithProtocol protocol: String?
-    ) {}
+    ) async {
+        print("Connected")
+    }
 
-    func urlSession(
+    private func urlSession(
         _ session: URLSession,
         webSocketTask: URLSessionWebSocketTask,
         didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?
-    ) {}
+    ) async {
+        print("Disconnected")
+    }
 }
 
 // MARK: - Data.WebSocketProvider
 
 extension WebSocket: WebSocketProvider {
 
-    var messageReceived: AnyPublisher<WebSocketMessage, Never> {
+    nonisolated var messageReceived: AnyPublisher<WebSocketMessage, Never> {
         topic.eraseToAnyPublisher()
+    }
+
+    func send<Message: Encodable>(message: Message) async throws -> Int {
+        let (id, _): (Int, EmptyDecodable) = try await send(message: message)
+        return id
     }
 
     func send<Message: Encodable, Response: Decodable>(
         message: Message
-    ) async throws -> ResultWebSocketMessage<Response> {
-        let message = WebSocketSendMessageWrapper(id: UUID().uuidString.hash, messageData: message)
+    ) async throws -> (id: Int, response: Response) {
+        let id = latestID
+        let message = WebSocketSendMessageWrapper(id: id, messageData: message)
+        latestID += 1
         let data = try message.toJSON()
         try await webSocket.send(.string(data))
 
@@ -137,7 +154,7 @@ extension WebSocket: WebSocketProvider {
             var hasValue = false
             responseCancellable = topic
                 .timeout(.seconds(10), scheduler: DispatchQueue.global())
-                .filter { $0.header.id == message.id && $0.header.type == .result }
+                .filter { $0.header.id == message.id && $0.header.type == .getStates }
                 .tryCompactMap { try ResultWebSocketMessage<Response>(data: $0.data) }
                 .sink(receiveCompletion: { completion in
                     switch completion {
@@ -145,15 +162,25 @@ extension WebSocket: WebSocketProvider {
                         if !hasValue {
                             continuation.resume(throwing: WebSocketError.timeOut)
                         }
-                    case .failure:
-                        continuation.resume(throwing: WebSocketError.timeOut)
+                    case .failure(let failure):
+                        switch failure {
+                        case is DecodingError:
+                            continuation.resume(throwing: WebSocketError.decodingError)
+                        default:
+                            continuation.resume(throwing: WebSocketError.unknown)
+                        }
                     }
                 }, receiveValue: { messageData in
-                    continuation.resume(returning: messageData)
                     hasValue = true
+                    continuation.resume(returning: messageData)
                 })
         }
-        return try await withCheckedThrowingContinuation(wrapper)
+        
+        if let result = try await withCheckedThrowingContinuation(wrapper).result {
+            return (id, result)
+        } else {
+            throw WebSocketError.emptyData
+        }
     }
 }
 

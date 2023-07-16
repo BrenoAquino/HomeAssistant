@@ -32,7 +32,7 @@ struct ContentView: View {
     func fetchStates() {
         Task {
             do {
-                let result: ResultWebSocketMessage<[StateR]> = try await webSocket.send(message: FetchingStates())
+                let (id, result): (Int, ResultWebSocketMessage<[StateR]>) = try await webSocket.send(message: FetchingStates())
                 print(result)
             } catch {
                 print(error)
@@ -53,7 +53,7 @@ struct ContentView: View {
         }
         .padding()
         .task {
-            webSocket.connect()
+            await webSocket.connect()
         }
     }
 }
