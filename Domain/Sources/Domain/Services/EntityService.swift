@@ -23,6 +23,8 @@ public class Entities {
         didSet { updateAllEntities() }
     }
 
+    public init() {}
+
     private func updateAllEntities() {
         all = [:]
         lights.values.forEach { all[$0.id] = $0 }
