@@ -51,8 +51,8 @@ final class FetcherRemoteDataSourceImplTests: XCTestCase {
     func testFetchStates() async throws {
         // Given
         webSocketMock.sendReturn = (.zero, [
-            EntityState(id: "1", state: "on", name: "name1"),
-            EntityState(id: "2", state: "off", name: "name2")
+            GenericEntity(id: "1", state: "on", name: "name1"),
+            GenericEntity(id: "2", state: "off", name: "name2")
         ])
 
         // When
@@ -62,7 +62,33 @@ final class FetcherRemoteDataSourceImplTests: XCTestCase {
         XCTAssertEqual(states.count, 2)
         XCTAssertEqual(states[0].id, "1")
         XCTAssertEqual(states[1].state, "off")
-        XCTAssertEqual(states[0].name, "name1")
+        XCTAssertEqual(states[0].attributes.name, "name1")
         XCTAssertNotNil(webSocketMock.messageSent as? FetchStateMessage)
+    }
+}
+
+// MARK: - GenericEntity+init
+
+private extension GenericEntity {
+
+    init(id: String, state: String, name: String) {
+        self.init(
+            id: id,
+            state: state,
+            attributes: .init(
+                name: name,
+                hvacModes: nil,
+                fanModes: nil,
+                minTemperature: nil,
+                maxTemperature: nil,
+                targetTemperature: nil,
+                temperatureStep: nil,
+                currentHvac: nil,
+                currentFanModel: nil,
+                currentTemperature: nil,
+                currentPercentage: nil,
+                percentageStep: nil
+            )
+        )
     }
 }
