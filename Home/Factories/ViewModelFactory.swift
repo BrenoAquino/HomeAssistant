@@ -7,6 +7,7 @@
 
 import Foundation
 import Launch
+import Dashboard
 
 class ViewModelFactory {
 
@@ -20,7 +21,7 @@ class ViewModelFactory {
         LaunchViewModel(entityService: servicesFactory.entity())
     }
 
-    func launchCoordinator() -> LaunchCoordinatorViewModel {
-        LaunchCoordinatorViewModel(launchViewModel: launch())
+    func dashboard() -> DashboardViewModel {
+        DashboardViewModel()
     }
 }

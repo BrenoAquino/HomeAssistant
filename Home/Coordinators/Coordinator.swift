@@ -6,35 +6,20 @@
 //
 
 import SwiftUI
-import Launch
-import Dashboard
-
-enum Screen: String, Identifiable {
-    case launch
-    case dashboard
-
-    var id: String { rawValue }
-}
-
-enum Sheet: String, Identifiable {
-    case example
-
-    var id: String { rawValue }
-}
-
-enum FullScreenCover: String, Identifiable {
-    case example
-
-    var id: String { rawValue }
-}
-
-// MARK: Coordinator
 
 class Coordinator: ObservableObject {
 
+    @Published var root = Screen.launch
     @Published var path = NavigationPath()
-    @Published var sheet: Sheet?
-    @Published var fullScreenCover: FullScreenCover?
+    @Published var sheet: Screen?
+    @Published var fullScreenCover: Screen?
+
+    private lazy var webSocket = try! WebSocket(url: Environment.homeAssistantURL, token: Environment.authToken)
+    private lazy var remoteDataSourceFactory = RemoteDataSourceFactory(webSocketProvider: webSocket)
+    private lazy var repositoryFactory = RepositoryFactory(remoteDataSourceFactory: remoteDataSourceFactory)
+    private lazy var servicesFactory = ServicesFactory(repositoryFactory: repositoryFactory)
+    private lazy var viewModelFactory = ViewModelFactory(servicesFactory: servicesFactory)
+    private lazy var coordinatorFactory = CoordinatorFactory(viewModelFactory: viewModelFactory)
 }
 
 // MARK: Present
@@ -45,11 +30,11 @@ extension Coordinator {
         path.append(screen)
     }
 
-    func preset(sheet: Sheet) {
+    func preset(sheet: Screen) {
         self.sheet = sheet
     }
 
-    func preset(fullScreenCover: FullScreenCover) {
+    func preset(fullScreenCover: Screen) {
         self.fullScreenCover = fullScreenCover
     }
 }
@@ -77,22 +62,22 @@ extension Coordinator {
 extension Coordinator {
 
     @ViewBuilder
+    func rootView() -> some View {
+        root.viewCoordinator(coordinatorFactory)
+    }
+
+    @ViewBuilder
     func build(screen: Screen) -> some View {
-        switch screen {
-        case .launch:
-            Text("1")
-        case .dashboard:
-            Text("2")
-        }
+        screen.viewCoordinator(coordinatorFactory)
     }
 
     @ViewBuilder
-    func build(sheet: Sheet) -> some View {
-        Text("3")
+    func build(sheet: Screen) -> some View {
+        sheet.viewCoordinator(coordinatorFactory)
     }
 
     @ViewBuilder
-    func build(fullScreenCover: FullScreenCover) -> some View {
-        Text("4")
+    func build(fullScreenCover: Screen) -> some View {
+        fullScreenCover.viewCoordinator(coordinatorFactory)
     }
 }

@@ -9,11 +9,18 @@ import SwiftUI
 
 public struct DashboardView: View {
 
-    public init() {
+    @ObservedObject private var viewModel: DashboardViewModel
 
+    public init(viewModel: DashboardViewModel) {
+        self.viewModel = viewModel
     }
 
     public var body: some View {
-        Text("Dashboard")
+        VStack {
+            Text("Dashboard")
+            Button("Click Here!") {
+                viewModel.buttonDidClick?()
+            }
+        }
     }
 }
