@@ -10,5 +10,5 @@ import Foundation
 public protocol FetcherRemoteDataSource {
 
     func fetchConfig() async throws -> ServerConfig
-    func fetchStates() async throws -> [EntityState]
+    func fetchStates() async throws -> [GenericEntity]
 }
