@@ -49,8 +49,20 @@ final class SubscriptionRepositoryImplTests: XCTestCase {
         let data = """
         {
             "event_type": "state_changed",
-            "old_state": { "entity_id": "light.id", "state": "on", "attributes": { "friendly_name": "Light I" }},
-            "new_state": { "entity_id": "light.id", "state": "off", "attributes": { "friendly_name": "Light I" }},
+            "old_state": {
+                "entity_id": "light.id",
+                "state": "on",
+                "attributes": {
+                    "friendly_name": "Light I"
+                }
+            },
+            "new_state": {
+                "entity_id": "light.id",
+                "state": "off",
+                "attributes": {
+                    "friendly_name": "Light I"
+                }
+            }
         }
         """.data(using: .utf8)!
         subject

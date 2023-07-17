@@ -36,17 +36,18 @@ public struct GenericEntity: Decodable {
         public let currentPercentage: Double?
         public let percentageStep: Double?
 
-        enum AttributesCodingKeys: String, CodingKey {
-            case percentage
+        enum CodingKeys: String, CodingKey {
             case name = "friendly_name"
             case hvacModes = "hvac_modes"
             case fanModes = "fan_modes"
             case minTemperature = "min_temp"
             case maxTemperature = "max_temp"
             case targetTemperature = "temperature"
+            case temperatureStep = "target_temp_step"
             case currentHvac = "hvac_action"
             case currentFanModel = "fan_mode"
             case currentTemperature = "current_temperature"
+            case currentPercentage = "percentage"
             case percentageStep = "percentage_step"
         }
     }
