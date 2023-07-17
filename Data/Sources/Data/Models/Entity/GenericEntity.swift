@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class GenericEntity: Decodable {
+public struct GenericEntity: Decodable {
 
     public let id: String
     public let state: String

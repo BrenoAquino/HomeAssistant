@@ -29,7 +29,7 @@ extension CommandRepositoryImpl: CommandRepository {
     public func callService<T: Encodable>(
         entityID: String,
         service: EntityActionService,
-        serviceData: T?
+        serviceData: T? = EmptyCodable.nil
     ) async throws {
         try await commandRemoteDataSource.callService(
             domain: try Domain.EntityDomain(id: entityID).string,
@@ -42,7 +42,7 @@ extension CommandRepositoryImpl: CommandRepository {
     public func callService<T: Encodable>(
         domain: EntityDomain,
         service: EntityActionService,
-        serviceData: T?
+        serviceData: T? = EmptyCodable.nil
     ) async throws {
         try await commandRemoteDataSource.callService(
             domain: domain.string,

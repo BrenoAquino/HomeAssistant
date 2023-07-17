@@ -46,30 +46,58 @@ final class CommandRepositoryImplTests: XCTestCase {
         XCTAssertNil(params?.eventData)
     }
 
-    func testCallServiceWithData() async throws {
+    func testCallServiceForEntityWithData() async throws {
         // Given
         struct ServiceData: Encodable { let test = "test" }
 
         // When
-        try await subject.callService(domain: .light, service: .turnOn, entityID: "id", serviceData: ServiceData())
+        try await subject.callService(entityID: "light.id", service: .turnOn, serviceData: ServiceData())
 
         // Then
         let params = commandRemoteDataSourceMock.callServiceParamsCalled
         let serviceData = params?.serviceData as? ServiceData
         XCTAssertEqual(params?.domain, "light")
         XCTAssertEqual(params?.service, "turn_on")
-        XCTAssertEqual(params?.entityID, "id")
+        XCTAssertEqual(params?.entityID, "light.id")
         XCTAssertEqual(serviceData?.test, "test")
     }
 
-    func testCallServiceWithoutData() async throws {
+    func testCallServiceForEntityWithoutData() async throws {
         // When
-        try await subject.callService(domain: .switch, service: .turnOff, entityID: nil)
+        try await subject.callService(entityID: "light.id", service: .turnOn)
 
         // Then
         let params = commandRemoteDataSourceMock.callServiceParamsCalled
-        XCTAssertEqual(params?.domain, "switch")
-        XCTAssertEqual(params?.service, "turn_off")
+        XCTAssertEqual(params?.domain, "light")
+        XCTAssertEqual(params?.service, "turn_on")
+        XCTAssertEqual(params?.entityID, "light.id")
+        XCTAssertNil(params?.serviceData)
+    }
+
+    func testCallServiceForDomainWithData() async throws {
+        // Given
+        struct ServiceData: Encodable { let test = "test" }
+
+        // When
+        try await subject.callService(domain: .climate, service: .turnOn, serviceData: ServiceData())
+
+        // Then
+        let params = commandRemoteDataSourceMock.callServiceParamsCalled
+        let serviceData = params?.serviceData as? ServiceData
+        XCTAssertEqual(params?.domain, "climate")
+        XCTAssertEqual(params?.service, "turn_on")
+        XCTAssertEqual(serviceData?.test, "test")
+        XCTAssertNil(params?.entityID)
+    }
+
+    func testCallServiceForDomainWithoutData() async throws {
+        // When
+        try await subject.callService(domain: .climate, service: .turnOn)
+
+        // Then
+        let params = commandRemoteDataSourceMock.callServiceParamsCalled
+        XCTAssertEqual(params?.domain, "climate")
+        XCTAssertEqual(params?.service, "turn_on")
         XCTAssertNil(params?.entityID)
         XCTAssertNil(params?.serviceData)
     }

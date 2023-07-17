@@ -60,10 +60,36 @@ private class FetcherRemoteDataSourceMock: FetcherRemoteDataSource {
         )
     }
 
-    func fetchStates() async throws -> [EntityState] {
+    func fetchStates() async throws -> [GenericEntity] {
         [
             .init(id: "light.id1", state: "on", name: "name1"),
             .init(id: "light.id2", state: "off", name: "name2")
         ]
+    }
+}
+
+// MARK: - GenericEntity+init
+
+private extension GenericEntity {
+
+    init(id: String, state: String, name: String) {
+        self.init(
+            id: id,
+            state: state,
+            attributes: .init(
+                name: name,
+                hvacModes: nil,
+                fanModes: nil,
+                minTemperature: nil,
+                maxTemperature: nil,
+                targetTemperature: nil,
+                temperatureStep: nil,
+                currentHvac: nil,
+                currentFanModel: nil,
+                currentTemperature: nil,
+                currentPercentage: nil,
+                percentageStep: nil
+            )
+        )
     }
 }
