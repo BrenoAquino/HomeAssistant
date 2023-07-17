@@ -72,6 +72,7 @@ extension EntityServiceImpl: EntityService {
 
     public func trackEntities() async throws {
         try await fetcherRepository.fetchStates().forEach { [self] in insertEntity($0) }
+        entities.updateAllEntities()
         stateChangeSubscription = try await subscriptionRepository.subscribeToEvents(eventType: .stateChanged)
         setupSubscription()
     }
