@@ -26,6 +26,6 @@ extension FetcherRepositoryImpl: FetcherRepository {
     }
 
     public func fetchStates() async throws -> [Domain.Entity] {
-        try await fetcherRemoteDataSource.fetchStates().map { try $0.toDomain() }
+        try await fetcherRemoteDataSource.fetchStates().compactMap { try? $0.toDomain() }
     }
 }

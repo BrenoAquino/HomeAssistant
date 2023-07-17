@@ -5,6 +5,7 @@
 //  Created by Breno Aquino on 14/07/23.
 //
 
+import Common
 import Combine
 import Data
 import Foundation
@@ -149,7 +150,7 @@ extension WebSocket: WebSocketProvider {
     }
 
     @discardableResult func send<Message: Encodable>(message: Message) async throws -> Int {
-        let (id, _): (Int, EmptyDecodable) = try await send(message: message)
+        let (id, _): (Int, EmptyCodable) = try await send(message: message)
         return id
     }
 
@@ -167,6 +168,8 @@ extension WebSocket: WebSocketProvider {
         let response: ResultWebSocketMessage<Response> = try await withCheckedThrowingContinuation { continuationHandler($0, id) }
         if let result = response.result {
             return (id, result)
+        } else if response.success, let emptyCodable = EmptyCodable() as? Response {
+            return (id, emptyCodable)
         } else {
             throw WebSocketError.emptyData
         }
