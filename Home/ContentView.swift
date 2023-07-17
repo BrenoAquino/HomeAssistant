@@ -13,9 +13,10 @@ struct ContentView: View {
     @ObservedObject private var contentViewModel: ContentViewModel = .init()
 
     var body: some View {
-        contentViewModel
-            .coordinatorFactory
-            .launch()
+        CoordinatorView()
+//        contentViewModel
+//            .coordinatorFactory
+//            .launch()
     }
 }
 

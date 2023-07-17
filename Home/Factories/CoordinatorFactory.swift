@@ -16,6 +16,10 @@ class CoordinatorFactory {
     }
 
     func launch() -> LaunchCoordinator {
-        LaunchCoordinator(viewModel: viewModelFactory.launchCoordinator())
+        LaunchCoordinator(viewModel: viewModelFactory.launch())
+    }
+
+    func dashboard() -> DashboardCoordinator {
+        DashboardCoordinator(viewModel: viewModelFactory.dashboard())
     }
 }
