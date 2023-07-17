@@ -25,8 +25,8 @@ extension FetcherRemoteDataSourceImpl: FetcherRemoteDataSource {
         return config
     }
 
-    public func fetchStates() async throws -> [EntityState] {
-        let (_, states): (Int, [EntityState]) = try await webSocketProvider.send(message: FetchStateMessage())
+    public func fetchStates() async throws -> [GenericEntity] {
+        let (_, states): (Int, [GenericEntity]) = try await webSocketProvider.send(message: FetchStateMessage())
         return states
     }
 }

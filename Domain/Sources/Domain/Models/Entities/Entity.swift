@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class Entity: Hashable {
+public class Entity {
 
     public let id: String
     public let name: String
@@ -20,13 +20,13 @@ public class Entity: Hashable {
         self.domain = domain
         self.state = state
     }
+}
+
+extension Entity: Hashable {
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-}
-
-extension Entity {
 
     public static func == (lhs: Entity, rhs: Entity) -> Bool {
         lhs.id == rhs.id

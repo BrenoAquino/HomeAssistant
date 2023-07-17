@@ -10,8 +10,8 @@ import Foundation
 public struct StateChangedEvent: Decodable {
 
     let eventType: String
-    let oldState: EntityState
-    let newState: EntityState
+    let oldState: GenericEntity
+    let newState: GenericEntity
 
     enum CodingKeys: String, CodingKey {
         case oldState = "old_state"
@@ -22,7 +22,7 @@ public struct StateChangedEvent: Decodable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.eventType = try container.decode(String.self, forKey: .eventType)
-        self.oldState = try container.decode(EntityState.self, forKey: .oldState)
-        self.newState = try container.decode(EntityState.self, forKey: .newState)
+        self.oldState = try container.decode(GenericEntity.self, forKey: .oldState)
+        self.newState = try container.decode(GenericEntity.self, forKey: .newState)
     }
 }
