@@ -9,6 +9,7 @@ import Foundation
 
 public class Entities {
 
+    public var all: [String : Entity] = [:]
     public var lights: [String : LightEntity] = [:] {
         didSet { updateAllEntities() }
     }
@@ -21,8 +22,6 @@ public class Entities {
     public var climates: [String : ClimateEntity] = [:] {
         didSet { updateAllEntities() }
     }
-
-    public var all: [String : Entity] = [:]
 
     private func updateAllEntities() {
         all = [:]
