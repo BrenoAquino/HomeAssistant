@@ -7,17 +7,28 @@
 
 import Foundation
 
-public struct Entity {
+public class Entity: Hashable {
 
     public let id: String
     public let name: String
     public let domain: EntityDomain
-    public let state: EntityState
+    public var state: EntityState
 
     public init(id: String, name: String, domain: EntityDomain, state: EntityState) {
         self.id = id
         self.name = name
         self.domain = domain
         self.state = state
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
+extension Entity {
+
+    public static func == (lhs: Entity, rhs: Entity) -> Bool {
+        lhs.id == rhs.id
     }
 }

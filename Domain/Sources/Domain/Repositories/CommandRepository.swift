@@ -11,7 +11,7 @@ import Foundation
 public protocol CommandRepository {
 
     func fireEvent<T: Encodable>(eventType: String, eventData: T?) async throws
-    func callService<T: Encodable>(domain: EntityDomain, service: EntityService, entityID: String?, serviceData: T?) async throws
+    func callService<T: Encodable>(domain: EntityDomain, service: EntityActionService, entityID: String?, serviceData: T?) async throws
 }
 
 extension CommandRepository {
@@ -19,7 +19,7 @@ extension CommandRepository {
     func fireEvent<T: Encodable>(eventType: String, eventData: T? = EmptyCodable.nil) async throws {}
     func callService<T: Encodable>(
         domain: EntityDomain,
-        service: EntityService,
+        service: EntityActionService,
         entityID: String?,
         serviceData: T? = EmptyCodable.nil
     ) async throws {}

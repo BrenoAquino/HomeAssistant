@@ -1,5 +1,5 @@
 //
-//  DomainEntityService+string.swift
+//  DomainEntityActionService+string.swift
 //  
 //
 //  Created by Breno Aquino on 16/07/23.
@@ -8,7 +8,7 @@
 import Domain
 import Foundation
 
-extension Domain.EntityService {
+extension Domain.EntityActionService {
 
     var string: String {
         switch self {
