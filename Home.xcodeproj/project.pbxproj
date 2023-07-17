@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5508EC8A2A65C67D00100E18 /* DashboardCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5508EC892A65C67D00100E18 /* DashboardCoordinator.swift */; };
+		5508EC8C2A65C68600100E18 /* DashboardCoordinatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5508EC8B2A65C68600100E18 /* DashboardCoordinatorViewModel.swift */; };
+		5508EC952A65D28E00100E18 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5508EC942A65D28E00100E18 /* Coordinator.swift */; };
+		5508EC972A65D82300100E18 /* CoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5508EC962A65D82300100E18 /* CoordinatorView.swift */; };
 		552783E32A64F5A000603EBA /* RemoteDataSourceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552783E22A64F5A000603EBA /* RemoteDataSourceFactory.swift */; };
 		552783E52A64F5F200603EBA /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552783E42A64F5F200603EBA /* Environment.swift */; };
 		552783E72A64F70800603EBA /* RepositoryFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552783E62A64F70800603EBA /* RepositoryFactory.swift */; };
@@ -32,6 +36,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5508EC892A65C67D00100E18 /* DashboardCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardCoordinator.swift; sourceTree = "<group>"; };
+		5508EC8B2A65C68600100E18 /* DashboardCoordinatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardCoordinatorViewModel.swift; sourceTree = "<group>"; };
+		5508EC942A65D28E00100E18 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		5508EC962A65D82300100E18 /* CoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorView.swift; sourceTree = "<group>"; };
 		552783E02A64ECCD00603EBA /* Features */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Features; sourceTree = "<group>"; };
 		552783E22A64F5A000603EBA /* RemoteDataSourceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDataSourceFactory.swift; sourceTree = "<group>"; };
 		552783E42A64F5F200603EBA /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
@@ -75,6 +83,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5508EC882A65C66500100E18 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				5508EC892A65C67D00100E18 /* DashboardCoordinator.swift */,
+				5508EC8B2A65C68600100E18 /* DashboardCoordinatorViewModel.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
 		552783E12A64F58F00603EBA /* Factories */ = {
 			isa = PBXGroup;
 			children = (
@@ -90,7 +107,10 @@
 		552783F22A65025900603EBA /* Coordinators */ = {
 			isa = PBXGroup;
 			children = (
+				5508EC882A65C66500100E18 /* Dashboard */,
 				552783F32A65026D00603EBA /* Launch */,
+				5508EC942A65D28E00100E18 /* Coordinator.swift */,
+				5508EC962A65D82300100E18 /* CoordinatorView.swift */,
 			);
 			path = Coordinators;
 			sourceTree = "<group>";
@@ -269,11 +289,15 @@
 				552783F72A65028800603EBA /* LaunchCoordinatorViewModel.swift in Sources */,
 				55E63B1A2A618C88002068A5 /* AuthenticationMessage.swift in Sources */,
 				55E63B212A619059002068A5 /* Logger.swift in Sources */,
+				5508EC952A65D28E00100E18 /* Coordinator.swift in Sources */,
 				55C25B972A60D8C700E52C5F /* ContentView.swift in Sources */,
 				55C25BA82A60FB6B00E52C5F /* WebSocket.swift in Sources */,
 				552783E32A64F5A000603EBA /* RemoteDataSourceFactory.swift in Sources */,
+				5508EC8A2A65C67D00100E18 /* DashboardCoordinator.swift in Sources */,
+				5508EC972A65D82300100E18 /* CoordinatorView.swift in Sources */,
 				55C25B952A60D8C700E52C5F /* HomeApp.swift in Sources */,
 				552783F52A65027E00603EBA /* LaunchCoordinator.swift in Sources */,
+				5508EC8C2A65C68600100E18 /* DashboardCoordinatorViewModel.swift in Sources */,
 				552783EA2A64F80200603EBA /* ServicesFactory.swift in Sources */,
 				55E63B182A617164002068A5 /* URLSessionWebSocketTask+Stream.swift in Sources */,
 				55CED2412A62F2C40070B851 /* PingMessage.swift in Sources */,
