@@ -45,6 +45,7 @@ extension LaunchViewModel {
                 launchFinished?()
             }
         } catch {
+            print(error.localizedDescription)
             await MainActor.run { [self] in
                 state = .error
             }

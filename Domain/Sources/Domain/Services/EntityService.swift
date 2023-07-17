@@ -10,22 +10,14 @@ import Foundation
 public class Entities {
 
     public var all: [String : Entity] = [:]
-    public var lights: [String : LightEntity] = [:] {
-        didSet { updateAllEntities() }
-    }
-    public var switches: [String : SwitchEntity] = [:] {
-        didSet { updateAllEntities() }
-    }
-    public var fans: [String : FanEntity] = [:] {
-        didSet { updateAllEntities() }
-    }
-    public var climates: [String : ClimateEntity] = [:] {
-        didSet { updateAllEntities() }
-    }
+    public var lights: [String : LightEntity] = [:]
+    public var switches: [String : SwitchEntity] = [:]
+    public var fans: [String : FanEntity] = [:]
+    public var climates: [String : ClimateEntity] = [:]
 
     public init() {}
 
-    private func updateAllEntities() {
+    func updateAllEntities() {
         all = [:]
         lights.values.forEach { all[$0.id] = $0 }
         switches.values.forEach { all[$0.id] = $0 }

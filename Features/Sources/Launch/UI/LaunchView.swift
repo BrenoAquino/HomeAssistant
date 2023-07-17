@@ -17,14 +17,14 @@ public struct LaunchView: View {
 
     public var body: some View {
         Image(packageResource: .whiteLogo)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 120)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color.black)
-                .task {
-                    await viewModel.startConfiguration()
-                }
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 120)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.black)
+            .task {
+                await viewModel.startConfiguration()
+            }
     }
 }
 
