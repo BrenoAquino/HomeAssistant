@@ -20,11 +20,11 @@ public struct AdaptiveForegroundColorModifier: ViewModifier {
     private var resolvedColor: Color {
         switch colorScheme {
         case .light:
-            return color.color.light
+            return Color(color.schema.light)
         case .dark:
-            return color.color.dark
+            return Color(color.schema.dark)
         @unknown default:
-            return color.color.light
+            return Color(color.schema.light)
         }
     }
 }
@@ -42,54 +42,21 @@ public struct AdaptiveBackgroundColorModifier: ViewModifier {
     private var resolvedColor: Color {
         switch colorScheme {
         case .light:
-            return color.color.light
+            return Color(color.schema.light)
         case .dark:
-            return color.color.dark
+            return Color(color.schema.dark)
         @unknown default:
-            return color.color.light
-        }
-    }
-}
-
-public struct AdaptiveColorModifier<T: View>: ViewModifier {
-
-    var color: AdaptiveColor
-    @ViewBuilder var modifier: (_ content: any View, _ color: Color) -> T
-
-    @Environment(\.colorScheme) private var colorScheme
-
-    public func body(content: Content) -> T {
-        modifier(content, resolvedColor)
-    }
-
-    private var resolvedColor: Color {
-        switch colorScheme {
-        case .light:
-            return color.color.light
-        case .dark:
-            return color.color.dark
-        @unknown default:
-            return color.color.light
+            return Color(color.schema.light)
         }
     }
 }
 
 public extension View {
     func foregroundColor(color: AdaptiveColor) -> some View {
-        modifier(AdaptiveColorModifier(
-            color: .background,
-            modifier: { content, color in
-                AnyView(content.foregroundColor(color))
-            }
-        ))
+        modifier(AdaptiveForegroundColorModifier(color: color))
     }
 
     func background(color: AdaptiveColor) -> some View {
-        modifier(AdaptiveColorModifier(
-            color: .background,
-            modifier: { content, color in
-                AnyView(content.background(color))
-            }
-        ))
+        modifier(AdaptiveBackgroundColorModifier(color: color))
     }
 }

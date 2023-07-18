@@ -8,18 +8,21 @@
 import UIKit
 
 extension UIColor {
-
-    convenience init(adaptiveColor: AdaptiveColor) {
+    
+    convenience init(
+        light lightModeColor: @escaping @autoclosure () -> UIColor,
+        dark darkModeColor: @escaping @autoclosure () -> UIColor
+     ) {
         self.init { traitCollection in
             switch traitCollection.userInterfaceStyle {
             case .light:
-                return adaptiveColor.uiColor.light
+                return lightModeColor()
             case .dark:
-                return adaptiveColor.uiColor.dark
+                return darkModeColor()
             case .unspecified:
-                return adaptiveColor.uiColor.light
+                return lightModeColor()
             @unknown default:
-                return adaptiveColor.uiColor.light
+                return lightModeColor()
             }
         }
     }

@@ -9,7 +9,13 @@ import SwiftUI
 
 extension Color {
     
-    init(adaptiveColor: AdaptiveColor) {
-        self.init(UIColor(adaptiveColor: adaptiveColor))
+    init(
+        light lightModeColor: @escaping @autoclosure () -> Color,
+        dark darkModeColor: @escaping @autoclosure () -> Color
+    ) {
+        self.init(UIColor(
+            light: UIColor(lightModeColor()),
+            dark: UIColor(darkModeColor())
+        ))
     }
 }

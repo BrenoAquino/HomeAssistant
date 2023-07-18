@@ -17,32 +17,37 @@ struct RoomsView: View {
         ScrollView(.horizontal) {
             HStack(spacing: .smallL) {
                 ForEach(Array(rooms.enumerated()), id: \.element.id) { (offset, roomUI) in
-                    roomElement(roomUI, offset)
+                    squareElement(roomUI.name, roomUI.icon, offset)
                 }
+                squareElement("", "plus.circle", rooms.count + 1)
             }
             .padding(.horizontal, space: .smallL)
         }
     }
 
-    @ViewBuilder func roomElement(_ roomUI: RoomUI, _ offset: Int) -> some View {
+    @ViewBuilder func squareElement(
+        _ title: String,
+        _ icon: String,
+        _ offset: Int
+    ) -> some View {
         let isSelected = offset == selectedRoom
 
         VStack(spacing: .smallM) {
-            Image(systemName: roomUI.icon)
-                .foregroundColor(color: isSelected ? .background : .primaryText)
+            Image(systemName: icon)
+                .foregroundColor(isSelected ? SystemColor.background : SystemColor.label)
                 .frame(width: 80, height: 80)
-                .background(color: isSelected ? .primaryText : .background)
+                .background(isSelected ? SystemColor.label : SystemColor.background)
                 .overlay(
                     RoundedRectangle(cornerRadius: .hard)
-                        .stroke(.primaryText, lineWidth: 1)
+                        .stroke(
+                            isSelected ? SystemColor.background : SystemColor.gray3,
+                            lineWidth: 1
+                        )
                 )
-                .clipShape(
-                    RoundedRectangle(cornerRadius: .hard)
-//                        .stroke(Color.purple, lineWidth: 4)
-                )
+                .clipShape(RoundedRectangle(cornerRadius: .hard))
 
 
-            Text(roomUI.name)
+            Text(title)
                 .font(.subheadline)
         }
     }
@@ -54,8 +59,10 @@ struct RoomsView_Preview: PreviewProvider {
     static var previews: some View {
         RoomsView(
             rooms: [
-                .init(name: "Quarto Breno", icon: "bed.double.fill"),
-                .init(name: "Jardim", icon: "tree.fill"),
+                .init(name: "Quarto", icon: "bed.double"),
+                .init(name: "Sala", icon: "sofa"),
+                .init(name: "Cozinha", icon: "refrigerator"),
+                .init(name: "Jardim", icon: "tree"),
             ],
             selectedRoom: 0
         )

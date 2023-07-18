@@ -15,20 +15,29 @@ public enum AdaptiveColor {
 
     // MARK: Background
     case background
+//    case secondarySystemBackground
+//    case tertiarySystemBackground
+//    case systemGroupedBackground
+//    case secondarySystemGroupedBackground
+//    case tertiarySystemGroupedBackground
 }
 
 public extension AdaptiveColor {
 
-    var uiColor: (light: UIColor, dark: UIColor) {
+    var schema: (light: UIColor, dark: UIColor) {
         switch self {
         case .primaryText:
-            return (.black, .white)
+            return (light: .black, dark: .white)
         case .background:
-            return (.white, .black)
+            return (light: .white, dark: .black)
         }
     }
 
-    var color: (light: Color, dark: Color) {
-        (Color(uiColor: uiColor.light), Color(uiColor: uiColor.dark))
+    var uiColor: UIColor {
+        UIColor(light: schema.light, dark: schema.dark)
+    }
+
+    var color: Color {
+        Color(light: Color(schema.light), dark: Color(schema.dark))
     }
 }
