@@ -25,8 +25,13 @@ public struct DashboardView: View {
                 .padding(.leading, space: .smallL)
                 .padding(.top, space: .smallS)
 
-            DashboardsCarouselView(dashboards: viewModel.dashboards, selectedRoom: 0)
-                .padding(.top, space: .smallM)
+            DashboardsCarouselView(
+                dashboards: viewModel.dashboards,
+                selectedIndex: viewModel.selectedIndex,
+                dashboardDidSelect: viewModel.selectDashboard,
+                addDidSelect: {}
+            )
+            .padding(.top, space: .smallM)
         }
         .navigationTitle(Localizable.hiThere.value)
     }

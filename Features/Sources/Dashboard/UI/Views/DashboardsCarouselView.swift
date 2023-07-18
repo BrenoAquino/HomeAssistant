@@ -1,6 +1,6 @@
 //
 //  DashboardsCarouselView.swift
-//  
+//
 //
 //  Created by Breno Aquino on 17/07/23.
 //
@@ -11,15 +11,19 @@ import SwiftUI
 struct DashboardsCarouselView: View {
 
     var dashboards: [any DashboardUI]
-    var selectedRoom: Int
+    var selectedIndex: Int
+    var dashboardDidSelect: (_ dashboard: any DashboardUI, _ index: Int) -> Void
+    var addDidSelect: () -> Void
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: .smallL) {
                 ForEach(Array(dashboards.enumerated()), id: \.element.id) { (offset, dashboardUI) in
                     squareElement(dashboardUI.name, dashboardUI.icon, offset)
+                        .onTapGesture { dashboardDidSelect(dashboardUI, offset) }
                 }
                 squareElement("", "plus.circle", dashboards.count + 1)
+                    .onTapGesture(perform: addDidSelect)
             }
             .padding(.horizontal, space: .smallL)
         }
@@ -30,7 +34,7 @@ struct DashboardsCarouselView: View {
         _ icon: String,
         _ offset: Int
     ) -> some View {
-        let isSelected = offset == selectedRoom
+        let isSelected = offset == selectedIndex
 
         VStack(spacing: .smallM) {
             Image(systemName: icon)
@@ -58,11 +62,9 @@ import Preview
 struct DashboardsCarouselView_Preview: PreviewProvider {
 
     static var previews: some View {
-
-        DashboardsCarouselView(
-            dashboards: DashboardServiceMock().dashboards,
-            selectedRoom: 4
-        )
+        NavigationView {
+            DashboardView(viewModel: .init(dashboardService: DashboardServiceMock()))
+        }
     }
 }
 #endif
