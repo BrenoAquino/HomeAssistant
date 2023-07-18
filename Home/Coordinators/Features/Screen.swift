@@ -10,7 +10,6 @@ import SwiftUI
 enum Screen: String, Identifiable {
     case launch
     case dashboard
-    case example
 
     var id: String { rawValue }
 }
@@ -23,8 +22,6 @@ extension Screen {
             factory.launch()
         case .dashboard:
             factory.dashboard()
-        case .example:
-            Text("example")
         }
     }
 }

@@ -5,6 +5,7 @@
 //  Created by Breno Aquino on 17/07/23.
 //
 
+import DesignSystem
 import SwiftUI
 
 public struct DashboardView: View {
@@ -16,11 +17,29 @@ public struct DashboardView: View {
     }
 
     public var body: some View {
-        VStack {
-            Text("Dashboard")
-            Button("Click Here!") {
-                viewModel.buttonDidClick?()
-            }
+        ScrollView(.vertical) {
+            Text(localizable: .welcome)
+//                .foregroundColor(.secondaryLabel)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .font(.callout)
+                .padding(.leading, space: .smallL)
+                .padding(.top, space: .smallS)
+        }
+        .navigationTitle(Localizable.hiThere.value)
+    }
+
+    // MARK: Components
+
+    
+}
+
+#if DEBUG
+struct DashboardView_Preview: PreviewProvider {
+
+    static var previews: some View {
+        NavigationView {
+            DashboardView(viewModel: .init())
         }
     }
 }
+#endif
