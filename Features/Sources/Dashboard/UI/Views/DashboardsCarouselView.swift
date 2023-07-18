@@ -1,5 +1,5 @@
 //
-//  RoomsView.swift
+//  DashboardsCarouselView.swift
 //  
 //
 //  Created by Breno Aquino on 17/07/23.
@@ -8,18 +8,18 @@
 import DesignSystem
 import SwiftUI
 
-struct RoomsView: View {
+struct DashboardsCarouselView: View {
 
-    var rooms: [RoomUI]
+    var dashboards: [any DashboardUI]
     var selectedRoom: Int
 
     var body: some View {
-        ScrollView(.horizontal) {
+        ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: .smallL) {
-                ForEach(Array(rooms.enumerated()), id: \.element.id) { (offset, roomUI) in
-                    squareElement(roomUI.name, roomUI.icon, offset)
+                ForEach(Array(dashboards.enumerated()), id: \.element.id) { (offset, dashboardUI) in
+                    squareElement(dashboardUI.name, dashboardUI.icon, offset)
                 }
-                squareElement("", "plus.circle", rooms.count + 1)
+                squareElement("", "plus.circle", dashboards.count + 1)
             }
             .padding(.horizontal, space: .smallL)
         }
@@ -54,17 +54,23 @@ struct RoomsView: View {
 }
 
 #if DEBUG
-struct RoomsView_Preview: PreviewProvider {
+struct DashboardsCarouselView_Preview: PreviewProvider {
+
+    private struct DashboardUIMock: DashboardUI {
+        let name: String
+        let icon: String
+    }
 
     static var previews: some View {
-        RoomsView(
-            rooms: [
-                .init(name: "Quarto", icon: "bed.double"),
-                .init(name: "Sala", icon: "sofa"),
-                .init(name: "Cozinha", icon: "refrigerator"),
-                .init(name: "Jardim", icon: "tree"),
+        DashboardsCarouselView(
+            dashboards: [
+                DashboardUIMock(name: "Quarto", icon: "bed.double"),
+                DashboardUIMock(name: "Sala", icon: "sofa"),
+                DashboardUIMock(name: "Cozinha", icon: "refrigerator"),
+                DashboardUIMock(name: "Jardim", icon: "tree"),
+                DashboardUIMock(name: "Segurança", icon: "light.beacon.max"),
             ],
-            selectedRoom: 0
+            selectedRoom: 4
         )
     }
 }
