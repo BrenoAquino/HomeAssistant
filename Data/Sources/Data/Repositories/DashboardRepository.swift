@@ -30,4 +30,18 @@ extension DashboardRepositoryImpl: Domain.DashboardRepository {
         dashboards = try await dashboardLocalDataSource.dashboards().map { $0.toDomain() }
         return dashboards
     }
+
+    public func save(dashboard: [Domain.Dashboard]) async throws {
+        let data = dashboard.map { $0.toData() }
+        try await dashboardLocalDataSource.save(dashboards: data)
+    }
+}
+
+// MARK: - Domain.Dashboard to Data.Dashboard
+
+extension Domain.Dashboard {
+
+    func toData() -> Dashboard {
+        Dashboard(name: name, icon: icon, entities: entities.map { $0.id })
+    }
 }

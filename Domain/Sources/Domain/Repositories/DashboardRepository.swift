@@ -10,4 +10,5 @@ import Foundation
 public protocol DashboardRepository {
 
     func fetchDashboards() async throws -> [Dashboard]
+    func save(dashboard: [Dashboard]) async throws
 }

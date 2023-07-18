@@ -21,7 +21,8 @@
 		552783F12A6500E000603EBA /* Features in Frameworks */ = {isa = PBXBuildFile; productRef = 552783F02A6500E000603EBA /* Features */; };
 		552783F52A65027E00603EBA /* LaunchCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552783F42A65027E00603EBA /* LaunchCoordinator.swift */; };
 		552783FA2A65034800603EBA /* CoordinatorFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552783F92A65034800603EBA /* CoordinatorFactory.swift */; };
-		552783FC2A65038C00603EBA /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552783FB2A65038C00603EBA /* ContentViewModel.swift */; };
+		55C0FA332A66384B00758023 /* LocalDataSourceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C0FA322A66384B00758023 /* LocalDataSourceFactory.swift */; };
+		55C0FA352A6639A700758023 /* UserDefaultsDatabaseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C0FA342A6639A700758023 /* UserDefaultsDatabaseProvider.swift */; };
 		55C25B952A60D8C700E52C5F /* HomeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C25B942A60D8C700E52C5F /* HomeApp.swift */; };
 		55C25B972A60D8C700E52C5F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C25B962A60D8C700E52C5F /* ContentView.swift */; };
 		55C25B992A60D8C800E52C5F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55C25B982A60D8C800E52C5F /* Assets.xcassets */; };
@@ -49,8 +50,9 @@
 		552783EC2A6500BD00603EBA /* ViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelFactory.swift; sourceTree = "<group>"; };
 		552783F42A65027E00603EBA /* LaunchCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchCoordinator.swift; sourceTree = "<group>"; };
 		552783F92A65034800603EBA /* CoordinatorFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorFactory.swift; sourceTree = "<group>"; };
-		552783FB2A65038C00603EBA /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		5594C06E2A6388750015AE11 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = text; path = Domain; sourceTree = SOURCE_ROOT; };
+		55C0FA322A66384B00758023 /* LocalDataSourceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataSourceFactory.swift; sourceTree = "<group>"; };
+		55C0FA342A6639A700758023 /* UserDefaultsDatabaseProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsDatabaseProvider.swift; sourceTree = "<group>"; };
 		55C25B912A60D8C700E52C5F /* Home.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Home.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		55C25B942A60D8C700E52C5F /* HomeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeApp.swift; sourceTree = "<group>"; };
 		55C25B962A60D8C700E52C5F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 		552783E12A64F58F00603EBA /* Factories */ = {
 			isa = PBXGroup;
 			children = (
+				55C0FA322A66384B00758023 /* LocalDataSourceFactory.swift */,
 				552783E22A64F5A000603EBA /* RemoteDataSourceFactory.swift */,
 				552783E62A64F70800603EBA /* RepositoryFactory.swift */,
 				552783E92A64F80200603EBA /* ServicesFactory.swift */,
@@ -141,7 +144,6 @@
 			children = (
 				55C25B942A60D8C700E52C5F /* HomeApp.swift */,
 				55C25B962A60D8C700E52C5F /* ContentView.swift */,
-				552783FB2A65038C00603EBA /* ContentViewModel.swift */,
 				55C25B982A60D8C800E52C5F /* Assets.xcassets */,
 				55C25BA52A60DB8B00E52C5F /* Info.plist */,
 				55C25B9A2A60D8C800E52C5F /* Home.entitlements */,
@@ -169,6 +171,7 @@
 				55E63B222A61E7D7002068A5 /* Models */,
 				55C25BA72A60FB6B00E52C5F /* WebSocket.swift */,
 				55E63B172A617164002068A5 /* URLSessionWebSocketTask+Stream.swift */,
+				55C0FA342A6639A700758023 /* UserDefaultsDatabaseProvider.swift */,
 			);
 			path = Infrestructure;
 			sourceTree = "<group>";
@@ -277,9 +280,10 @@
 			files = (
 				552783ED2A6500BD00603EBA /* ViewModelFactory.swift in Sources */,
 				552783E72A64F70800603EBA /* RepositoryFactory.swift in Sources */,
-				552783FC2A65038C00603EBA /* ContentViewModel.swift in Sources */,
 				55E63B1A2A618C88002068A5 /* AuthenticationMessage.swift in Sources */,
+				55C0FA332A66384B00758023 /* LocalDataSourceFactory.swift in Sources */,
 				55E63B212A619059002068A5 /* Logger.swift in Sources */,
+				55C0FA352A6639A700758023 /* UserDefaultsDatabaseProvider.swift in Sources */,
 				5508EC952A65D28E00100E18 /* Coordinator.swift in Sources */,
 				55C25B972A60D8C700E52C5F /* ContentView.swift in Sources */,
 				55C25BA82A60FB6B00E52C5F /* WebSocket.swift in Sources */,

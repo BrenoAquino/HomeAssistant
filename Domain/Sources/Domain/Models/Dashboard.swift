@@ -13,10 +13,13 @@ public class Dashboard {
     public var icon: String
     public var entities: [Entity]
 
-    public init(name: String, icon: String, entities: [Entity] = []) {
+    internal var entitiesIDs: [String]
+
+    public init(name: String, icon: String, entities: [String] = []) {
         self.name = name
         self.icon = icon
-        self.entities = entities
+        self.entitiesIDs = entities
+        self.entities = []
     }
 }
 

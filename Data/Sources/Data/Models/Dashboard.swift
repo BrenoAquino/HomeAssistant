@@ -9,4 +9,7 @@ import Foundation
 
 public struct Dashboard: Codable {
 
+    let name: String
+    let icon: String
+    let entities: [String]
 }
