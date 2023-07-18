@@ -22,6 +22,6 @@ class ViewModelFactory {
     }
 
     func dashboard() -> DashboardViewModel {
-        DashboardViewModel()
+        DashboardViewModel(dashboardService: servicesFactory.dashboard())
     }
 }

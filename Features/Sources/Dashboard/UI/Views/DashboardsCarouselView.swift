@@ -46,7 +46,6 @@ struct DashboardsCarouselView: View {
                 )
                 .clipShape(RoundedRectangle(cornerRadius: .hard))
 
-
             Text(title)
                 .font(.subheadline)
         }
@@ -54,22 +53,14 @@ struct DashboardsCarouselView: View {
 }
 
 #if DEBUG
+import Preview
+
 struct DashboardsCarouselView_Preview: PreviewProvider {
 
-    private struct DashboardUIMock: DashboardUI {
-        let name: String
-        let icon: String
-    }
-
     static var previews: some View {
+
         DashboardsCarouselView(
-            dashboards: [
-                DashboardUIMock(name: "Quarto", icon: "bed.double"),
-                DashboardUIMock(name: "Sala", icon: "sofa"),
-                DashboardUIMock(name: "Cozinha", icon: "refrigerator"),
-                DashboardUIMock(name: "Jardim", icon: "tree"),
-                DashboardUIMock(name: "Segurança", icon: "light.beacon.max"),
-            ],
+            dashboards: DashboardServiceMock().dashboards,
             selectedRoom: 4
         )
     }
