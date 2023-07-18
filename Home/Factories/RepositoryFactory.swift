@@ -11,14 +11,16 @@ import Foundation
 
 class RepositoryFactory {
 
-    let commandRepository: CommandRepository
-    let fetcherRepository: FetcherRepository
-    let subscriptionRepository: SubscriptionRepository
+    private let commandRepository: CommandRepository
+    private let fetcherRepository: FetcherRepository
+    private let subscriptionRepository: SubscriptionRepository
+    private let dashboardRepository: DashboardRepository
 
-    init(remoteDataSourceFactory: RemoteDataSourceFactory) {
-        self.commandRepository = CommandRepositoryImpl(commandRemoteDataSource: remoteDataSourceFactory.command())
-        self.fetcherRepository = FetcherRepositoryImpl(fetcherRemoteDataSource: remoteDataSourceFactory.fetcher())
-        self.subscriptionRepository = SubscriptionRepositoryImpl(subscriptionRemoteDataSource: remoteDataSourceFactory.subscription())
+    init(localDataSourceFactory: LocalDataSourceFactory, remoteDataSourceFactory: RemoteDataSourceFactory) {
+        commandRepository = CommandRepositoryImpl(commandRemoteDataSource: remoteDataSourceFactory.command())
+        fetcherRepository = FetcherRepositoryImpl(fetcherRemoteDataSource: remoteDataSourceFactory.fetcher())
+        subscriptionRepository = SubscriptionRepositoryImpl(subscriptionRemoteDataSource: remoteDataSourceFactory.subscription())
+        dashboardRepository = DashboardRepositoryImpl(dashboardLocalDataSource: localDataSourceFactory.dashboard())
     }
 
     func command() -> CommandRepository {
@@ -31,5 +33,9 @@ class RepositoryFactory {
 
     func subscription() -> SubscriptionRepository {
         subscriptionRepository
+    }
+
+    func dashboard() -> DashboardRepository {
+        dashboardRepository
     }
 }

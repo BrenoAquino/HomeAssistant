@@ -10,13 +10,8 @@ import SwiftUI
 
 struct ContentView: View {
 
-    @ObservedObject private var contentViewModel: ContentViewModel = .init()
-
     var body: some View {
         CoordinatorView()
-//        contentViewModel
-//            .coordinatorFactory
-//            .launch()
     }
 }
 

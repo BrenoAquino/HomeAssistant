@@ -12,13 +12,18 @@ class ServicesFactory {
 
     private let configService: ConfigService
     private let entityService: EntityService
+    private let dashboardService: DashboardService
 
     init(repositoryFactory: RepositoryFactory) {
-        configService = ConfigServiceImpl(fetcherRepository: repositoryFactory.fetcherRepository)
+        configService = ConfigServiceImpl(fetcherRepository: repositoryFactory.fetcher())
         entityService = EntityServiceImpl(
             fetcherRepository: repositoryFactory.fetcher(),
             commandRepository: repositoryFactory.command(),
             subscriptionRepository: repositoryFactory.subscription()
+        )
+        dashboardService = DashboardServiceImpl(
+            entityService: entityService,
+            dashboardRepository: repositoryFactory.dashboard()
         )
     }
 
@@ -28,5 +33,9 @@ class ServicesFactory {
 
     func entity() -> EntityService {
         entityService
+    }
+
+    func dashboard() -> DashboardService {
+        dashboardService
     }
 }

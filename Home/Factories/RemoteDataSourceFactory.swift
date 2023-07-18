@@ -10,9 +10,9 @@ import Foundation
 
 class RemoteDataSourceFactory {
 
-    let commandRemoteDateSource: CommandRemoteDataSource
-    let fetcherRemoteDateSource: FetcherRemoteDataSource
-    let subscriptionRemoteDateSource: SubscriptionRemoteDataSource
+    private let commandRemoteDateSource: CommandRemoteDataSource
+    private let fetcherRemoteDateSource: FetcherRemoteDataSource
+    private let subscriptionRemoteDateSource: SubscriptionRemoteDataSource
 
     init(webSocketProvider: WebSocketProvider) {
         commandRemoteDateSource = CommandRemoteDataSourceImpl(webSocketProvider: webSocketProvider)

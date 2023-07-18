@@ -15,8 +15,14 @@ class Coordinator: ObservableObject {
     @Published var fullScreenCover: Screen?
 
     private lazy var webSocket = try! WebSocket(url: Environment.homeAssistantURL, token: Environment.authToken)
+    private lazy var database = UserDefaultsDatabaseProvider()
+
+    private lazy var localDataSourceFactory = LocalDataSourceFactory(databaseProvider: database)
     private lazy var remoteDataSourceFactory = RemoteDataSourceFactory(webSocketProvider: webSocket)
-    private lazy var repositoryFactory = RepositoryFactory(remoteDataSourceFactory: remoteDataSourceFactory)
+    private lazy var repositoryFactory = RepositoryFactory(
+        localDataSourceFactory: localDataSourceFactory,
+        remoteDataSourceFactory: remoteDataSourceFactory
+    )
     private lazy var servicesFactory = ServicesFactory(repositoryFactory: repositoryFactory)
     private lazy var viewModelFactory = ViewModelFactory(servicesFactory: servicesFactory)
     private lazy var coordinatorFactory = CoordinatorFactory(viewModelFactory: viewModelFactory)

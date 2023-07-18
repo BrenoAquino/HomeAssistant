@@ -19,12 +19,5 @@ struct DashboardCoordinator: View {
 
     var body: some View {
         DashboardView(viewModel: viewModel)
-            .onAppear(perform: setupCallbacks)
-    }
-
-    private func setupCallbacks() {
-        viewModel.buttonDidClick = { [self] in
-            coordinator.push(.example)
-        }
     }
 }
