@@ -11,25 +11,23 @@ import SwiftUI
 struct EntitiesListView: View {
 
     let entities: [any EntityUI]
-    let selectedEntities: Set<Int>
+    let selectedEntities: Set<String>
     @Binding var entitySearchText: String
     let didChangeEntitySelection: ((
         _ entity: EntityUI,
-        _ index: Int,
         _ isSelected: Bool
     ) -> Void
     )?
     let domains: [any EntityDomainUI]
-    let selectedDomains: Set<Int>
+    let selectedDomains: Set<String>
     let didChangeDomainSelection: ((
         _ domain: EntityDomainUI,
-        _ index: Int,
         _ isSelected: Bool
     ) -> Void
     )?
 
     var body: some View {
-        ScrollView {
+        ScrollView(.vertical) {
             filters
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets())
@@ -47,25 +45,22 @@ struct EntitiesListView: View {
                 .listRowInsets(EdgeInsets())
 
         }
-        .listStyle(.plain)
+        .scrollDismissesKeyboard(.immediately)
     }
 
     private var filters: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: .smallM) {
-                ForEach(Array(domains.enumerated()), id: \.element.name) { offset, domain in
-                    domainElement(domain, offset)
+                ForEach(domains, id: \.name) { domain in
+                    domainElement(domain)
                 }
             }
             .padding(.horizontal, space: .normal)
         }
     }
 
-    @ViewBuilder private func domainElement(
-        _ domain: EntityDomainUI,
-        _ index: Int
-    ) -> some View {
-        let isSelected = selectedDomains.contains(index)
+    @ViewBuilder private func domainElement(_ domain: EntityDomainUI) -> some View {
+        let isSelected = selectedDomains.contains(domain.name)
         Text(domain.name)
             .padding(.vertical, space: .smallS)
             .padding(.horizontal, space: .smallL)
@@ -74,7 +69,7 @@ struct EntitiesListView: View {
             .overlay(Capsule().stroke(SystemColor.label, lineWidth: 1))
             .clipShape(Capsule())
             .onTapGesture {
-                didChangeDomainSelection?(domain, index, !isSelected)
+                didChangeDomainSelection?(domain, !isSelected)
             }
     }
 
@@ -99,8 +94,8 @@ struct EntitiesListView: View {
 
     @ViewBuilder private var entitiesList: some View {
         LazyVStack {
-            ForEach(Array(entities.enumerated()), id: \.element.id) { offset, entity in
-                let isSelected = selectedEntities.contains(offset)
+            ForEach(entities, id: \.id) { entity in
+                let isSelected = selectedEntities.contains(entity.id)
                 let image = isSelected ? SystemImages.check : SystemImages.uncheck
 
                 HStack(spacing: .smallM) {
@@ -112,7 +107,7 @@ struct EntitiesListView: View {
                 .frame(height: 40)
                 .background(Color.clear)
                 .onTapGesture {
-                    didChangeEntitySelection?(entity, offset, !isSelected)
+                    didChangeEntitySelection?(entity, !isSelected)
                 }
             }
         }
@@ -147,12 +142,12 @@ struct EntitiesListView_Preview: PreviewProvider {
 
         EntitiesListView(
             entities: [mainLight, ledDesk, ledCeiling, climate, coffeeMachine, fan],
-            selectedEntities: [0],
+            selectedEntities: [],
             entitySearchText: .constant(""),
-            didChangeEntitySelection: { _, _, _ in },
+            didChangeEntitySelection: { _, _ in },
             domains: [lightDomain, switchDomain, fanDomain, climateDomain],
-            selectedDomains: [0, 2],
-            didChangeDomainSelection: { _, _, _ in}
+            selectedDomains: [],
+            didChangeDomainSelection: { _, _ in}
         )
     }
 }

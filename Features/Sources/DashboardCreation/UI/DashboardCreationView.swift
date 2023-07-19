@@ -38,6 +38,7 @@ public struct DashboardCreationView: View {
             entitiesList
                 .padding(.top, space: .smallS)
         }
+        .scrollDismissesKeyboard(.immediately)
     }
 
     private var title: some View {
@@ -132,8 +133,8 @@ public struct DashboardCreationView: View {
 
             EntitiesListView(
                 entities: viewModel.entities,
-                selectedEntities: viewModel.selectedEntities,
-                entitySearchText: .constant(""),
+                selectedEntities: viewModel.selectedEntitiesIDs,
+                entitySearchText: $viewModel.entityFilterText,
                 didChangeEntitySelection: viewModel.updateEntitySelection,
                 domains: viewModel.domains,
                 selectedDomains: viewModel.selectedDomains,

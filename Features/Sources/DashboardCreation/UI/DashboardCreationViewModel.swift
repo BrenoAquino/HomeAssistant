@@ -28,9 +28,10 @@ public class DashboardCreationViewModel: ObservableObject {
     @Published private(set) var selectedIconIndex: Int = .zero
     @Published var iconFilterText: String = ""
     @Published private(set) var entities: [EntityUI] = []
-    @Published private(set) var selectedEntities: Set<Int> = []
+    @Published private(set) var selectedEntitiesIDs: Set<String> = []
+    @Published var entityFilterText: String = ""
     @Published private(set) var domains: [EntityDomainUI] = []
-    @Published private(set) var selectedDomains: Set<Int> = []
+    @Published private(set) var selectedDomains: Set<String> = []
 
     // MARK: Services
 
@@ -60,13 +61,17 @@ extension DashboardCreationViewModel {
         $iconFilterText
             .sink { [weak self] in self?.filterIcon($0) }
             .store(in: &cancellable)
+
+        $entityFilterText
+            .sink { [weak self] in self?.filterEntity($0) }
+            .store(in: &cancellable)
     }
 
     private func setupData() {
         icons = IconUI.list
         entities = Array(entitiesHandler.all.values)
         domains = entitiesService.domains
-        selectedDomains = Set(0 ..< entitiesService.domains.count)
+        selectedDomains = Set(domains.map { $0.name })
     }
 
     private func filterIcon(_ text: String) {
@@ -76,20 +81,27 @@ extension DashboardCreationViewModel {
         }
 
         let result = IconUI.list.filter { icon in
-            let strings = [icon.name].appended(contentsOf: icon.keywords)
-            for string in strings {
-                guard text.count <= string.count else { continue }
-                let startIndex = string.startIndex
-                let endIndex = string.index(startIndex, offsetBy: text.count)
-                let range = Range(uncheckedBounds: (startIndex, endIndex))
-                if string.compare(text, options: [.caseInsensitive, .diacriticInsensitive], range: range) == .orderedSame {
-                    return true
-                }
-            }
-            return false
+            [icon.name].appended(contentsOf: icon.keywords).contains(text, options: [.caseInsensitive, .diacriticInsensitive])
         }
         
         icons = result.isEmpty ? IconUI.list : result
+    }
+
+    private func filterEntity(_ text: String) {
+        let allEntities = Array(entitiesHandler.all.values)
+        guard !text.isEmpty || !selectedDomains.isEmpty else {
+            entities = allEntities
+            return
+        }
+
+        let result = allEntities.filter { [weak self] entity in
+            guard let self else { return false }
+            let nameCheck = [entity.name, entity.domain.name].contains(text, options: [.caseInsensitive, .diacriticInsensitive])
+            let domainCheck = self.selectedDomains.contains(entity.domain.name)
+            return nameCheck && domainCheck
+        }
+
+        entities = result.isEmpty ? allEntities : result
     }
 }
 
@@ -102,19 +114,21 @@ extension DashboardCreationViewModel {
         selectedIconIndex = index
     }
 
-    func updateEntitySelection(_ entity: EntityUI, index: Int, isSelected: Bool) {
+    func updateEntitySelection(_ entity: EntityUI, isSelected: Bool) {
         if isSelected {
-            selectedEntities.insert(index)
+            selectedEntitiesIDs.insert(entity.id)
         } else {
-            selectedEntities.remove(index)
+            selectedEntitiesIDs.remove(entity.id)
         }
     }
 
-    func updateDomainSelection(_ domain: EntityDomainUI, index: Int, isSelected: Bool) {
+    func updateDomainSelection(_ domain: EntityDomainUI, isSelected: Bool) {
         if isSelected {
-            selectedDomains.insert(index)
+            selectedDomains.insert(domain.name)
         } else {
-            selectedDomains.remove(index)
+            selectedDomains.remove(domain.name)
         }
+
+        filterEntity(entityFilterText)
     }
 }
