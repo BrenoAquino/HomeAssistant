@@ -17,7 +17,7 @@ public class Entities {
 
     public init() {}
 
-    func updateAllEntities() {
+    public func updateAllEntities() {
         all = [:]
         lights.values.forEach { all[$0.id] = $0 }
         switches.values.forEach { all[$0.id] = $0 }
@@ -29,6 +29,7 @@ public class Entities {
 public protocol EntityService {
 
     var entities: Entities { get }
+    var domains: [EntityDomain] { get }
 
     func trackEntities() async throws
     func updateEntity(_ entityID: String, service: EntityActionService) async throws

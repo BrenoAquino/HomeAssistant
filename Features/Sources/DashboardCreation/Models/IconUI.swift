@@ -18,10 +18,6 @@ class IconUI {
     }
 }
 
-extension IconUI: Identifiable {
-    var id: String { name }
-}
-
 extension IconUI {
 
     static let list: [IconUI] = [

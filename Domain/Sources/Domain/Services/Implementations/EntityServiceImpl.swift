@@ -13,6 +13,7 @@ public class EntityServiceImpl {
     // MARK: Variables
 
     public private(set) var entities: Entities = .init()
+    public private(set) var domains: [EntityDomain] = EntityDomain.allCases
 
     private var cancellable: Set<AnyCancellable> = []
     private var stateChangeSubscription: Int?

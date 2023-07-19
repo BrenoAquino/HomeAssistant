@@ -17,12 +17,12 @@ struct IconsCarouselView: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(spacing: .smallM) {
-                ForEach(Array(icons.enumerated()), id: \.element.id) { offset, iconUI in
+                ForEach(Array(icons.enumerated()), id: \.element.name) { offset, iconUI in
                     iconElement(iconUI, offset)
                         .onTapGesture { iconDidSelect(iconUI, offset) }
                 }
             }
-            .padding(.horizontal, space: .smallL)
+            .padding(.horizontal, space: .normal)
         }
     }
 
@@ -53,13 +53,11 @@ import Preview
 struct IconsCarouselView_Preview: PreviewProvider {
 
     static var previews: some View {
-        NavigationView {
-            IconsCarouselView(
-                icons: IconUI.list,
-                selectedIndex: 0,
-                iconDidSelect: { _, _ in}
-            )
-        }
+        IconsCarouselView(
+            icons: IconUI.list,
+            selectedIndex: 0,
+            iconDidSelect: { _, _ in}
+        )
     }
 }
 #endif

@@ -16,6 +16,8 @@ enum Localizable: String, CommonLocalizable {
     case nameHint = "name_hint"
     case icon
     case iconHint = "icon_hint"
+    case entities
+    case entitiesHint = "entities_hint"
 }
 
 extension Localizable {

@@ -34,6 +34,9 @@ public struct DashboardCreationView: View {
             nameField
                 .padding(.horizontal, space: .normal)
                 .padding(.top, space: .smallS)
+
+            entitiesList
+                .padding(.top, space: .smallS)
         }
     }
 
@@ -90,7 +93,7 @@ public struct DashboardCreationView: View {
                 .font(.headline)
                 .fontWeight(.medium)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, space: .smallL)
+                .padding(.horizontal, space: .normal)
 
             IconsCarouselView(
                 icons: viewModel.icons,
@@ -114,7 +117,28 @@ public struct DashboardCreationView: View {
                     .fontWeight(.medium)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(.horizontal, space: .smallL)
+            .padding(.horizontal, space: .normal)
+        }
+    }
+
+    private var entitiesList: some View {
+        VStack(spacing: .smallL) {
+            Localizable.entities.text
+                .foregroundColor(SystemColor.label)
+                .font(.headline)
+                .fontWeight(.medium)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, space: .normal)
+
+            EntitiesListView(
+                entities: viewModel.entities,
+                selectedEntities: viewModel.selectedEntities,
+                entitySearchText: .constant(""),
+                didChangeEntitySelection: viewModel.updateEntitySelection,
+                domains: viewModel.domains,
+                selectedDomains: viewModel.selectedDomains,
+                didChangeDomainSelection: viewModel.updateDomainSelection
+            )
         }
     }
 }
@@ -126,7 +150,12 @@ struct DashboardCreationView_Preview: PreviewProvider {
 
     static var previews: some View {
 
-        DashboardCreationView(viewModel: .init(dashboardService: DashboardServiceMock()))
+        DashboardCreationView(
+            viewModel: .init(
+                dashboardService: DashboardServiceMock(),
+                entitiesService: EntityServiceMock()
+            )
+        )
     }
 }
 #endif

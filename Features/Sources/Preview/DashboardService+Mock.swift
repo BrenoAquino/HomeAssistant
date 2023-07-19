@@ -14,11 +14,11 @@ public class DashboardServiceMock: Domain.DashboardService {
     public var dashboards: [Dashboard]
 
     public init(dashboards: [Dashboard] = [
-        .init(name: "Quarto", icon: "bed.double"),
-        .init(name: "Sala", icon: "sofa"),
-        .init(name: "Cozinha", icon: "refrigerator"),
-        .init(name: "Jardim", icon: "tree"),
-        .init(name: "Segurança", icon: "light.beacon.max"),
+        .init(name: "Bedroom", icon: "bed.double"),
+        .init(name: "Living Room", icon: "sofa"),
+        .init(name: "Kitchen", icon: "refrigerator"),
+        .init(name: "Garden", icon: "tree"),
+        .init(name: "Security", icon: "light.beacon.max"),
     ]) {
         self.dashboards = dashboards
     }

@@ -12,3 +12,5 @@
 "name_hint" = "O nome do painel precisa ser único";
 "icon" = "Ícone";
 "icon_hint" = "Você pode procurar por palavras chaves";
+"entities" = "Dispositivos";
+"entities_hint" = "Você pode pesquisar por um nome";

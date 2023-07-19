@@ -12,3 +12,5 @@
 "name_hint" = "The dashboard's name must be unique";
 "icon" = "Icon";
 "icon_hint" = "You can search for keywords";
+"entities" = "Devices";
+"entities_hint" = "You can search for a name";

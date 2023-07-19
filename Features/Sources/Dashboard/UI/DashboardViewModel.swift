@@ -25,7 +25,7 @@ public class DashboardViewModel: ObservableObject {
     // MARK: Init
 
     public init(dashboardService: DashboardService) {
-        self.dashboardService = DashboardServiceMock()
+        self.dashboardService = dashboardService
         dashboards = self.dashboardService.dashboards
     }
 }
