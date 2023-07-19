@@ -19,12 +19,13 @@ enum DashboardCreationViewModelStates {
 public class DashboardCreationViewModel: ObservableObject {
 
     private var cancellable: Set<AnyCancellable> = []
+    private var allEntities: Entities = .init()
 
     // MARK: Publishers
 
     @Published private(set) var state: DashboardCreationViewModelStates = .loading
     @Published var dashboardName: String = ""
-    @Published private(set) var icons: [IconUI] = []
+    @Published private(set) var icons: [IconUI] = IconUI.list
     @Published private(set) var selectedIconIndex: Int = .zero
     @Published var iconFilterText: String = ""
     @Published private(set) var entities: [EntityUI] = []
@@ -38,10 +39,6 @@ public class DashboardCreationViewModel: ObservableObject {
     private let dashboardService: DashboardService
     private let entitiesService: EntityService
 
-    // MARK: Gets
-
-    private var entitiesHandler: Entities { entitiesService.entities }
-
     // MARK: Init
 
     public init(dashboardService: DashboardService, entitiesService: EntityService) {
@@ -49,7 +46,6 @@ public class DashboardCreationViewModel: ObservableObject {
         self.entitiesService = entitiesService
 
         setupObservers()
-        setupData()
     }
 }
 
@@ -58,6 +54,21 @@ public class DashboardCreationViewModel: ObservableObject {
 extension DashboardCreationViewModel {
 
     private func setupObservers() {
+        entitiesService
+            .entities
+            .sink { [weak self] in
+                self?.allEntities = $0
+            }
+            .store(in: &cancellable)
+
+        entitiesService
+            .domains
+            .sink { [weak self] domains in
+                self?.domains = domains
+                self?.selectedDomains = Set(domains.map { $0.name })
+            }
+            .store(in: &cancellable)
+
         $iconFilterText
             .sink { [weak self] in self?.filterIcon($0) }
             .store(in: &cancellable)
@@ -65,13 +76,6 @@ extension DashboardCreationViewModel {
         $entityFilterText
             .sink { [weak self] in self?.filterEntity($0) }
             .store(in: &cancellable)
-    }
-
-    private func setupData() {
-        icons = IconUI.list
-        entities = Array(entitiesHandler.all.values)
-        domains = entitiesService.domains
-        selectedDomains = Set(domains.map { $0.name })
     }
 
     private func filterIcon(_ text: String) {
@@ -88,7 +92,7 @@ extension DashboardCreationViewModel {
     }
 
     private func filterEntity(_ text: String) {
-        let allEntities = Array(entitiesHandler.all.values)
+        let allEntities = Array(allEntities.all.values)
         guard !text.isEmpty || !selectedDomains.isEmpty else {
             entities = allEntities
             return
@@ -135,7 +139,7 @@ extension DashboardCreationViewModel {
     func createDashboard() {
         let name = dashboardName
         let icon = icons[selectedIconIndex].name
-        let entities = Array(entitiesHandler.all.values).filter { [weak self] entity in
+        let entities = Array(allEntities.all.values).filter { [weak self] entity in
             self?.selectedEntitiesIDs.contains(entity.id) == true
         }
 

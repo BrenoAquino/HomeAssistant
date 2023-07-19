@@ -6,22 +6,21 @@
 //
 
 #if DEBUG
+import Combine
 import Domain
 import Foundation
 
 public class DashboardServiceMock: Domain.DashboardService {
 
-    public var dashboards: [Dashboard]
-
-    public init(dashboards: [Dashboard] = [
+    public var dashboards: CurrentValueSubject<[Dashboard], Never> = .init([
         .init(name: "Bedroom", icon: "bed.double"),
         .init(name: "Living Room", icon: "sofa"),
         .init(name: "Kitchen", icon: "refrigerator"),
         .init(name: "Garden", icon: "tree"),
         .init(name: "Security", icon: "light.beacon.max"),
-    ]) {
-        self.dashboards = dashboards
-    }
+    ])
+
+    public init() {}
 
     public func persist() async throws {}
     public func add(dashboard: Dashboard) throws {}

@@ -5,6 +5,7 @@
 //  Created by Breno Aquino on 17/07/23.
 //
 
+import Combine
 import Foundation
 
 enum DashboardServiceError: Error {
@@ -13,7 +14,7 @@ enum DashboardServiceError: Error {
 
 public protocol DashboardService {
 
-    var dashboards: [Dashboard] { get }
+    var dashboards: CurrentValueSubject<[Dashboard], Never> { get }
 
     func persist() async throws
 

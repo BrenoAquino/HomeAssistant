@@ -12,11 +12,14 @@ public class EntityServiceImpl {
 
     // MARK: Variables
 
-    public private(set) var entities: Entities = .init()
-    public private(set) var domains: [EntityDomain] = EntityDomain.allCases
-
+    public private(set) var entitiesHandler: Entities = .init()
     private var cancellable: Set<AnyCancellable> = []
     private var stateChangeSubscription: Int?
+
+    // MARK: Publishers
+
+    public private(set) var entities: CurrentValueSubject<Entities, Never> = .init(.init())
+    public private(set) var domains: CurrentValueSubject<[EntityDomain], Never> = .init(EntityDomain.allCases)
 
     // MARK: Repositories
 
@@ -45,23 +48,26 @@ extension EntityServiceImpl {
         let id = entity.id
         switch entity {
         case let light as LightEntity:
-            entities.lights[id] = light
+            entitiesHandler.lights[id] = light
         case let `switch` as SwitchEntity:
-            entities.switches[id] = `switch`
+            entitiesHandler.switches[id] = `switch`
         case let fan as FanEntity:
-            entities.fans[id] = fan
+            entitiesHandler.fans[id] = fan
         case let climate as ClimateEntity:
-            entities.climates[id] = climate
+            entitiesHandler.climates[id] = climate
         default:
             break
         }
+        entities.send(entitiesHandler)
     }
 
     private func setupSubscription() {
         subscriptionRepository
             .stateChangedEvent
             .sink { _ in } receiveValue: { [weak self] stateChanged in
-                self?.entities.all[stateChanged.id]?.state = stateChanged.newState
+                guard let self else { return }
+                self.entitiesHandler.all[stateChanged.id]?.state = stateChanged.newState
+                self.entities.send(self.entitiesHandler)
             }
             .store(in: &cancellable)
     }
@@ -73,7 +79,7 @@ extension EntityServiceImpl: EntityService {
 
     public func trackEntities() async throws {
         try await fetcherRepository.fetchStates().forEach { [self] in insertEntity($0) }
-        entities.updateAllEntities()
+        entitiesHandler.updateAllEntities()
         stateChangeSubscription = try await subscriptionRepository.subscribeToEvents(eventType: .stateChanged)
         setupSubscription()
     }

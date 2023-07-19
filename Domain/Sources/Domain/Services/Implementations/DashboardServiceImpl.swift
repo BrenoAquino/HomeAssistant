@@ -5,11 +5,15 @@
 //  Created by Breno Aquino on 17/07/23.
 //
 
+import Combine
 import Foundation
 
 public class DashboardServiceImpl {
 
-    public private(set) var dictDashboards: [String : Dashboard] = [:]
+    public let dashboards: CurrentValueSubject<[Dashboard], Never> = .init([])
+    public private(set) var dictDashboards: [String : Dashboard] = [:] {
+        didSet { dashboards.send(Array(dictDashboards.values)) }
+    }
 
     private let entityService: EntityService
     private let dashboardRepository: DashboardRepository
@@ -24,7 +28,7 @@ public class DashboardServiceImpl {
         Task {
             let allDashboards = try? await self.dashboardRepository.fetchDashboards()
             for dashboard in allDashboards ?? [] {
-                dashboard.entities = dashboard.entitiesIDs.compactMap { entityService.entities.all[$0] }
+                dashboard.entities = dashboard.entitiesIDs.compactMap { entityService.entities.value.all[$0] }
                 dictDashboards[dashboard.name] = dashboard
             }
         }
@@ -35,10 +39,8 @@ public class DashboardServiceImpl {
 
 extension DashboardServiceImpl: DashboardService {
 
-    public var dashboards: [Dashboard] { Array(dictDashboards.values) }
-
     public func persist() async throws{
-        try await dashboardRepository.save(dashboard: dashboards)
+        try await dashboardRepository.save(dashboard: dashboards.value)
     }
 
     public func add(dashboard: Dashboard) throws {

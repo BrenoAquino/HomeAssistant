@@ -5,12 +5,13 @@
 //  Created by Breno Aquino on 17/07/23.
 //
 
-import Preview
+import Combine
 import Domain
 import Foundation
 
 public class DashboardViewModel: ObservableObject {
 
+    private var cancellable: Set<AnyCancellable> = .init()
     public var didSelectAddDashboard: (() -> Void)?
 
     // MARK: Publishers
@@ -26,7 +27,20 @@ public class DashboardViewModel: ObservableObject {
 
     public init(dashboardService: DashboardService) {
         self.dashboardService = dashboardService
-        dashboards = self.dashboardService.dashboards
+
+        setupObservers()
+    }
+}
+
+// MARK: - Private Methods
+
+extension DashboardViewModel {
+
+    private func setupObservers() {
+        dashboardService
+            .dashboards
+            .sink { [weak self] in self?.dashboards = $0 }
+            .store(in: &cancellable)
     }
 }
 
