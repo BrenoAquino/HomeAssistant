@@ -19,5 +19,16 @@ struct DashboardCreationCoordinator: View {
 
     var body: some View {
         DashboardCreationView(viewModel: viewModel)
+            .task { setupCallbacks() }
+    }
+
+    private func setupCallbacks() {
+        viewModel.didClose = { [self] in
+            coordinator.dismiss()
+        }
+
+        viewModel.didFinish = { [self] in
+            coordinator.dismiss()
+        }
     }
 }

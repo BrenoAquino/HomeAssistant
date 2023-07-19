@@ -10,20 +10,18 @@ import Common
 import Domain
 import Foundation
 
-enum DashboardCreationViewModelStates {
-    case loading
-    case content
-    case finish
-}
-
 public class DashboardCreationViewModel: ObservableObject {
 
     private var cancellable: Set<AnyCancellable> = []
     private var allEntities: Entities = .init()
 
+    // MARK: External Actions
+
+    public var didFinish: (() -> Void)?
+    public var didClose: (() -> Void)?
+
     // MARK: Publishers
 
-    @Published private(set) var state: DashboardCreationViewModelStates = .loading
     @Published var dashboardName: String = ""
     @Published private(set) var icons: [IconUI] = IconUI.list
     @Published private(set) var selectedIconIndex: Int = .zero
@@ -38,6 +36,12 @@ public class DashboardCreationViewModel: ObservableObject {
 
     private let dashboardService: DashboardService
     private let entitiesService: EntityService
+
+    // MARK: Gets
+
+    private var sortedEntities: [Entity] {
+        Array(allEntities.all.values).sorted(by: { $0.name < $1.name })
+    }
 
     // MARK: Init
 
@@ -92,7 +96,7 @@ extension DashboardCreationViewModel {
     }
 
     private func filterEntity(_ text: String) {
-        let allEntities = Array(allEntities.all.values)
+        let allEntities = sortedEntities
         guard !text.isEmpty || !selectedDomains.isEmpty else {
             entities = allEntities
             return
@@ -143,11 +147,21 @@ extension DashboardCreationViewModel {
             self?.selectedEntitiesIDs.contains(entity.id) == true
         }
 
+        guard !name.isEmpty, !icon.isEmpty, !entities.isEmpty else {
+            Logger.log(level: .error, "Unable to create a dashboard: missing required data")
+            return
+        }
+
         let dashboard = Dashboard(name: name, icon: icon, entities: entities)
         do {
             try dashboardService.add(dashboard: dashboard)
+            didFinish?()
         } catch {
             Logger.log(level: .error, error.localizedDescription)
         }
+    }
+
+    func close() {
+        didClose?()
     }
 }

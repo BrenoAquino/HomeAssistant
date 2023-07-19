@@ -54,9 +54,7 @@ public struct DashboardCreationView: View {
                 .fontWeight(.bold)
                 .padding(.top, space: .bigL)
 
-            Button {
-
-            } label: {
+            Button(action: viewModel.close) {
                 SystemImages.close
                     .imageScale(.large)
                     .foregroundColor(SystemColor.label)
