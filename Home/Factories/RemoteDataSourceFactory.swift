@@ -14,10 +14,10 @@ class RemoteDataSourceFactory {
     private let fetcherRemoteDateSource: FetcherRemoteDataSource
     private let subscriptionRemoteDateSource: SubscriptionRemoteDataSource
 
-    init(webSocketProvider: WebSocketProvider) {
-        commandRemoteDateSource = CommandRemoteDataSourceImpl(webSocketProvider: webSocketProvider)
-        fetcherRemoteDateSource = FetcherRemoteDataSourceImpl(webSocketProvider: webSocketProvider)
-        subscriptionRemoteDateSource = SubscriptionRemoteDataSourceImpl(webSocketProvider: webSocketProvider)
+    init(infrastructureFactory: InfrastructureFactory) {
+        commandRemoteDateSource = CommandRemoteDataSourceImpl(webSocketProvider: infrastructureFactory.webSocket())
+        fetcherRemoteDateSource = FetcherRemoteDataSourceImpl(webSocketProvider: infrastructureFactory.webSocket())
+        subscriptionRemoteDateSource = SubscriptionRemoteDataSourceImpl(webSocketProvider: infrastructureFactory.webSocket())
     }
 
     func command() -> CommandRemoteDataSource {

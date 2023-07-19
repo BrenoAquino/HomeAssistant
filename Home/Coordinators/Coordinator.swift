@@ -9,16 +9,11 @@ import SwiftUI
 
 class Coordinator: ObservableObject {
 
-    @Published var root = Screen.launch
-    @Published var path = NavigationPath()
-    @Published var sheet: Screen?
-    @Published var fullScreenCover: Screen?
+    // MARK: Factories
 
-    private lazy var webSocket = try! WebSocket(url: Environment.homeAssistantURL, token: Environment.authToken)
-    private lazy var database = UserDefaultsDatabaseProvider()
-
-    private lazy var localDataSourceFactory = LocalDataSourceFactory(databaseProvider: database)
-    private lazy var remoteDataSourceFactory = RemoteDataSourceFactory(webSocketProvider: webSocket)
+    private lazy var infrastructureFactory = InfrastructureFactory()
+    private lazy var localDataSourceFactory = LocalDataSourceFactory(infrastructureFactory: infrastructureFactory)
+    private lazy var remoteDataSourceFactory = RemoteDataSourceFactory(infrastructureFactory: infrastructureFactory)
     private lazy var repositoryFactory = RepositoryFactory(
         localDataSourceFactory: localDataSourceFactory,
         remoteDataSourceFactory: remoteDataSourceFactory
@@ -26,6 +21,13 @@ class Coordinator: ObservableObject {
     private lazy var servicesFactory = ServicesFactory(repositoryFactory: repositoryFactory)
     private lazy var viewModelFactory = ViewModelFactory(servicesFactory: servicesFactory)
     private lazy var coordinatorFactory = CoordinatorFactory(viewModelFactory: viewModelFactory)
+
+    // MARK: Publishers
+
+    @Published var root = Screen.launch
+    @Published var path = NavigationPath()
+    @Published var sheet: Screen?
+    @Published var fullScreenCover: Screen?
 }
 
 // MARK: Present
