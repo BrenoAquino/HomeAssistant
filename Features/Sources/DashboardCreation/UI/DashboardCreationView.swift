@@ -74,6 +74,7 @@ public struct DashboardCreationView: View {
             VStack(spacing: .smallS) {
                 TextField("", text: $viewModel.dashboardName, axis: .horizontal)
                     .frame(height: 40)
+                    .padding(.horizontal, space: .smallL)
                     .overlay(
                         RoundedRectangle(cornerRadius: .normal)
                             .stroke(SystemColor.secondaryLabel)
