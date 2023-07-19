@@ -24,6 +24,8 @@ extension Domain.EntityDomain {
         switch String(domainInName) {
         case Self.light.string: self = .light
         case Self.switch.string: self = .switch
+        case Self.climate.string: self = .climate
+        case Self.fan.string: self = .fan
         default: throw ConverterError("Domain.EntityDomain.init: Could not recognize the domain")
         }
     }
