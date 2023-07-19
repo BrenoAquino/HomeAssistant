@@ -133,6 +133,17 @@ extension DashboardCreationViewModel {
     }
 
     func createDashboard() {
-        
+        let name = dashboardName
+        let icon = icons[selectedIconIndex].name
+        let entities = Array(entitiesHandler.all.values).filter { [weak self] entity in
+            self?.selectedEntitiesIDs.contains(entity.id) == true
+        }
+
+        let dashboard = Dashboard(name: name, icon: icon, entities: entities)
+        do {
+            try dashboardService.add(dashboard: dashboard)
+        } catch {
+            Logger.log(level: .error, error.localizedDescription)
+        }
     }
 }
