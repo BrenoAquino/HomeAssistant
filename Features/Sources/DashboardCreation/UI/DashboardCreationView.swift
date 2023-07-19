@@ -37,6 +37,10 @@ public struct DashboardCreationView: View {
 
             entitiesList
                 .padding(.top, space: .smallS)
+
+            createButton
+                .padding(.top, space: .normal)
+                .padding(.bottom, space: .normal)
         }
         .scrollDismissesKeyboard(.immediately)
     }
@@ -141,6 +145,16 @@ public struct DashboardCreationView: View {
                 didChangeDomainSelection: viewModel.updateDomainSelection
             )
         }
+    }
+
+    private var createButton: some View {
+        Button(action: viewModel.createDashboard) {
+            Localizable.create.text
+        }
+        .buttonStyle(DefaultButtonStyle(
+            foregroundColor: SystemColor.background,
+            backgroundColor: SystemColor.label
+        ))
     }
 }
 

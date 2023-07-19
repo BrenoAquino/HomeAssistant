@@ -131,4 +131,8 @@ extension DashboardCreationViewModel {
 
         filterEntity(entityFilterText)
     }
+
+    func createDashboard() {
+        
+    }
 }
