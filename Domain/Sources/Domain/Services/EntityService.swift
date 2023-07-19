@@ -5,6 +5,7 @@
 //  Created by Breno Aquino on 15/07/23.
 //
 
+import Combine
 import Foundation
 
 public class Entities {
@@ -17,7 +18,7 @@ public class Entities {
 
     public init() {}
 
-    func updateAllEntities() {
+    public func updateAllEntities() {
         all = [:]
         lights.values.forEach { all[$0.id] = $0 }
         switches.values.forEach { all[$0.id] = $0 }
@@ -28,7 +29,8 @@ public class Entities {
 
 public protocol EntityService {
 
-    var entities: Entities { get }
+    var entities: CurrentValueSubject<Entities, Never> { get }
+    var domains: CurrentValueSubject<[EntityDomain], Never> { get }
 
     func trackEntities() async throws
     func updateEntity(_ entityID: String, service: EntityActionService) async throws

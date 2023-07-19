@@ -21,6 +21,13 @@ public class Dashboard {
         self.entitiesIDs = entities
         self.entities = []
     }
+
+    public init(name: String, icon: String, entities: [Entity]) {
+        self.name = name
+        self.icon = icon
+        self.entities = entities
+        self.entitiesIDs = entities.map { $0.id } 
+    }
 }
 
 // MARK: - Hashable

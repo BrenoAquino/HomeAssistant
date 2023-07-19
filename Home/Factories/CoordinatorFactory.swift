@@ -22,4 +22,8 @@ class CoordinatorFactory {
     func dashboard() -> DashboardCoordinator {
         DashboardCoordinator(viewModel: viewModelFactory.dashboard())
     }
+
+    func dashboardCreation() -> DashboardCreationCoordinator {
+        DashboardCreationCoordinator(viewModel: viewModelFactory.dashboardCreation())
+    }
 }

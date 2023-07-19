@@ -6,13 +6,39 @@
 //
 
 #if DEBUG
+import Combine
 import Domain
 import Foundation
 
 public class EntityServiceMock: Domain.EntityService {
-    public var entities: Domain.Entities = .init()
 
-    public init() {}
+    public var entities: CurrentValueSubject<Entities, Never> = .init(.init())
+    public var domains: CurrentValueSubject<[EntityDomain], Never> = .init(Domain.EntityDomain.allCases)
+
+    var entitiesHandler: Domain.Entities = .init()
+
+    public var allEntities: [Entity] {
+        Array(entities.value.all.values)
+    }
+
+    public init() {
+        let mainLight = LightEntity(id: "light.main_light", name: "Main Light", state: .on)
+        let ledDesk = LightEntity(id: "light.led_desk", name: "Led Desk", state: .off)
+        let ledCeiling = LightEntity(id: "light.led_ceiling", name: "Led Ceiling", state: .on)
+        let climate = ClimateEntity(id: "climate.air_conditioner", name: "Air Conditioner", state: .on)
+        let coffeeMachine = SwitchEntity(id: "switch.coffee_machine", name: "Coffee Machine", state: .off)
+        let fan = FanEntity(id: "fan.bedroom_fan", name: "Bedroom's Fan", state: .on)
+        entitiesHandler.lights = [
+            mainLight.id: mainLight,
+            ledDesk.id: ledDesk,
+            ledCeiling.id: ledCeiling,
+        ]
+        entitiesHandler.switches = [coffeeMachine.id: coffeeMachine]
+        entitiesHandler.fans = [fan.id: fan]
+        entitiesHandler.climates = [climate.id: climate]
+        entitiesHandler.updateAllEntities()
+        entities.send(entitiesHandler)
+    }
 
     public func trackEntities() async throws {
         if #available(iOS 16.0, *) {

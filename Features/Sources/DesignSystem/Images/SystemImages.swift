@@ -12,4 +12,7 @@ public enum SystemImages {
 
     public static let playFill = Image(systemName: "play.fill")
     public static let plus = Image(systemName: "plus")
+    public static let close = Image(systemName: "xmark.circle")
+    public static let uncheck = Image(systemName: "circle")
+    public static let check = Image(systemName: "checkmark.circle.fill")
 }

@@ -17,7 +17,7 @@ public enum EntityActionService {
     case turnOff
 }
 
-public enum EntityDomain: Hashable {
+public enum EntityDomain: Hashable, CaseIterable {
     case light
     case `switch`
     case fan
