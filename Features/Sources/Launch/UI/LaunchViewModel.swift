@@ -45,7 +45,7 @@ extension LaunchViewModel {
                 launchFinished?()
             }
         } catch {
-            print(error.localizedDescription)
+            Logger.log(level: .error, error.localizedDescription)
             await MainActor.run { [self] in
                 state = .error
             }

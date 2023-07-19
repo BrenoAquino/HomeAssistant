@@ -142,13 +142,26 @@ extension DashboardCreationViewModel {
 
     func createDashboard() {
         let name = dashboardName
+        guard !name.isEmpty else {
+            Logger.log(level: .error, "Name must be filled")
+            return
+        }
+        guard !dashboardService.dashboards.value.contains(where: { $0.name == name }) else {
+            Logger.log(level: .error, "Name already in use")
+            return
+        }
+
         let icon = icons[selectedIconIndex].name
+        guard !icon.isEmpty else {
+            Logger.log(level: .error, "Icon required")
+            return
+        }
+
         let entities = Array(allEntities.all.values).filter { [weak self] entity in
             self?.selectedEntitiesIDs.contains(entity.id) == true
         }
-
-        guard !name.isEmpty, !icon.isEmpty, !entities.isEmpty else {
-            Logger.log(level: .error, "Unable to create a dashboard: missing required data")
+        guard !entities.isEmpty else {
+            Logger.log(level: .error, "It is necessary at least 1 device")
             return
         }
 
