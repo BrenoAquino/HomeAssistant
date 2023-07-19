@@ -11,7 +11,7 @@ import Dashboard
 struct DashboardCoordinator: View {
 
     @EnvironmentObject private var coordinator: Coordinator
-    private let viewModel: DashboardViewModel
+    @State private var viewModel: DashboardViewModel
 
     init(viewModel: DashboardViewModel) {
         self.viewModel = viewModel
@@ -19,5 +19,12 @@ struct DashboardCoordinator: View {
 
     var body: some View {
         DashboardView(viewModel: viewModel)
+            .task { setupCallbacks() }
+    }
+
+    private func setupCallbacks() {
+        viewModel.didSelectAddDashboard = { [self] in
+            self.coordinator.preset(sheet: .dashboardCreation)
+        }
     }
 }

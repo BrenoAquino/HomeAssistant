@@ -11,6 +11,8 @@ import Foundation
 
 public class DashboardViewModel: ObservableObject {
 
+    public var didSelectAddDashboard: (() -> Void)?
+
     // MARK: Publishers
 
     @Published private(set) var dashboards: [Dashboard] = []
@@ -35,5 +37,9 @@ extension DashboardViewModel {
     func selectDashboard(_ dashboard: any DashboardUI, index: Int) {
         guard index < dashboards.count && index >= 0 else { return }
         selectedIndex = index
+    }
+
+    func didSelectAdd() {
+        didSelectAddDashboard?()
     }
 }

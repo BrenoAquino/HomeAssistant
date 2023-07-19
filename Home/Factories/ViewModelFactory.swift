@@ -8,6 +8,7 @@
 import Foundation
 import Launch
 import Dashboard
+import DashboardCreation
 
 class ViewModelFactory {
 
@@ -23,5 +24,9 @@ class ViewModelFactory {
 
     func dashboard() -> DashboardViewModel {
         DashboardViewModel(dashboardService: servicesFactory.dashboard())
+    }
+
+    func dashboardCreation() -> DashboardCreationViewModel {
+        DashboardCreationViewModel(dashboardService: servicesFactory.dashboard())
     }
 }

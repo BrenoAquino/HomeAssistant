@@ -1,0 +1,14 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Breno Aquino on 17/07/23.
+  
+*/
+
+"dashboard_creation" = "Criação de Painel";
+"dashboard_description" = "Um painel é o agrupamento de dispositivos e com um nome único";
+"name" = "Nome";
+"name_hint" = "O nome do painel precisa ser único";
+"icon" = "Ícone";
+"icon_hint" = "Você pode procurar por palavras chaves";

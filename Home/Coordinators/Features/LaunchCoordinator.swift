@@ -11,7 +11,7 @@ import Launch
 struct LaunchCoordinator: View {
 
     @EnvironmentObject private var coordinator: Coordinator
-    private let viewModel: LaunchViewModel
+    @State private var viewModel: LaunchViewModel
 
     init(viewModel: LaunchViewModel) {
         self.viewModel = viewModel

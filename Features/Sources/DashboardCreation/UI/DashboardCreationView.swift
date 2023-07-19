@@ -1,0 +1,132 @@
+//
+//  DashboardCreationView.swift
+//  
+//
+//  Created by Breno Aquino on 18/07/23.
+//
+
+import DesignSystem
+import SwiftUI
+
+public struct DashboardCreationView: View {
+
+    @ObservedObject private var viewModel: DashboardCreationViewModel
+
+    public init(viewModel: DashboardCreationViewModel) {
+        self.viewModel = viewModel
+    }
+
+    public var body: some View {
+        ScrollView(.vertical) {
+            title
+                .padding(.horizontal, space: .normal)
+            
+            Localizable.dashboardDescription.text
+                .foregroundColor(SystemColor.secondaryLabel)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .font(.callout)
+                .padding(.horizontal, space: .normal)
+                .padding(.top, space: .smallS)
+
+            iconField
+                .padding(.top, space: .smallS)
+
+            nameField
+                .padding(.horizontal, space: .normal)
+                .padding(.top, space: .smallS)
+        }
+    }
+
+    private var title: some View {
+        HStack(alignment: .top, spacing: .smallL) {
+            Localizable.dashboardCreation.text
+                .foregroundColor(SystemColor.label)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .padding(.top, space: .bigL)
+
+            Button {
+
+            } label: {
+                SystemImages.close
+                    .imageScale(.large)
+                    .foregroundColor(SystemColor.label)
+            }
+            .padding(.top, space: .normal)
+        }
+    }
+
+    private var nameField: some View {
+        VStack(spacing: .smallM) {
+            Localizable.name.text
+                .foregroundColor(SystemColor.label)
+                .font(.headline)
+                .fontWeight(.medium)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            VStack(spacing: .smallS) {
+                TextField("", text: $viewModel.dashboardName, axis: .horizontal)
+                    .frame(height: 40)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: .normal)
+                            .stroke(SystemColor.secondaryLabel)
+                    )
+
+                Localizable.nameHint.text
+                    .foregroundColor(SystemColor.secondaryLabel)
+                    .font(.footnote)
+                    .fontWeight(.medium)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+
+        }
+    }
+
+    private var iconField: some View {
+        VStack(spacing: .smallL) {
+            Localizable.icon.text
+                .foregroundColor(SystemColor.label)
+                .font(.headline)
+                .fontWeight(.medium)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, space: .smallL)
+
+            IconsCarouselView(
+                icons: viewModel.icons,
+                selectedIndex: viewModel.selectedIconIndex,
+                iconDidSelect: viewModel.selectIcon
+            )
+
+            VStack(spacing: .smallS) {
+                VStack(spacing: .zero) {
+                    TextField("", text: $viewModel.iconFilterText, axis: .horizontal)
+                        .foregroundColor(SystemColor.secondaryLabel)
+                        .font(.subheadline)
+                        .frame(height: 20)
+
+                    Divider()
+                }
+
+                Localizable.iconHint.text
+                    .foregroundColor(SystemColor.secondaryLabel)
+                    .font(.footnote)
+                    .fontWeight(.medium)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .padding(.horizontal, space: .smallL)
+        }
+    }
+}
+
+#if DEBUG
+import Preview
+
+struct DashboardCreationView_Preview: PreviewProvider {
+
+    static var previews: some View {
+
+        DashboardCreationView(viewModel: .init(dashboardService: DashboardServiceMock()))
+    }
+}
+#endif

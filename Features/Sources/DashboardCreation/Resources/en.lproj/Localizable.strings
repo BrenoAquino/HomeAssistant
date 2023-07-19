@@ -1,0 +1,14 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Breno Aquino on 17/07/23.
+  
+*/
+
+"dashboard_creation" = "Dashboard Creation";
+"dashboard_description" = "A dashboard is the grouping of devices and the must be unique";
+"name" = "Name";
+"name_hint" = "The dashboard's name must be unique";
+"icon" = "Icon";
+"icon_hint" = "You can search for keywords";

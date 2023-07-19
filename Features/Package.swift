@@ -6,11 +6,11 @@ import PackageDescription
 let package = Package(
     name: "Features",
     defaultLocalization: "en",
-    platforms: [.iOS(.v15)],
+    platforms: [.iOS(.v16)],
     products: [
         .library(
             name: "Features",
-            targets: ["Launch", "Dashboard"]),
+            targets: ["Launch", "Dashboard", "DashboardCreation"]),
     ],
     dependencies: [
         .package(name: "Common", path: "../Common"),
@@ -26,6 +26,10 @@ let package = Package(
             resources: [.process("Resources")]),
         .target(
             name: "Dashboard",
+            dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
+            resources: [.process("Resources")]),
+        .target(
+            name: "DashboardCreation",
             dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
             resources: [.process("Resources")]),
         .target(

@@ -18,7 +18,7 @@ public struct DashboardView: View {
 
     public var body: some View {
         ScrollView(.vertical) {
-            Text(localizable: .welcome)
+            Localizable.welcome.text
                 .foregroundColor(SystemColor.secondaryLabel)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.callout)
@@ -29,7 +29,7 @@ public struct DashboardView: View {
                 dashboards: viewModel.dashboards,
                 selectedIndex: viewModel.selectedIndex,
                 dashboardDidSelect: viewModel.selectDashboard,
-                addDidSelect: {}
+                addDidSelect: viewModel.didSelectAdd
             )
             .padding(.top, space: .smallM)
         }
