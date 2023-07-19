@@ -23,8 +23,18 @@ public class DashboardServiceMock: Domain.DashboardService {
     public init() {}
 
     public func persist() async throws {}
-    public func add(dashboard: Dashboard) throws {}
-    public func delete(dashboardName: String) {}
+
+    public func add(dashboard: Dashboard) throws {
+        let all = dashboards.value.appended(dashboard)
+        dashboards.send(all)
+    }
+
+    public func delete(dashboardName: String) {
+        var all = dashboards.value
+        all.removeAll(where: { $0.name == dashboardName })
+        dashboards.send(all)
+    }
+
     public func addEntity(_ entity: Entity, dashboardName: String) {}
     public func addEntities(_ entities: [Entity], dashboardName: String) {}
     public func removeEntity(_ entityID: String, dashboardName: String) {}

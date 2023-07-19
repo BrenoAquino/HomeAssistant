@@ -11,7 +11,6 @@
 		5508EC952A65D28E00100E18 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5508EC942A65D28E00100E18 /* Coordinator.swift */; };
 		5508EC972A65D82300100E18 /* CoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5508EC962A65D82300100E18 /* CoordinatorView.swift */; };
 		5508ECA42A65E64F00100E18 /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5508ECA32A65E64F00100E18 /* Screen.swift */; };
-		5508ECAD2A65EB3000100E18 /* View+opacityTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5508ECAC2A65EB3000100E18 /* View+opacityTransition.swift */; };
 		552783E32A64F5A000603EBA /* RemoteDataSourceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552783E22A64F5A000603EBA /* RemoteDataSourceFactory.swift */; };
 		552783E52A64F5F200603EBA /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552783E42A64F5F200603EBA /* AppEnvironment.swift */; };
 		552783E72A64F70800603EBA /* RepositoryFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552783E62A64F70800603EBA /* RepositoryFactory.swift */; };
@@ -43,7 +42,6 @@
 		5508EC942A65D28E00100E18 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		5508EC962A65D82300100E18 /* CoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorView.swift; sourceTree = "<group>"; };
 		5508ECA32A65E64F00100E18 /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
-		5508ECAC2A65EB3000100E18 /* View+opacityTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+opacityTransition.swift"; sourceTree = "<group>"; };
 		552783E02A64ECCD00603EBA /* Features */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Features; sourceTree = "<group>"; };
 		552783E22A64F5A000603EBA /* RemoteDataSourceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDataSourceFactory.swift; sourceTree = "<group>"; };
 		552783E42A64F5F200603EBA /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
@@ -194,7 +192,6 @@
 			children = (
 				55E63B202A619059002068A5 /* Logger.swift */,
 				552783E42A64F5F200603EBA /* AppEnvironment.swift */,
-				5508ECAC2A65EB3000100E18 /* View+opacityTransition.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -298,7 +295,6 @@
 				5508EC972A65D82300100E18 /* CoordinatorView.swift in Sources */,
 				55C25B952A60D8C700E52C5F /* HomeApp.swift in Sources */,
 				552783F52A65027E00603EBA /* LaunchCoordinator.swift in Sources */,
-				5508ECAD2A65EB3000100E18 /* View+opacityTransition.swift in Sources */,
 				55B85F352A68238500C8E667 /* InfrastructureFactory.swift in Sources */,
 				5508ECA42A65E64F00100E18 /* Screen.swift in Sources */,
 				552783EA2A64F80200603EBA /* ServicesFactory.swift in Sources */,

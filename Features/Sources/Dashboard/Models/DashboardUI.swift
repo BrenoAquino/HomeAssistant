@@ -8,13 +8,9 @@
 import Domain
 import Foundation
 
-protocol DashboardUI: Identifiable {
+protocol DashboardUI {
     var name: String { get }
     var icon: String { get }
-}
-
-extension DashboardUI {
-    public var id: String { name }
 }
 
 // MARK: Dashboard

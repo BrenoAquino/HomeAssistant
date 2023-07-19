@@ -53,6 +53,10 @@ extension DashboardViewModel {
         selectedIndex = index
     }
 
+    func removeDashboard(_ dashboard: any DashboardUI, index: Int) {
+        dashboardService.delete(dashboardName: dashboard.name)
+    }
+
     func didSelectAdd() {
         didSelectAddDashboard?()
     }

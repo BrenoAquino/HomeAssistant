@@ -5,6 +5,7 @@
 //  Created by Breno Aquino on 17/07/23.
 //
 
+import Common
 import DesignSystem
 import SwiftUI
 
@@ -29,9 +30,10 @@ public struct DashboardView: View {
                 dashboards: viewModel.dashboards,
                 selectedIndex: viewModel.selectedIndex,
                 dashboardDidSelect: viewModel.selectDashboard,
+                dashboardDidRemove: viewModel.removeDashboard,
                 addDidSelect: viewModel.didSelectAdd
             )
-            .padding(.top, space: .smallM)
+            .padding(.top, space: .smallS)
         }
         .navigationTitle(Localizable.hiThere.value)
     }
