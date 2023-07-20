@@ -15,10 +15,18 @@ public enum DashboardCreationMode: Equatable {
     case edit(_ dashboard: Dashboard)
 }
 
+enum DashboardCreationViewModelError: Error {
+    case missingName
+    case nameAlreadyExists
+    case missingIcon
+    case missingEntities
+}
+
 public class DashboardCreationViewModel: ObservableObject {
 
     private var cancellable: Set<AnyCancellable> = []
     private var allEntities: Entities = .init()
+    private var originalName: String = ""
     let mode: DashboardCreationMode
 
     // MARK: External Actions
@@ -68,6 +76,7 @@ extension DashboardCreationViewModel {
     private func setupData(_ mode: DashboardCreationMode) {
         guard case .edit(let dashboard) = mode else { return }
 
+        originalName = dashboard.name
         dashboardName = dashboard.name
         selectedIconIndex = icons.firstIndex(where: { $0.name == dashboard.icon }) ?? .zero
         selectedEntitiesIDs = Set(dashboard.entities.map { $0.id })
@@ -127,6 +136,33 @@ extension DashboardCreationViewModel {
 
         entities = result.isEmpty ? allEntities : result
     }
+
+    private func createDashboard() throws -> Dashboard {
+        let name = dashboardName
+        guard !name.isEmpty else {
+            throw DashboardCreationViewModelError.missingName
+        }
+
+        if name != originalName {
+            guard !dashboardService.dashboards.value.contains(where: { $0.name == name }) else {
+                throw DashboardCreationViewModelError.nameAlreadyExists
+            }
+        }
+
+        let icon = icons[selectedIconIndex].name
+        guard !icon.isEmpty else {
+            throw DashboardCreationViewModelError.missingIcon
+        }
+
+        let entities = Array(allEntities.all.values).filter { [weak self] entity in
+            self?.selectedEntitiesIDs.contains(entity.id) == true
+        }
+        guard !entities.isEmpty else {
+            throw DashboardCreationViewModelError.missingEntities
+        }
+
+        return Dashboard(name: name, icon: icon, entities: entities)
+    }
 }
 
 // MARK: - Interfaces
@@ -156,34 +192,14 @@ extension DashboardCreationViewModel {
         filterEntity(entityFilterText)
     }
 
-    func createDashboard() {
-        let name = dashboardName
-        guard !name.isEmpty else {
-            Logger.log(level: .error, "Name must be filled")
-            return
-        }
-        guard !dashboardService.dashboards.value.contains(where: { $0.name == name }) else {
-            Logger.log(level: .error, "Name already in use")
-            return
-        }
-
-        let icon = icons[selectedIconIndex].name
-        guard !icon.isEmpty else {
-            Logger.log(level: .error, "Icon required")
-            return
-        }
-
-        let entities = Array(allEntities.all.values).filter { [weak self] entity in
-            self?.selectedEntitiesIDs.contains(entity.id) == true
-        }
-        guard !entities.isEmpty else {
-            Logger.log(level: .error, "It is necessary at least 1 device")
-            return
-        }
-
-        let dashboard = Dashboard(name: name, icon: icon, entities: entities)
+    func createOrUpdateDashboard() {
         do {
-            try dashboardService.add(dashboard: dashboard)
+            let dashboard = try createDashboard()
+            if mode == .creation {
+                try dashboardService.add(dashboard: dashboard)
+            } else {
+                try dashboardService.update(dashboardName: originalName, dashboard: dashboard)
+            }
             didFinish?()
         } catch {
             Logger.log(level: .error, error.localizedDescription)

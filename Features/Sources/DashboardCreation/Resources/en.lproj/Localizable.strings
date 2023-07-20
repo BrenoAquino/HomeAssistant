@@ -16,3 +16,4 @@
 "entities" = "Devices";
 "entities_hint" = "You can search for a name";
 "create" = "Create Dashboard";
+"update" = "Update Dashboard";

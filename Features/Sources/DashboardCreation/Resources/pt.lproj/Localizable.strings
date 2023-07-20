@@ -16,3 +16,4 @@
 "entities" = "Dispositivos";
 "entities_hint" = "Você pode pesquisar por um nome";
 "create" = "Criar Painel";
+"update" = "Atualizar Dashboard";

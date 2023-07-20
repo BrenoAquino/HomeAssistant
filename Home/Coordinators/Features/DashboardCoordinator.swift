@@ -24,7 +24,11 @@ struct DashboardCoordinator: View {
 
     private func setupCallbacks() {
         viewModel.didSelectAddDashboard = { [self] in
-            self.coordinator.preset(sheet: .dashboardCreation)
+            self.coordinator.preset(sheet: .dashboardCreation(mode: .creation))
+        }
+
+        viewModel.didSelectEditDashboard = { [self] dashboard in
+            self.coordinator.preset(sheet: .dashboardCreation(mode: .edit(dashboard)))
         }
     }
 }

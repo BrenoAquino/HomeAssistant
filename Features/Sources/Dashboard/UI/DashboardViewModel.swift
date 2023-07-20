@@ -65,5 +65,6 @@ extension DashboardViewModel {
     func didSelectEdit(_ dashboard: any DashboardUI) {
         guard let dashboard = dashboards.first(where: { $0.name == dashboard.name }) else { return }
         didSelectEditDashboard?(dashboard)
+        editModel = false
     }
 }

@@ -6,13 +6,18 @@
 //
 
 import SwiftUI
+import DashboardCreation
 
-enum Screen: String, Identifiable {
+enum Screen: Identifiable, Hashable {
     case launch
     case dashboard
-    case dashboardCreation
+    case dashboardCreation(mode: DashboardCreationMode)
 
-    var id: String { rawValue }
+    var id: String { String(describing: self) }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
 
 extension Screen {
@@ -23,8 +28,8 @@ extension Screen {
             factory.getLaunchCoordinator()
         case .dashboard:
             factory.getDashboardCoordinator()
-        case .dashboardCreation:
-            factory.getDashboardCreationCoordinator()
+        case .dashboardCreation(let mode):
+            factory.getDashboardCreationCoordinator(mode: mode)
         }
     }
 }

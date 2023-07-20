@@ -149,8 +149,12 @@ public struct DashboardCreationView: View {
     }
 
     private var createButton: some View {
-        Button(action: viewModel.createDashboard) {
-            Localizable.create.text
+        Button(action: viewModel.createOrUpdateDashboard) {
+            if viewModel.mode == .creation {
+                Localizable.create.text
+            } else {
+                Localizable.update.text
+            }
         }
         .buttonStyle(DefaultButtonStyle(
             foregroundColor: SystemColor.background,

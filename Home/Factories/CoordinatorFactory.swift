@@ -5,6 +5,7 @@
 //  Created by Breno Aquino on 17/07/23.
 //
 
+import DashboardCreation
 import Foundation
 
 class CoordinatorFactory {
@@ -23,7 +24,7 @@ class CoordinatorFactory {
         DashboardCoordinator(viewModel: viewModelFactory.dashboard())
     }
 
-    func dashboardCreation() -> DashboardCreationCoordinator {
-        DashboardCreationCoordinator(viewModel: viewModelFactory.dashboardCreation())
+    func dashboardCreation(mode: DashboardCreationMode) -> DashboardCreationCoordinator {
+        DashboardCreationCoordinator(viewModel: viewModelFactory.dashboardCreation(mode: mode))
     }
 }

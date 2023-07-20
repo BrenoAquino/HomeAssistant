@@ -50,23 +50,15 @@ extension DashboardServiceImpl: DashboardService {
         dictDashboards[dashboard.name] = dashboard
     }
 
+    public func update(dashboardName: String, dashboard: Dashboard) throws {
+        delete(dashboardName: dashboardName)
+        guard !dictDashboards.keys.contains(dashboard.name) else {
+            throw DashboardServiceError.dashboardDoesNotExist
+        }
+        dictDashboards[dashboard.name] = dashboard
+    }
+
     public func delete(dashboardName: String) {
         dictDashboards[dashboardName] = nil
-    }
-
-    public func addEntity(_ entity: Entity, dashboardName: String) {
-        dictDashboards[dashboardName]?.entities.append(entity)
-    }
-
-    public func addEntities(_ entities: [Entity], dashboardName: String) {
-        dictDashboards[dashboardName]?.entities.append(contentsOf: entities)
-    }
-
-    public func removeEntity(_ entityID: String, dashboardName: String) {
-        dictDashboards[dashboardName]?.entities.removeAll(where: { $0.id == entityID })
-    }
-
-    public func removeEntities(_ entityIDs: [String], dashboardName: String) {
-        dictDashboards[dashboardName]?.entities.removeAll(where: { entityIDs.contains($0.id) })
     }
 }
