@@ -142,7 +142,7 @@ extension Factory {
 extension Factory {
 
     func getLaunchViewModel() -> LaunchViewModel {
-        LaunchViewModel(entityService: entityService)
+        LaunchViewModel(entityService: entityService, dashboardService: dashboardService)
     }
 
     func getDashboardViewModel() -> DashboardViewModel {

@@ -13,14 +13,16 @@ import Foundation
 public class DashboardServiceMock: Domain.DashboardService {
 
     public var dashboards: CurrentValueSubject<[Dashboard], Never> = .init([
-        .init(name: "Bedroom", icon: "bed.double"),
-        .init(name: "Living Room", icon: "sofa"),
-        .init(name: "Kitchen", icon: "refrigerator"),
-        .init(name: "Garden", icon: "tree"),
-        .init(name: "Security", icon: "light.beacon.max"),
+        .init(name: "Bedroom", icon: "bed.double", entities: [""]),
+        .init(name: "Living Room", icon: "sofa", entities: [""]),
+        .init(name: "Kitchen", icon: "refrigerator", entities: [""]),
+        .init(name: "Garden", icon: "tree", entities: [""]),
+        .init(name: "Security", icon: "light.beacon.max", entities: [""]),
     ])
 
     public init() {}
+
+    public func trackDashboards() async throws {}
 
     public func persist() async throws {}
 

@@ -19,7 +19,7 @@ class ViewModelFactory {
     }
     
     func launch() -> LaunchViewModel {
-        LaunchViewModel(entityService: servicesFactory.entity())
+        LaunchViewModel(entityService: servicesFactory.entity(), dashboardService: servicesFactory.dashboard())
     }
 
     func dashboard() -> DashboardViewModel {

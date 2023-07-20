@@ -17,6 +17,7 @@ enum LaunchViewModelStates {
 public class LaunchViewModel: ObservableObject {
 
     private let entityService: EntityService
+    private let dashboardService: DashboardService
 
     // MARK: Redirects
 
@@ -28,8 +29,9 @@ public class LaunchViewModel: ObservableObject {
 
     // MARK: Init
 
-    public init(entityService: EntityService) {
+    public init(entityService: EntityService, dashboardService: DashboardService) {
         self.entityService = entityService
+        self.dashboardService = dashboardService
     }
 }
 
@@ -40,6 +42,8 @@ extension LaunchViewModel {
     func startConfiguration() async {
         do {
             try await entityService.trackEntities()
+            try await dashboardService.trackDashboards()
+
             await MainActor.run { [self] in
                 state = .finished
                 launchFinished?()
