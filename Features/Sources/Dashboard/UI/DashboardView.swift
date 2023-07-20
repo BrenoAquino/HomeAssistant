@@ -27,9 +27,9 @@ public struct DashboardView: View {
                 .padding(.top, space: .smallS)
 
             DashboardsCarouselView(
-                dashboards: viewModel.dashboards,
-                selectedIndex: viewModel.selectedIndex,
-                dashboardDidSelect: viewModel.selectDashboard,
+                editMode: $viewModel.editModel,
+                dashboards: $viewModel.dashboards,
+                selectedDashboard: $viewModel.selectedDashboard,
                 dashboardDidRemove: viewModel.removeDashboard,
                 addDidSelect: viewModel.didSelectAdd
             )

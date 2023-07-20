@@ -8,6 +8,7 @@
 import Common
 import DesignSystem
 import SwiftUI
+import UniformTypeIdentifiers
 
 private enum Constants {
 
@@ -19,44 +20,25 @@ private enum Constants {
     static let removeIconWidth: CGFloat = removeIconHeight
 }
 
-struct DashboardsCarouselView: View {
+struct DashboardsCarouselView<Model: DashboardUI>: View {
 
-    let dashboards: [any DashboardUI]
-    let selectedIndex: Int
-    let dashboardDidSelect: (_ dashboard: any DashboardUI, _ index: Int) -> Void
-    let dashboardDidRemove: (_ dashboard: any DashboardUI, _ index: Int) -> Void
+    @Binding var editMode: Bool
+    @Binding var dashboards: [Model]
+    @Binding var selectedDashboard: String
+
+    let dashboardDidRemove: (_ dashboard: Model) -> Void
     let addDidSelect: () -> Void
 
-    @State private var editMode: Bool = false
+    // MARK: Private States
+
+    @State private var draggedItem: Model?
+
+    // MARK: View
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: .smallL) {
-                ForEach(Array(dashboards.enumerated()), id: \.element.name) { offset, dashboard in
-                    let shakeAnimation = Animation.easeInOut(duration: 0.15).repeatForever(autoreverses: true)
-                    let isSelected = offset == selectedIndex
-
-                    squareElement(dashboard.name, dashboard.icon, isSelected)
-                        .overlay(
-                            GeometryReader { _ in
-                                SystemImages.remove
-                                    .imageScale(.large)
-                                    .frame(width: Constants.removeIconWidth, height: Constants.removeIconHeight)
-                                    .offset(x: -Constants.removeIconWidth / 3, y: -Constants.removeIconHeight / 3)
-                                    .opacity(editMode ? 1 : 0)
-                                    .animation(.default, value: editMode)
-                                    .onTapGesture {
-                                        dashboardDidRemove(dashboard, offset)
-                                    }
-                            }
-                        )
-                        .rotationEffect(.degrees(editMode ? Constants.shakeAnimationAngle : .zero))
-                        .animation(editMode ? shakeAnimation : .default, value: editMode)
-                        .onTapGesture { dashboardDidSelect(dashboard, offset) }
-                        .onLongPressGesture(minimumDuration: 0.5) {
-                            editMode = !editMode
-                        }
-                }
+                carousel
                 squareElement("", "plus.circle", false)
                     .onTapGesture(perform: addDidSelect)
             }
@@ -65,7 +47,47 @@ struct DashboardsCarouselView: View {
         }
     }
 
-    @ViewBuilder func squareElement(
+    private var carousel: some View {
+        ForEach(dashboards, id: \.name) { dashboard in
+            let shakeAnimation = Animation.easeInOut(duration: 0.15).repeatForever(autoreverses: true)
+            let isSelected = dashboard.name == selectedDashboard
+            let squareElementView = squareElement(dashboard.name, dashboard.icon, isSelected)
+
+            squareElementView
+                .overlay(removeIcon(dashboard))
+                .rotationEffect(.degrees(editMode ? Constants.shakeAnimationAngle : .zero))
+                .animation(editMode ? shakeAnimation : .default, value: editMode)
+                .onTapGesture {
+                    selectedDashboard = dashboard.name
+                }
+                .onDrop(of: [UTType.text], delegate: DashboardDropDelegate(
+                    dashboard: dashboard,
+                    dashboards: $dashboards,
+                    draggedItem: $draggedItem
+                ))
+                .onDrag {
+                    editMode = true
+                    draggedItem = dashboard
+                    return NSItemProvider(item: nil, typeIdentifier: dashboard.name)
+                } preview: { squareElementView }
+        }
+    }
+
+    private func removeIcon(_ dashboard: Model) -> some View {
+        GeometryReader { _ in
+            SystemImages.remove
+                .imageScale(.large)
+                .frame(width: Constants.removeIconWidth, height: Constants.removeIconHeight)
+                .offset(x: -Constants.removeIconWidth / 3, y: -Constants.removeIconHeight / 3)
+                .opacity(editMode ? 1 : 0)
+                .animation(.default, value: editMode)
+                .onTapGesture {
+                    dashboardDidRemove(dashboard)
+                }
+        }
+    }
+
+    func squareElement(
         _ title: String,
         _ icon: String,
         _ isSelected: Bool
@@ -89,6 +111,30 @@ struct DashboardsCarouselView: View {
                 .font(.subheadline)
         }
     }
+
+    private struct DashboardDropDelegate<Model: DashboardUI>: DropDelegate {
+
+        let dashboard: Model
+        @Binding var dashboards: [Model]
+        @Binding var draggedItem: Model?
+
+        func performDrop(info: DropInfo) -> Bool {
+            return true
+        }
+
+        func dropEntered(info: DropInfo) {
+            guard
+                let draggedItem,
+                draggedItem.name != dashboard.name,
+                let from = dashboards.firstIndex(where: { $0.name == draggedItem.name }),
+                let to = dashboards.firstIndex(where: { $0.name == dashboard.name })
+            else { return }
+
+            withAnimation {
+                dashboards.move(fromOffsets: IndexSet(integer: from), toOffset: to > from ? to + 1 : to)
+            }
+        }
+    }
 }
 
 #if DEBUG
@@ -103,16 +149,16 @@ struct DashboardsCarouselView_Preview: PreviewProvider {
 
     static var previews: some View {
         DashboardsCarouselView(
-            dashboards: [
+            editMode: .constant(true),
+            dashboards: .constant([
                 DashboardMock(name: "Bedroom", icon: "bed.double"),
                 DashboardMock(name: "Living Room", icon: "sofa"),
                 DashboardMock(name: "Kitchen", icon: "refrigerator"),
                 DashboardMock(name: "Garden", icon: "tree"),
                 DashboardMock(name: "Security", icon: "light.beacon.max"),
-            ],
-            selectedIndex: 0,
-            dashboardDidSelect: { _, _ in print("dashboardDidSelect") },
-            dashboardDidRemove: { _, _ in print("dashboardDidRemove") },
+            ]),
+            selectedDashboard: .constant("Bedroom"),
+            dashboardDidRemove: { _ in print("dashboardDidRemove") },
             addDidSelect: { print("addDidSelect") }
         )
     }
