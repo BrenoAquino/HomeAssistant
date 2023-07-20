@@ -61,11 +61,13 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
             let shakeAnimation = Animation.easeInOut(duration: 0.15).repeatForever(autoreverses: true)
             let isSelected = dashboard.name == selectedDashboard
             let squareElementView = squareElement(dashboard.name, dashboard.icon, isSelected)
+            let isDragging = dashboard.name == draggedItem?.name
 
             squareElementView
                 .overlay(removeIcon(dashboard))
                 .rotationEffect(.degrees(editMode ? Constants.shakeAnimationAngle : .zero))
                 .animation(editMode ? shakeAnimation : .default, value: editMode)
+                .opacity(isDragging ? .leastNonzeroMagnitude : 1)
                 .onTapGesture {
                     if editMode {
                         dashboardDidEdit(dashboard)
@@ -133,6 +135,7 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
         @Binding var draggedItem: Model?
 
         func performDrop(info: DropInfo) -> Bool {
+            draggedItem = nil
             return true
         }
 

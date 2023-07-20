@@ -19,7 +19,7 @@ let package = Package(
     targets: [
         .target(
             name: "DesignSystem",
-            dependencies: ["Common"]),
+            dependencies: ["Common", "Domain"]),
         .target(
             name: "Launch",
             dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
