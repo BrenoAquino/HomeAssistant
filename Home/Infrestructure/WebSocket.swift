@@ -137,6 +137,7 @@ extension WebSocket: URLSessionWebSocketDelegate {
         webSocketTask: URLSessionWebSocketTask,
         didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?
     ) async {
+        isAuthenticated = false
         Logger.log(level: .info, "Disconnected")
     }
 }
