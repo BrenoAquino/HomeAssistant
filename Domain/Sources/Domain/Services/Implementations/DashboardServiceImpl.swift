@@ -21,19 +21,6 @@ public class DashboardServiceImpl {
     public init(entityService: EntityService, dashboardRepository: DashboardRepository) {
         self.entityService = entityService
         self.dashboardRepository = dashboardRepository
-        loadDashboards()
-    }
-
-    private func loadDashboards() {
-        Task {
-            let fetchedDashboards = try? await self.dashboardRepository.fetchDashboards()
-            allDashboards = []
-
-            for dashboard in fetchedDashboards ?? [] {
-                dashboard.entities = dashboard.entitiesIDs.compactMap { entityService.entities.value.all[$0] }
-                allDashboards.append(dashboard)
-            }
-        }
     }
 }
 
@@ -41,7 +28,17 @@ public class DashboardServiceImpl {
 
 extension DashboardServiceImpl: DashboardService {
 
-    public func persist() async throws{
+    public func trackDashboards() async throws {
+        let fetchedDashboards = try? await dashboardRepository.fetchDashboards()
+        allDashboards = []
+
+        for dashboard in fetchedDashboards ?? [] {
+            dashboard.entities = dashboard.entitiesIDs.compactMap { entityService.entities.value.all[$0] }
+            allDashboards.append(dashboard)
+        }
+    }
+
+    public func persist() async throws {
         try await dashboardRepository.save(dashboard: dashboards.value)
     }
 

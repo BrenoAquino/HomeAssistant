@@ -15,7 +15,7 @@ public class Dashboard {
 
     internal var entitiesIDs: [String]
 
-    public init(name: String, icon: String, entities: [String] = []) {
+    public init(name: String, icon: String, entities: [String]) {
         self.name = name
         self.icon = icon
         self.entitiesIDs = entities

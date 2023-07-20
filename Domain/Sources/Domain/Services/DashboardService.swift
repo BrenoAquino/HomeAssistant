@@ -17,6 +17,7 @@ public protocol DashboardService {
 
     var dashboards: CurrentValueSubject<[Dashboard], Never> { get }
 
+    func trackDashboards() async throws
     func persist() async throws
 
     func add(dashboard: Dashboard) throws

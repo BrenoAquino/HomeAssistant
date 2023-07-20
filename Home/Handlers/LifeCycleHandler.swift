@@ -28,7 +28,6 @@ class LifeCycleHandler {
 extension LifeCycleHandler {
 
     func appStateDidChange(_ state: AppState) {
-        print(state)
         guard state == .background || state == .terminate else { return }
         let semaphore = DispatchSemaphore(value: 0)
         Task {

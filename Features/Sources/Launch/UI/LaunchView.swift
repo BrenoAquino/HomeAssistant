@@ -34,7 +34,10 @@ import Preview
 struct LaunchView_Preview: PreviewProvider {
 
     static var previews: some View {
-        LaunchView(viewModel: .init(entityService: EntityServiceMock()))
+        LaunchView(viewModel: .init(
+            entityService: EntityServiceMock(),
+            dashboardService: DashboardServiceMock()
+        ))
     }
 }
 #endif
