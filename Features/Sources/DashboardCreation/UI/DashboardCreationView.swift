@@ -47,7 +47,9 @@ public struct DashboardCreationView: View {
 
     private var title: some View {
         HStack(alignment: .top, spacing: .smallL) {
-            Localizable.dashboardCreation.text
+            let title = viewModel.mode == .creation ? Localizable.dashboardCreation : Localizable.dashboardEdit
+
+            title.text
                 .foregroundColor(SystemColor.label)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.largeTitle)
@@ -167,7 +169,8 @@ struct DashboardCreationView_Preview: PreviewProvider {
         DashboardCreationView(
             viewModel: .init(
                 dashboardService: DashboardServiceMock(),
-                entitiesService: EntityServiceMock()
+                entitiesService: EntityServiceMock(),
+                mode: .creation
             )
         )
     }

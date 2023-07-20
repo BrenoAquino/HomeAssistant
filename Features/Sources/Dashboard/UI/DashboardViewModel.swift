@@ -14,6 +14,7 @@ public class DashboardViewModel: ObservableObject {
 
     private var cancellable: Set<AnyCancellable> = .init()
     public var didSelectAddDashboard: (() -> Void)?
+    public var didSelectEditDashboard: ((_ dashboard: Dashboard) -> Void)?
 
     // MARK: Publishers
 
@@ -59,5 +60,10 @@ extension DashboardViewModel {
 
     func didSelectAdd() {
         didSelectAddDashboard?()
+    }
+
+    func didSelectEdit(_ dashboard: any DashboardUI) {
+        guard let dashboard = dashboards.first(where: { $0.name == dashboard.name }) else { return }
+        didSelectEditDashboard?(dashboard)
     }
 }

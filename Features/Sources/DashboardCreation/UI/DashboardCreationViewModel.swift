@@ -10,10 +10,16 @@ import Common
 import Domain
 import Foundation
 
+public enum DashboardCreationMode: Equatable {
+    case creation
+    case edit(_ dashboard: Dashboard)
+}
+
 public class DashboardCreationViewModel: ObservableObject {
 
     private var cancellable: Set<AnyCancellable> = []
     private var allEntities: Entities = .init()
+    let mode: DashboardCreationMode
 
     // MARK: External Actions
 
@@ -45,10 +51,12 @@ public class DashboardCreationViewModel: ObservableObject {
 
     // MARK: Init
 
-    public init(dashboardService: DashboardService, entitiesService: EntityService) {
+    public init(dashboardService: DashboardService, entitiesService: EntityService, mode: DashboardCreationMode) {
         self.dashboardService = dashboardService
         self.entitiesService = entitiesService
+        self.mode = mode
 
+        setupData(mode)
         setupObservers()
     }
 }
@@ -56,6 +64,14 @@ public class DashboardCreationViewModel: ObservableObject {
 // MARK: - Private Methods
 
 extension DashboardCreationViewModel {
+
+    private func setupData(_ mode: DashboardCreationMode) {
+        guard case .edit(let dashboard) = mode else { return }
+
+        dashboardName = dashboard.name
+        selectedIconIndex = icons.firstIndex(where: { $0.name == dashboard.icon }) ?? .zero
+        selectedEntitiesIDs = Set(dashboard.entities.map { $0.id })
+    }
 
     private func setupObservers() {
         entitiesService

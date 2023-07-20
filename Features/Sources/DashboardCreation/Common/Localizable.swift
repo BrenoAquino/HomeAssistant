@@ -11,6 +11,7 @@ import SwiftUI
 enum Localizable: String, CommonLocalizable {
 
     case dashboardCreation = "dashboard_creation"
+    case dashboardEdit = "dashboard_edit"
     case dashboardDescription = "dashboard_description"
     case name
     case nameHint = "name_hint"

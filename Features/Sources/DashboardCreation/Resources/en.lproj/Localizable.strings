@@ -7,6 +7,7 @@
 */
 
 "dashboard_creation" = "Dashboard Creation";
+"dashboard_edit" = "Dashboard Edit";
 "dashboard_description" = "A dashboard is the grouping of devices and the must be unique";
 "name" = "Name";
 "name_hint" = "The dashboard's name must be unique";
