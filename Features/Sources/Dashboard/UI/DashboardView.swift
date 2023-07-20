@@ -36,6 +36,19 @@ public struct DashboardView: View {
             .padding(.top, space: .smallS)
         }
         .navigationTitle(Localizable.hiThere.value)
+        .toolbar {
+            if viewModel.editModel {
+                doneButton
+            }
+        }
+    }
+
+    private var doneButton: some View {
+        Button {
+            viewModel.editModel = false
+        } label: {
+            Localizable.done.text
+        }
     }
 }
 
