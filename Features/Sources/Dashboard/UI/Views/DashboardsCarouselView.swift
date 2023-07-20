@@ -79,6 +79,7 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
                     draggedItem: $draggedItem
                 ))
                 .onDrag {
+                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                     editMode = true
                     draggedItem = dashboard
                     return NSItemProvider(item: nil, typeIdentifier: dashboard.name)

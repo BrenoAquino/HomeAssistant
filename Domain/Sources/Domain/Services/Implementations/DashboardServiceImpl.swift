@@ -50,8 +50,14 @@ extension DashboardServiceImpl: DashboardService {
     }
 
     public func update(dashboardName: String, dashboard: Dashboard) throws {
+        guard let index = allDashboards.firstIndex(where: { $0.name == dashboardName }) else {
+            throw DashboardServiceError.dashboardDoesNotExist
+        }
         delete(dashboardName: dashboardName)
-        try add(dashboard: dashboard)
+        guard allDashboards.first(where: { $0.name == dashboard.name }) == nil else {
+            throw DashboardServiceError.dashboardAlreadyExists
+        }
+        allDashboards.insert(dashboard, at: index)
     }
 
     public func delete(dashboardName: String) {
