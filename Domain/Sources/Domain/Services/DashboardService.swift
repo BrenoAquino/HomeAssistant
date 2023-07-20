@@ -22,4 +22,5 @@ public protocol DashboardService {
     func add(dashboard: Dashboard) throws
     func update(dashboardName: String, dashboard: Dashboard) throws
     func delete(dashboardName: String)
+    func updateAll(dashboards: [Dashboard])
 }

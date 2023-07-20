@@ -13,6 +13,8 @@ import Foundation
 public class DashboardViewModel: ObservableObject {
 
     private var cancellable: Set<AnyCancellable> = .init()
+    private var dashboardUpdateCancellable: AnyCancellable?
+
     public var didSelectAddDashboard: (() -> Void)?
     public var didSelectEditDashboard: ((_ dashboard: Dashboard) -> Void)?
 
@@ -42,11 +44,29 @@ extension DashboardViewModel {
     private func setupObservers() {
         dashboardService
             .dashboards
+            .filter { [weak self] incomingDashboards in
+                guard let self else { return false }
+                return incomingDashboards.map { $0.name } != self.dashboards.map { $0.name }
+            }
             .sink { [weak self] in
                 self?.dashboards = $0
-                self?.selectedDashboard = $0.first?.name ?? ""
+                self?.setupDashboardsUpdate()
             }
             .store(in: &cancellable)
+    }
+
+    private func setupDashboardsUpdate() {
+        guard dashboardUpdateCancellable == nil else { return }
+
+        selectedDashboard = dashboards.first?.name ?? ""
+        dashboardUpdateCancellable = $dashboards
+            .filter { [weak self] incomingDashboards in
+                guard let self else { return false }
+                return incomingDashboards.map { $0.name } != self.dashboardService.dashboards.value.map { $0.name }
+            }
+            .sink { [weak self] in
+                self?.dashboardService.updateAll(dashboards: $0)
+            }
     }
 }
 

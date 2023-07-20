@@ -39,6 +39,10 @@ public class DashboardServiceMock: Domain.DashboardService {
         all.removeAll(where: { $0.name == dashboardName })
         dashboards.send(all)
     }
+
+    public func updateAll(dashboards: [Domain.Dashboard]) {
+        
+    }
 }
 
 #endif
