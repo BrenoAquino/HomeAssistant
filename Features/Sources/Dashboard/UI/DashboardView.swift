@@ -30,6 +30,7 @@ public struct DashboardView: View {
                 editMode: $viewModel.editModel,
                 dashboards: $viewModel.dashboards,
                 selectedDashboard: $viewModel.selectedDashboard,
+                dashboardDidEdit: viewModel.didSelectEdit,
                 dashboardDidRemove: viewModel.removeDashboard,
                 addDidSelect: viewModel.didSelectAdd
             )

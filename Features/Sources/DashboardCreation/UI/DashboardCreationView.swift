@@ -47,7 +47,9 @@ public struct DashboardCreationView: View {
 
     private var title: some View {
         HStack(alignment: .top, spacing: .smallL) {
-            Localizable.dashboardCreation.text
+            let title = viewModel.mode == .creation ? Localizable.dashboardCreation : Localizable.dashboardEdit
+
+            title.text
                 .foregroundColor(SystemColor.label)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.largeTitle)
@@ -147,8 +149,12 @@ public struct DashboardCreationView: View {
     }
 
     private var createButton: some View {
-        Button(action: viewModel.createDashboard) {
-            Localizable.create.text
+        Button(action: viewModel.createOrUpdateDashboard) {
+            if viewModel.mode == .creation {
+                Localizable.create.text
+            } else {
+                Localizable.update.text
+            }
         }
         .buttonStyle(DefaultButtonStyle(
             foregroundColor: SystemColor.background,
@@ -167,7 +173,8 @@ struct DashboardCreationView_Preview: PreviewProvider {
         DashboardCreationView(
             viewModel: .init(
                 dashboardService: DashboardServiceMock(),
-                entitiesService: EntityServiceMock()
+                entitiesService: EntityServiceMock(),
+                mode: .creation
             )
         )
     }

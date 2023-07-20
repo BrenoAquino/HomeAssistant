@@ -29,16 +29,20 @@ public class DashboardServiceMock: Domain.DashboardService {
         dashboards.send(all)
     }
 
+    public func update(dashboardName: String, dashboard: Dashboard) throws {
+        let all = dashboards.value.appended(dashboard)
+        dashboards.send(all)
+    }
+
     public func delete(dashboardName: String) {
         var all = dashboards.value
         all.removeAll(where: { $0.name == dashboardName })
         dashboards.send(all)
     }
 
-    public func addEntity(_ entity: Entity, dashboardName: String) {}
-    public func addEntities(_ entities: [Entity], dashboardName: String) {}
-    public func removeEntity(_ entityID: String, dashboardName: String) {}
-    public func removeEntities(_ entityIDs: [String], dashboardName: String) {}
+    public func updateAll(dashboards: [Domain.Dashboard]) {
+        
+    }
 }
 
 #endif

@@ -26,10 +26,11 @@ class ViewModelFactory {
         DashboardViewModel(dashboardService: servicesFactory.dashboard())
     }
 
-    func dashboardCreation() -> DashboardCreationViewModel {
+    func dashboardCreation(mode: DashboardCreationMode) -> DashboardCreationViewModel {
         DashboardCreationViewModel(
             dashboardService: servicesFactory.dashboard(),
-            entitiesService: servicesFactory.entity()
+            entitiesService: servicesFactory.entity(),
+            mode: mode
         )
     }
 }

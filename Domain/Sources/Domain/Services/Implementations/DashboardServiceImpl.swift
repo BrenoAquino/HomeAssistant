@@ -11,8 +11,8 @@ import Foundation
 public class DashboardServiceImpl {
 
     public let dashboards: CurrentValueSubject<[Dashboard], Never> = .init([])
-    public private(set) var dictDashboards: [String : Dashboard] = [:] {
-        didSet { dashboards.send(Array(dictDashboards.values)) }
+    public private(set) var allDashboards: [Dashboard] = [] {
+        didSet { dashboards.send(allDashboards) }
     }
 
     private let entityService: EntityService
@@ -26,10 +26,12 @@ public class DashboardServiceImpl {
 
     private func loadDashboards() {
         Task {
-            let allDashboards = try? await self.dashboardRepository.fetchDashboards()
-            for dashboard in allDashboards ?? [] {
+            let fetchedDashboards = try? await self.dashboardRepository.fetchDashboards()
+            allDashboards = []
+
+            for dashboard in fetchedDashboards ?? [] {
                 dashboard.entities = dashboard.entitiesIDs.compactMap { entityService.entities.value.all[$0] }
-                dictDashboards[dashboard.name] = dashboard
+                allDashboards.append(dashboard)
             }
         }
     }
@@ -44,29 +46,22 @@ extension DashboardServiceImpl: DashboardService {
     }
 
     public func add(dashboard: Dashboard) throws {
-        guard !dictDashboards.keys.contains(dashboard.name) else {
+        guard allDashboards.first(where: { $0.name == dashboard.name }) == nil else {
             throw DashboardServiceError.dashboardAlreadyExists
         }
-        dictDashboards[dashboard.name] = dashboard
+        allDashboards.append(dashboard)
+    }
+
+    public func update(dashboardName: String, dashboard: Dashboard) throws {
+        delete(dashboardName: dashboardName)
+        try add(dashboard: dashboard)
     }
 
     public func delete(dashboardName: String) {
-        dictDashboards[dashboardName] = nil
+        allDashboards.removeAll(where: { $0.name == dashboardName })
     }
 
-    public func addEntity(_ entity: Entity, dashboardName: String) {
-        dictDashboards[dashboardName]?.entities.append(entity)
-    }
-
-    public func addEntities(_ entities: [Entity], dashboardName: String) {
-        dictDashboards[dashboardName]?.entities.append(contentsOf: entities)
-    }
-
-    public func removeEntity(_ entityID: String, dashboardName: String) {
-        dictDashboards[dashboardName]?.entities.removeAll(where: { $0.id == entityID })
-    }
-
-    public func removeEntities(_ entityIDs: [String], dashboardName: String) {
-        dictDashboards[dashboardName]?.entities.removeAll(where: { entityIDs.contains($0.id) })
+    public func updateAll(dashboards: [Dashboard]) {
+        allDashboards = dashboards
     }
 }

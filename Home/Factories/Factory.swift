@@ -149,10 +149,11 @@ extension Factory {
         DashboardViewModel(dashboardService: dashboardService)
     }
 
-    func getDashboardCreationViewModel() -> DashboardCreationViewModel {
+    func getDashboardCreationViewModel(mode: DashboardCreationMode) -> DashboardCreationViewModel {
         DashboardCreationViewModel(
             dashboardService: dashboardService,
-            entitiesService: entityService
+            entitiesService: entityService,
+            mode: mode
         )
     }
 }
@@ -169,7 +170,7 @@ extension Factory {
         DashboardCoordinator(viewModel: getDashboardViewModel())
     }
 
-    func getDashboardCreationCoordinator() -> DashboardCreationCoordinator {
-        DashboardCreationCoordinator(viewModel: getDashboardCreationViewModel())
+    func getDashboardCreationCoordinator(mode: DashboardCreationMode) -> DashboardCreationCoordinator {
+        DashboardCreationCoordinator(viewModel: getDashboardCreationViewModel(mode: mode))
     }
 }

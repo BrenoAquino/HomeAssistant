@@ -26,6 +26,7 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
     @Binding var dashboards: [Model]
     @Binding var selectedDashboard: String
 
+    let dashboardDidEdit: (_ dashboard: Model) -> Void
     let dashboardDidRemove: (_ dashboard: Model) -> Void
     let addDidSelect: () -> Void
 
@@ -66,7 +67,11 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
                 .rotationEffect(.degrees(editMode ? Constants.shakeAnimationAngle : .zero))
                 .animation(editMode ? shakeAnimation : .default, value: editMode)
                 .onTapGesture {
-                    selectedDashboard = dashboard.name
+                    if editMode {
+                        dashboardDidEdit(dashboard)
+                    } else {
+                        selectedDashboard = dashboard.name
+                    }
                 }
                 .onDrop(of: [UTType.text], delegate: DashboardDropDelegate(
                     dashboard: dashboard,
@@ -166,6 +171,7 @@ struct DashboardsCarouselView_Preview: PreviewProvider {
                 DashboardMock(name: "Security", icon: "light.beacon.max"),
             ]),
             selectedDashboard: .constant("Bedroom"),
+            dashboardDidEdit: { _ in print("dashboardDidEdit") },
             dashboardDidRemove: { _ in print("dashboardDidRemove") },
             addDidSelect: { print("addDidSelect") }
         )
