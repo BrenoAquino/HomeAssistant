@@ -5,6 +5,7 @@
 //  Created by Breno Aquino on 17/07/23.
 //
 
+import Common
 import DesignSystem
 import SwiftUI
 
@@ -26,14 +27,28 @@ public struct DashboardView: View {
                 .padding(.top, space: .smallS)
 
             DashboardsCarouselView(
-                dashboards: viewModel.dashboards,
-                selectedIndex: viewModel.selectedIndex,
-                dashboardDidSelect: viewModel.selectDashboard,
+                editMode: $viewModel.editModel,
+                dashboards: $viewModel.dashboards,
+                selectedDashboard: $viewModel.selectedDashboard,
+                dashboardDidRemove: viewModel.removeDashboard,
                 addDidSelect: viewModel.didSelectAdd
             )
-            .padding(.top, space: .smallM)
+            .padding(.top, space: .smallS)
         }
         .navigationTitle(Localizable.hiThere.value)
+        .toolbar {
+            if viewModel.editModel {
+                doneButton
+            }
+        }
+    }
+
+    private var doneButton: some View {
+        Button {
+            viewModel.editModel = false
+        } label: {
+            Localizable.done.text
+        }
     }
 }
 

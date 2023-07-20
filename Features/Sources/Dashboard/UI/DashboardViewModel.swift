@@ -5,6 +5,7 @@
 //  Created by Breno Aquino on 17/07/23.
 //
 
+import Preview
 import Combine
 import Domain
 import Foundation
@@ -16,8 +17,9 @@ public class DashboardViewModel: ObservableObject {
 
     // MARK: Publishers
 
-    @Published private(set) var dashboards: [Dashboard] = []
-    @Published private(set) var selectedIndex: Int = 0
+    @Published var editModel: Bool = false
+    @Published var dashboards: [Dashboard] = []
+    @Published var selectedDashboard: String = ""
 
     // MARK: Services
 
@@ -39,7 +41,10 @@ extension DashboardViewModel {
     private func setupObservers() {
         dashboardService
             .dashboards
-            .sink { [weak self] in self?.dashboards = $0 }
+            .sink { [weak self] in
+                self?.dashboards = $0
+                self?.selectedDashboard = $0.first?.name ?? ""
+            }
             .store(in: &cancellable)
     }
 }
@@ -48,9 +53,8 @@ extension DashboardViewModel {
 
 extension DashboardViewModel {
 
-    func selectDashboard(_ dashboard: any DashboardUI, index: Int) {
-        guard index < dashboards.count && index >= 0 else { return }
-        selectedIndex = index
+    func removeDashboard(_ dashboard: any DashboardUI) {
+        dashboardService.delete(dashboardName: dashboard.name)
     }
 
     func didSelectAdd() {

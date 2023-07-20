@@ -12,6 +12,7 @@ enum Localizable: String, CommonLocalizable {
 
     case hiThere = "hi_there"
     case welcome
+    case done
 }
 
 extension Localizable {

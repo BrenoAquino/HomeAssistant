@@ -9,23 +9,18 @@ import SwiftUI
 
 class Coordinator: ObservableObject {
 
+    private let factory: Factory = .init()
+
+    // MARK: Handlers
+
+    private(set) lazy var lifeCycleHandler = LifeCycleHandler(dashboardsService: factory.getDashboardService())
+
+    // MARK: Publishers
+
     @Published var root = Screen.launch
     @Published var path = NavigationPath()
     @Published var sheet: Screen?
     @Published var fullScreenCover: Screen?
-
-    private lazy var webSocket = try! WebSocket(url: Environment.homeAssistantURL, token: Environment.authToken)
-    private lazy var database = UserDefaultsDatabaseProvider()
-
-    private lazy var localDataSourceFactory = LocalDataSourceFactory(databaseProvider: database)
-    private lazy var remoteDataSourceFactory = RemoteDataSourceFactory(webSocketProvider: webSocket)
-    private lazy var repositoryFactory = RepositoryFactory(
-        localDataSourceFactory: localDataSourceFactory,
-        remoteDataSourceFactory: remoteDataSourceFactory
-    )
-    private lazy var servicesFactory = ServicesFactory(repositoryFactory: repositoryFactory)
-    private lazy var viewModelFactory = ViewModelFactory(servicesFactory: servicesFactory)
-    private lazy var coordinatorFactory = CoordinatorFactory(viewModelFactory: viewModelFactory)
 }
 
 // MARK: Present
@@ -69,21 +64,21 @@ extension Coordinator {
 
     @ViewBuilder
     func rootView() -> some View {
-        root.viewCoordinator(coordinatorFactory)
+        root.viewCoordinator(factory)
     }
 
     @ViewBuilder
     func build(screen: Screen) -> some View {
-        screen.viewCoordinator(coordinatorFactory)
+        screen.viewCoordinator(factory)
     }
 
     @ViewBuilder
     func build(sheet: Screen) -> some View {
-        sheet.viewCoordinator(coordinatorFactory)
+        sheet.viewCoordinator(factory)
     }
 
     @ViewBuilder
     func build(fullScreenCover: Screen) -> some View {
-        fullScreenCover.viewCoordinator(coordinatorFactory)
+        fullScreenCover.viewCoordinator(factory)
     }
 }

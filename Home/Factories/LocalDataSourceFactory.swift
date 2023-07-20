@@ -12,8 +12,8 @@ class LocalDataSourceFactory {
 
     private let dashboardLocalDateSource: DashboardLocalDataSource
 
-    init(databaseProvider: DatabaseProvider) {
-        dashboardLocalDateSource = DashboardLocalDataSourceImpl(databaseProvider: databaseProvider)
+    init(infrastructureFactory: InfrastructureFactory) {
+        dashboardLocalDateSource = DashboardLocalDataSourceImpl(databaseProvider: infrastructureFactory.database())
     }
 
     func dashboard() -> DashboardLocalDataSource {

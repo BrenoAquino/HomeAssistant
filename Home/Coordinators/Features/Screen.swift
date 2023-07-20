@@ -17,14 +17,14 @@ enum Screen: String, Identifiable {
 
 extension Screen {
 
-    @ViewBuilder func viewCoordinator(_ factory: CoordinatorFactory) -> some View {
+    @ViewBuilder func viewCoordinator(_ factory: Factory) -> some View {
         switch self {
         case .launch:
-            factory.launch()
+            factory.getLaunchCoordinator()
         case .dashboard:
-            factory.dashboard()
+            factory.getDashboardCoordinator()
         case .dashboardCreation:
-            factory.dashboardCreation()
+            factory.getDashboardCreationCoordinator()
         }
     }
 }
