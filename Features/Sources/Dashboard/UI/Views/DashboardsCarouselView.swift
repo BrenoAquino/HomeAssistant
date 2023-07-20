@@ -39,12 +39,20 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: .smallL) {
                 carousel
-                squareElement("", "plus.circle", false)
-                    .onTapGesture(perform: addDidSelect)
+                add
             }
             .padding(.horizontal, space: .smallL)
             .padding(.vertical, space: .normal)
         }
+    }
+
+    private var add: some View {
+        squareElement("", "plus.circle", false)
+            .onTapGesture {
+                if !editMode {
+                    addDidSelect()
+                }
+            }
     }
 
     private var carousel: some View {
