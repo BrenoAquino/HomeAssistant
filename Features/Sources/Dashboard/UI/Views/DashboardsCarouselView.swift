@@ -33,6 +33,7 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
     // MARK: Private States
 
     @State private var draggedItem: Model?
+    @State private var isDragging: Bool = false
 
     // MARK: View
 
@@ -61,13 +62,14 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
             let shakeAnimation = Animation.easeInOut(duration: 0.15).repeatForever(autoreverses: true)
             let isSelected = dashboard.name == selectedDashboard
             let squareElementView = squareElement(dashboard.name, dashboard.icon, isSelected)
-            let isDragging = dashboard.name == draggedItem?.name
+            let isCurrentElementDragging = draggedItem?.name == dashboard.name
+            let shouldHide = isDragging && isCurrentElementDragging
 
             squareElementView
                 .overlay(removeIcon(dashboard))
                 .rotationEffect(.degrees(editMode ? Constants.shakeAnimationAngle : .zero))
                 .animation(editMode ? shakeAnimation : .default, value: editMode)
-                .opacity(isDragging ? .leastNonzeroMagnitude : 1)
+                .opacity(shouldHide ? .leastNonzeroMagnitude : 1)
                 .onTapGesture {
                     if editMode {
                         dashboardDidEdit(dashboard)
@@ -75,10 +77,11 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
                         selectedDashboard = dashboard.name
                     }
                 }
-                .onDrop(of: [UTType.text], delegate: DashboardDropDelegate(
+                .onDrop(of: [.text], delegate: DashboardDropDelegate(
                     dashboard: dashboard,
                     dashboards: $dashboards,
-                    draggedItem: $draggedItem
+                    draggedItem: $draggedItem,
+                    isDragging: $isDragging
                 ))
                 .onDrag {
                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
@@ -133,13 +136,16 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
         let dashboard: Model
         @Binding var dashboards: [Model]
         @Binding var draggedItem: Model?
+        @Binding var isDragging: Bool
 
         func performDrop(info: DropInfo) -> Bool {
+            isDragging = false
             draggedItem = nil
             return true
         }
 
         func dropEntered(info: DropInfo) {
+            isDragging = true
             guard
                 let draggedItem,
                 draggedItem.name != dashboard.name,
