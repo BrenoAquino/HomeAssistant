@@ -24,7 +24,7 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
 
     @Binding var editMode: Bool
     @Binding var dashboards: [Model]
-    @Binding var selectedDashboard: String
+    @Binding var selectedDashboard: Model?
 
     let dashboardDidEdit: (_ dashboard: Model) -> Void
     let dashboardDidRemove: (_ dashboard: Model) -> Void
@@ -60,7 +60,7 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
     private var carousel: some View {
         ForEach(dashboards, id: \.name) { dashboard in
             let shakeAnimation = Animation.easeInOut(duration: 0.15).repeatForever(autoreverses: true)
-            let isSelected = dashboard.name == selectedDashboard
+            let isSelected = dashboard.name == selectedDashboard?.name
             let squareElementView = squareElement(dashboard.name, dashboard.icon, isSelected)
             let isCurrentElementDragging = draggedItem?.name == dashboard.name
             let shouldHide = isDragging && isCurrentElementDragging
@@ -74,7 +74,7 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
                     if editMode {
                         dashboardDidEdit(dashboard)
                     } else {
-                        selectedDashboard = dashboard.name
+                        selectedDashboard = dashboard
                     }
                 }
                 .onDrop(of: [.text], delegate: DashboardDropDelegate(
@@ -180,7 +180,7 @@ struct DashboardsCarouselView_Preview: PreviewProvider {
                 DashboardMock(name: "Garden", icon: "tree"),
                 DashboardMock(name: "Security", icon: "light.beacon.max"),
             ]),
-            selectedDashboard: .constant("Bedroom"),
+            selectedDashboard: .constant(nil),
             dashboardDidEdit: { _ in print("dashboardDidEdit") },
             dashboardDidRemove: { _ in print("dashboardDidRemove") },
             addDidSelect: { print("addDidSelect") }

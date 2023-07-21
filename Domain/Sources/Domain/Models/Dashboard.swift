@@ -12,8 +12,7 @@ public class Dashboard {
     public var name: String
     public var icon: String
     public var entities: [Entity]
-
-    internal var entitiesIDs: [String]
+    public var entitiesIDs: [String]
 
     public init(name: String, icon: String, entities: [String]) {
         self.name = name

@@ -5,6 +5,7 @@
 //  Created by Breno Aquino on 17/07/23.
 //
 
+import Domain
 import Common
 import DesignSystem
 import SwiftUI
@@ -36,7 +37,17 @@ public struct DashboardView: View {
             )
             .padding(.top, space: .smallS)
 
-            entities
+            Localizable.devices.text
+                .font(.title3)
+                .fontWeight(.semibold)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, space: .smallL)
+
+            VStack {
+                ForEach(viewModel.entities, id: \.id) { entity in
+                    Text(entity.name)
+                }
+            }
         }
         .navigationTitle(Localizable.hiThere.value)
         .toolbar {
@@ -53,20 +64,6 @@ public struct DashboardView: View {
             Localizable.done.text
         }
     }
-
-    private var entities: some View {
-        LightView(entity: $entity)
-            .frame(width: 150, height: 150)
-    }
-
-    struct LightEntityMock: LightEntityUI {
-        let name: String
-        let icon: String = "lamp.ceiling.inverse"
-        var lightState: LightStateUI = .off
-    }
-
-    @State var entity = LightEntityMock(name: "Trilho")
-    @State var isOn = false
 }
 
 #if DEBUG
@@ -76,7 +73,10 @@ struct DashboardView_Preview: PreviewProvider {
 
     static var previews: some View {
         NavigationView {
-            DashboardView(viewModel: .init(dashboardService: DashboardServiceMock()))
+            DashboardView(viewModel: .init(
+                dashboardService: DashboardServiceMock(),
+                entityService: EntityServiceMock()
+            ))
         }
     }
 }

@@ -146,7 +146,7 @@ extension Factory {
     }
 
     func getDashboardViewModel() -> DashboardViewModel {
-        DashboardViewModel(dashboardService: dashboardService)
+        DashboardViewModel(dashboardService: dashboardService, entityService: entityService)
     }
 
     func getDashboardCreationViewModel(mode: DashboardCreationMode) -> DashboardCreationViewModel {

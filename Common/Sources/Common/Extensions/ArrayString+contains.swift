@@ -19,7 +19,7 @@ public extension String {
 
 public extension Array<String> {
 
-    func contains(_ string: String, options: String.CompareOptions) -> Bool {
+    func contains(_ string: String, options: String.CompareOptions = []) -> Bool {
         guard !string.isEmpty else { return true }
         for element in self {
             guard string.count <= element.count else { continue }
