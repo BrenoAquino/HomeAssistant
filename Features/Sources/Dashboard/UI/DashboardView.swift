@@ -35,6 +35,8 @@ public struct DashboardView: View {
                 addDidSelect: viewModel.didSelectAdd
             )
             .padding(.top, space: .smallS)
+
+            entities
         }
         .navigationTitle(Localizable.hiThere.value)
         .toolbar {
@@ -51,6 +53,20 @@ public struct DashboardView: View {
             Localizable.done.text
         }
     }
+
+    private var entities: some View {
+        LightView(entity: $entity)
+            .frame(width: 150, height: 150)
+    }
+
+    struct LightEntityMock: LightEntityUI {
+        let name: String
+        let icon: String = "lamp.ceiling.inverse"
+        var lightState: LightStateUI = .off
+    }
+
+    @State var entity = LightEntityMock(name: "Trilho")
+    @State var isOn = false
 }
 
 #if DEBUG
