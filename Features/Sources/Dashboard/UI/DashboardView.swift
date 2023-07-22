@@ -45,26 +45,8 @@ public struct DashboardView: View {
 
             Text(viewModel.selectedDashboard?.name ?? "nil")
             Text("----")
-            Text(viewModel.selectedDashboard?.entities.map { $0.id }.reduce(
-                into: "",
-                { $0 = $0 + "\($1)"}) ?? "nil"
-            )
+            Text(String(viewModel.entities))
             Text("----")
-            Text(viewModel.entities.map { $0.id }.reduce(
-                into: "",
-                { $0 = $0 + "\($1)"}) ?? "nil"
-            )
-            Text("----")
-
-            VStack {
-                ForEach(viewModel.selectedDashboard?.entities ?? [], id: \.id) { entity in
-                    Text(entity.name)
-                }
-                Text("----")
-                ForEach(viewModel.selectedDashboard!.entities, id: \.id) { entity in
-                    Text(entity.name)
-                }
-            }
         }
         .navigationTitle(Localizable.hiThere.value)
         .toolbar {

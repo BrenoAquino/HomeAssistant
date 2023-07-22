@@ -23,7 +23,7 @@ public class DashboardViewModel: ObservableObject {
     @Published var editModel: Bool = false
     @Published var dashboards: [Dashboard] = []
     @Published var selectedDashboard: Dashboard?
-    @Published private(set) var entities: [any Entity] = []
+    @Published private(set) var entities: Int = .zero
 
     // MARK: Services
 
@@ -60,8 +60,8 @@ extension DashboardViewModel {
         $selectedDashboard
             .compactMap { $0 }
             .sink { [weak self] dashboard in
-                self?.entities = dashboard.entities
-                print("VIEW MODEL count \(self?.entities.count)")
+                self?.entities = dashboard.entitiesIDs.count
+                print("VIEW MODEL count \(self?.entities)")
             }
             .store(in: &cancellable)
     }
