@@ -12,7 +12,6 @@ import Foundation
 
 public class DashboardViewModel: ObservableObject {
 
-    private var allEntities: [Entity] = []
     private var cancellable: Set<AnyCancellable> = .init()
     private var dashboardUpdateCancellable: AnyCancellable?
 
@@ -24,7 +23,8 @@ public class DashboardViewModel: ObservableObject {
     @Published var editModel: Bool = false
     @Published var dashboards: [Dashboard] = []
     @Published var selectedDashboard: Dashboard?
-    @Published var entities: [Entity] = []
+    @Published private(set) var entities: [any Entity] = []
+
     // MARK: Services
 
     private let entityService: EntityService
@@ -57,26 +57,11 @@ extension DashboardViewModel {
             }
             .store(in: &cancellable)
 
-        entityService
-            .entities
-            .sink { [weak self] entities in
-                self?.allEntities = Array(entities.all.values)
-            }
-            .store(in: &cancellable)
-
         $selectedDashboard
             .compactMap { $0 }
             .sink { [weak self] dashboard in
-                self?.entities = self?.allEntities.filter {
-                    dashboard.entitiesIDs.contains($0.id)
-                } ?? []
+                self?.entities = dashboard.entities
                 print("VIEW MODEL count \(self?.entities.count)")
-            }
-            .store(in: &cancellable)
-
-        $entities
-            .sink { entities in
-                print("DEBUG \(entities.map { $0.id })")
             }
             .store(in: &cancellable)
     }

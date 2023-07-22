@@ -10,7 +10,7 @@ import Foundation
 
 extension GenericEntity {
 
-    func toDomain() throws -> Domain.Entity {
+    func toDomain() throws -> any Domain.Entity {
         let domain = try Domain.EntityDomain(id: id)
         let state = try Domain.EntityState(rawValue: state)
         switch domain {
@@ -32,9 +32,9 @@ extension GenericEntity {
             return Domain.FanEntity(
                 id: id,
                 name: attributes.name,
-                state: state,
+                percentageStep: attributes.percentageStep,
                 percentage: attributes.currentPercentage,
-                percentageStep: attributes.percentageStep
+                state: state
             )
 
         case .climate:

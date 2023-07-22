@@ -103,8 +103,7 @@ public struct DashboardCreationView: View {
 
             IconsCarouselView(
                 icons: viewModel.icons,
-                selectedIndex: viewModel.selectedIconIndex,
-                iconDidSelect: viewModel.selectIcon
+                selectedIcon: $viewModel.selectedIcon
             )
 
             VStack(spacing: .smallS) {
@@ -138,12 +137,10 @@ public struct DashboardCreationView: View {
 
             EntitiesListView(
                 entities: viewModel.entities,
-                selectedEntities: viewModel.selectedEntitiesIDs,
                 entitySearchText: $viewModel.entityFilterText,
-                didChangeEntitySelection: viewModel.updateEntitySelection,
+                selectedEntities: $viewModel.selectedEntitiesIDs,
                 domains: viewModel.domains,
-                selectedDomains: viewModel.selectedDomains,
-                didChangeDomainSelection: viewModel.updateDomainSelection
+                selectedDomains: $viewModel.selectedDomainsNames
             )
         }
     }

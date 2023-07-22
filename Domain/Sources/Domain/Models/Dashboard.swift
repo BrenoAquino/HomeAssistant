@@ -7,25 +7,16 @@
 
 import Foundation
 
-public class Dashboard {
+public struct Dashboard {
 
     public var name: String
     public var icon: String
-    public var entities: [Entity]
     public var entitiesIDs: [String]
 
     public init(name: String, icon: String, entities: [String]) {
         self.name = name
         self.icon = icon
         self.entitiesIDs = entities
-        self.entities = []
-    }
-
-    public init(name: String, icon: String, entities: [Entity]) {
-        self.name = name
-        self.icon = icon
-        self.entities = entities
-        self.entitiesIDs = entities.map { $0.id } 
     }
 }
 

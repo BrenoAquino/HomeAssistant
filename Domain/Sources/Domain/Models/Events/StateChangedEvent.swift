@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class StateChangedEvent {
+public struct StateChangedEvent {
 
     public let id: String
     public let domain: EntityDomain

@@ -73,7 +73,7 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
                 .onTapGesture {
                     if editMode {
                         dashboardDidEdit(dashboard)
-                    } else {
+                    } else if selectedDashboard?.name != dashboard.name {
                         selectedDashboard = dashboard
                     }
                 }

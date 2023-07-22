@@ -20,12 +20,12 @@ public struct DashboardView: View {
 
     public var body: some View {
         ScrollView(.vertical) {
-            Localizable.welcome.text
-                .foregroundColor(SystemColor.secondaryLabel)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .font(.callout)
-                .padding(.leading, space: .smallL)
-                .padding(.top, space: .smallS)
+//            Localizable.welcome.text
+//                .foregroundColor(SystemColor.secondaryLabel)
+//                .frame(maxWidth: .infinity, alignment: .leading)
+//                .font(.callout)
+//                .padding(.leading, space: .smallL)
+//                .padding(.top, space: .smallS)
 
             DashboardsCarouselView(
                 editMode: $viewModel.editModel,
@@ -37,14 +37,31 @@ public struct DashboardView: View {
             )
             .padding(.top, space: .smallS)
 
-            Localizable.devices.text
-                .font(.title3)
-                .fontWeight(.semibold)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, space: .smallL)
+//            Localizable.devices.text
+//                .font(.title3)
+//                .fontWeight(.semibold)
+//                .frame(maxWidth: .infinity, alignment: .leading)
+//                .padding(.horizontal, space: .smallL)
+
+            Text(viewModel.selectedDashboard?.name ?? "nil")
+            Text("----")
+            Text(viewModel.selectedDashboard?.entities.map { $0.id }.reduce(
+                into: "",
+                { $0 = $0 + "\($1)"}) ?? "nil"
+            )
+            Text("----")
+            Text(viewModel.entities.map { $0.id }.reduce(
+                into: "",
+                { $0 = $0 + "\($1)"}) ?? "nil"
+            )
+            Text("----")
 
             VStack {
-                ForEach(viewModel.entities, id: \.id) { entity in
+                ForEach(viewModel.selectedDashboard?.entities ?? [], id: \.id) { entity in
+                    Text(entity.name)
+                }
+                Text("----")
+                ForEach(viewModel.selectedDashboard!.entities, id: \.id) { entity in
                     Text(entity.name)
                 }
             }
