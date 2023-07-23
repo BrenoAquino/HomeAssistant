@@ -10,7 +10,10 @@ import Domain
 
 protocol EntityDomainUI {
 
+    var name: String { get }
     var icon: String { get }
 }
 
-extension EntityDomain: EntityDomainUI {}
+extension EntityDomain: EntityDomainUI {
+    var name: String { String(describing: self) }
+}

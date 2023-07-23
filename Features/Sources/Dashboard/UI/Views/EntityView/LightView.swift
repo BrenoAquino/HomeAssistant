@@ -14,7 +14,7 @@ struct LightView: View {
 
     var body: some View {
         content
-            .padding(.vertical, space: .normal)
+            .padding(.vertical, space: .smallL)
             .padding(.horizontal, space: .smallL)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(
@@ -47,14 +47,10 @@ struct LightView: View {
         HStack(spacing: .smallS) {
             Image(systemName: entity.icon)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Spacer()
-            Toggle("", isOn: .init(
-                get: { entity.lightState == .on },
-                set: { entity.lightState = $0 ? .on : .off }
-            ))
-            .labelsHidden()
-            .scaleEffect(0.6)
-            .controlSize(.mini)
+            Text(entity.lightState.rawValue.uppercased())
+                .foregroundColor(SystemColor.secondaryLabel)
+                .font(.subheadline)
+                .padding(.trailing, space: .smallM)
         }
     }
 
@@ -102,12 +98,12 @@ struct LightView_Preview: PreviewProvider {
         HStack(spacing: .bigL) {
             LightView(entity: .init(get: {
                 entityOn
-            }, set: { newValue in }))
+            }, set: { _ in }))
             .frame(width: size, height: size)
 
             LightView(entity: .init(get: {
                 entityOff
-            }, set: { newValue in }))
+            }, set: { _ in }))
             .frame(width: size, height: size)
         }
     }

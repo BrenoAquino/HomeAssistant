@@ -14,6 +14,7 @@ enum Localizable: String, CommonLocalizable {
     case welcome
     case done
     case devices
+    case unsupported
 }
 
 extension Localizable {

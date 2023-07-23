@@ -35,13 +35,10 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                 .fontWeight(.semibold)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, space: .smallL)
-            
-            Text("----")
-            Text(viewModel.currentDashboard?.name ?? "nil")
-            Text(String(describing: viewModel.currentDashboard?.entitiesIDs.count))
-            Text("----")
+                .padding(.top, space: .smallS)
             
             entitiesGrid
+                .padding(.top, space: .smallS)
         }
         .navigationTitle(Localizable.hiThere.value)
         .toolbar {
@@ -68,14 +65,19 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             let columns = [GridItem](repeating: .init(.fixed(size), spacing: space), count: numberOfElementsInRow)
             
             LazyVGrid(columns: columns) {
-                ForEach(viewModel.entities, id: \.id) { entity in
-                    VStack {
-                        Text(entity.name)
-                        Text(String(describing: entity.state))
+                ForEach(Array(viewModel.entities.enumerated()), id: \.element.id) { index, entity in
+                    Group {
+                        switch entity {
+                        case let light as LightEntityUI:
+                            LightView(entity: .init(get: { light }, set: { _ in }))
+                        default:
+                            UnsupportedView(
+                                name: entity.name,
+                                domain: entity.domain.name
+                            )
+                        }
                     }
-                    .padding()
                     .frame(height: size)
-                    .background(Color.red)
                 }
             }
         }
