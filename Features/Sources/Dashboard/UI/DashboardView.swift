@@ -5,36 +5,40 @@
 //  Created by Breno Aquino on 17/07/23.
 //
 
+import Domain
 import Common
 import DesignSystem
 import SwiftUI
 
-public struct DashboardView: View {
+public struct DashboardView<ViewModel: DashboardViewModel>: View {
 
-    @ObservedObject private var viewModel: DashboardViewModel
+    @ObservedObject private var viewModel: ViewModel
 
-    public init(viewModel: DashboardViewModel) {
+    public init(viewModel: ViewModel) {
         self.viewModel = viewModel
     }
 
     public var body: some View {
         ScrollView(.vertical) {
-            Localizable.welcome.text
-                .foregroundColor(SystemColor.secondaryLabel)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .font(.callout)
-                .padding(.leading, space: .smallL)
-                .padding(.top, space: .smallS)
 
             DashboardsCarouselView(
                 editMode: $viewModel.editModel,
                 dashboards: $viewModel.dashboards,
-                selectedDashboard: $viewModel.selectedDashboard,
+                selectedDashboardIndex: $viewModel.selectedDashboardIndex,
                 dashboardDidEdit: viewModel.didSelectEdit,
-                dashboardDidRemove: viewModel.removeDashboard,
                 addDidSelect: viewModel.didSelectAdd
             )
             .padding(.top, space: .smallS)
+
+            Localizable.devices.text
+                .font(.title3)
+                .fontWeight(.semibold)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, space: .smallL)
+
+            Text("----")
+            Text(viewModel.currentDashboard?.name ?? "nil")
+            Text(String(describing: viewModel.currentDashboard?.entitiesIDs.count))
         }
         .navigationTitle(Localizable.hiThere.value)
         .toolbar {
@@ -58,9 +62,22 @@ import Preview
 
 struct DashboardView_Preview: PreviewProvider {
 
+    class FakeViewModel: DashboardViewModel {
+        var didSelectAddDashboard: (() -> Void)?
+        var didSelectEditDashboard: ((Domain.Dashboard) -> Void)?
+
+        var editModel: Bool = false
+        var selectedDashboardIndex: Int?
+        var dashboards: [Dashboard] = []
+        var currentDashboard: Domain.Dashboard?
+
+        func didSelectAdd() {}
+        func didSelectEdit(_ dashboard: Dashboard) {}
+    }
+
     static var previews: some View {
         NavigationView {
-            DashboardView(viewModel: .init(dashboardService: DashboardServiceMock()))
+            DashboardView(viewModel: FakeViewModel())
         }
     }
 }

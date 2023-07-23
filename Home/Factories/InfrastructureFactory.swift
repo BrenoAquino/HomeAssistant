@@ -8,21 +8,8 @@
 import Data
 import Foundation
 
-class InfrastructureFactory {
+protocol InfrastructureFactory {
 
-    private let webSocketProvider: WebSocketProvider
-    private let databaseProvider: DatabaseProvider
-
-    init() {
-        webSocketProvider = try! WebSocket(url: AppEnvironment.homeAssistantURL, token: AppEnvironment.authToken)
-        databaseProvider = UserDefaultsDatabaseProvider()
-    }
-
-    func webSocket() -> WebSocketProvider {
-        webSocketProvider
-    }
-
-    func database() -> DatabaseProvider {
-        databaseProvider
-    }
+    func webSocket() -> WebSocketProvider
+    func database() -> DatabaseProvider 
 }

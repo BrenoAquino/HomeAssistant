@@ -51,12 +51,12 @@ public struct AdaptiveBackgroundColorModifier: ViewModifier {
     }
 }
 
-public extension View {
-    func foregroundColor(color: AdaptiveColor) -> some View {
-        modifier(AdaptiveForegroundColorModifier(color: color))
-    }
-
-    func background(color: AdaptiveColor) -> some View {
-        modifier(AdaptiveBackgroundColorModifier(color: color))
-    }
-}
+//public extension View {
+//    func foregroundColor(color: AdaptiveColor) -> some View {
+//        modifier(AdaptiveForegroundColorModifier(color: color))
+//    }
+//
+//    func background(color: AdaptiveColor) -> some View {
+//        modifier(AdaptiveBackgroundColorModifier(color: color))
+//    }
+//}

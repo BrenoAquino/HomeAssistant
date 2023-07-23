@@ -12,13 +12,13 @@ import Foundation
 
 public class DashboardServiceMock: Domain.DashboardService {
 
-    public var dashboards: CurrentValueSubject<[Dashboard], Never> = .init([
+    public var dashboards: [Domain.Dashboard] = [
         .init(name: "Bedroom", icon: "bed.double", entities: [""]),
         .init(name: "Living Room", icon: "sofa", entities: [""]),
         .init(name: "Kitchen", icon: "refrigerator", entities: [""]),
         .init(name: "Garden", icon: "tree", entities: [""]),
         .init(name: "Security", icon: "light.beacon.max", entities: [""]),
-    ])
+    ]
 
     public init() {}
 
@@ -27,23 +27,20 @@ public class DashboardServiceMock: Domain.DashboardService {
     public func persist() async throws {}
 
     public func add(dashboard: Dashboard) throws {
-        let all = dashboards.value.appended(dashboard)
-        dashboards.send(all)
+        dashboards.append(dashboard)
     }
 
     public func update(dashboardName: String, dashboard: Dashboard) throws {
-        let all = dashboards.value.appended(dashboard)
-        dashboards.send(all)
+        dashboards.removeAll(where: { $0.name == dashboardName })
+        dashboards.append(dashboard)
     }
 
     public func delete(dashboardName: String) {
-        var all = dashboards.value
-        all.removeAll(where: { $0.name == dashboardName })
-        dashboards.send(all)
+        dashboards.removeAll(where: { $0.name == dashboardName })
     }
 
     public func updateAll(dashboards: [Domain.Dashboard]) {
-        
+        self.dashboards = dashboards
     }
 }
 

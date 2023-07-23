@@ -1,6 +1,6 @@
 //
 //  DashboardCreationView.swift
-//  
+//
 //
 //  Created by Breno Aquino on 18/07/23.
 //
@@ -8,11 +8,11 @@
 import DesignSystem
 import SwiftUI
 
-public struct DashboardCreationView: View {
+public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View {
 
-    @ObservedObject private var viewModel: DashboardCreationViewModel
+    @ObservedObject private var viewModel: ViewModel
 
-    public init(viewModel: DashboardCreationViewModel) {
+    public init(viewModel: ViewModel) {
         self.viewModel = viewModel
     }
 
@@ -20,7 +20,7 @@ public struct DashboardCreationView: View {
         ScrollView(.vertical) {
             title
                 .padding(.horizontal, space: .normal)
-            
+
             Localizable.dashboardDescription.text
                 .foregroundColor(SystemColor.secondaryLabel)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -103,8 +103,7 @@ public struct DashboardCreationView: View {
 
             IconsCarouselView(
                 icons: viewModel.icons,
-                selectedIndex: viewModel.selectedIconIndex,
-                iconDidSelect: viewModel.selectIcon
+                selectedIcon: $viewModel.selectedIcon
             )
 
             VStack(spacing: .smallS) {
@@ -138,12 +137,10 @@ public struct DashboardCreationView: View {
 
             EntitiesListView(
                 entities: viewModel.entities,
-                selectedEntities: viewModel.selectedEntitiesIDs,
                 entitySearchText: $viewModel.entityFilterText,
-                didChangeEntitySelection: viewModel.updateEntitySelection,
+                selectedEntities: $viewModel.selectedEntitiesIDs,
                 domains: viewModel.domains,
-                selectedDomains: viewModel.selectedDomains,
-                didChangeDomainSelection: viewModel.updateDomainSelection
+                selectedDomains: $viewModel.selectedDomainsNames
             )
         }
     }
@@ -165,18 +162,33 @@ public struct DashboardCreationView: View {
 
 #if DEBUG
 import Preview
+import Domain
 
 struct DashboardCreationView_Preview: PreviewProvider {
 
+    class FakeViewModel: DashboardCreationViewModel {
+
+        var mode: DashboardCreationMode = .creation
+        var dashboardName: String = ""
+        var icons: [IconUI] = IconUI.list
+        var selectedIcon: IconUI? = IconUI.list.first
+        var iconFilterText: String = ""
+        var entities: [EntityUI] = EntityMock.all.map { $0.toUI() }
+        var selectedEntitiesIDs: Set<String> = []
+        var entityFilterText: String = ""
+        var domains: [EntityDomain] = EntityDomain.allCases
+        var selectedDomainsNames: Set<String> = Set(EntityDomain.allCases.map { $0.name })
+
+        var didFinish: (() -> Void)? = { print("didFinish") }
+        var didClose: (() -> Void)? = { print("didClose") }
+
+        func close() {}
+        func createOrUpdateDashboard() {}
+    }
+
     static var previews: some View {
 
-        DashboardCreationView(
-            viewModel: .init(
-                dashboardService: DashboardServiceMock(),
-                entitiesService: EntityServiceMock(),
-                mode: .creation
-            )
-        )
+        DashboardCreationView(viewModel: FakeViewModel())
     }
 }
 #endif

@@ -12,14 +12,13 @@ public class EntityServiceImpl {
 
     // MARK: Variables
 
-    public private(set) var entitiesHandler: Entities = .init()
     private var cancellable: Set<AnyCancellable> = []
-    private var stateChangeSubscription: Int?
+    private var stateChangeSubscriptionID: Int?
 
     // MARK: Publishers
 
-    public private(set) var entities: CurrentValueSubject<Entities, Never> = .init(.init())
-    public private(set) var domains: CurrentValueSubject<[EntityDomain], Never> = .init(EntityDomain.allCases)
+    @Published public var entities: [String : any Entity] = [:]
+    @Published public private(set) var domains: [EntityDomain] = EntityDomain.allCases
 
     // MARK: Repositories
 
@@ -44,30 +43,27 @@ public class EntityServiceImpl {
 
 extension EntityServiceImpl {
 
-    private func insertEntity(_ entity: Entity) {
+    private func insertEntity(_ entity: any Entity) {
         let id = entity.id
         switch entity {
         case let light as LightEntity:
-            entitiesHandler.lights[id] = light
+            entities[id] = light
         case let `switch` as SwitchEntity:
-            entitiesHandler.switches[id] = `switch`
+            entities[id] = `switch`
         case let fan as FanEntity:
-            entitiesHandler.fans[id] = fan
+            entities[id] = fan
         case let climate as ClimateEntity:
-            entitiesHandler.climates[id] = climate
+            entities[id] = climate
         default:
             break
         }
-        entities.send(entitiesHandler)
     }
 
     private func setupSubscription() {
         subscriptionRepository
             .stateChangedEvent
             .sink { _ in } receiveValue: { [weak self] stateChanged in
-                guard let self else { return }
-                self.entitiesHandler.all[stateChanged.id]?.state = stateChanged.newState
-                self.entities.send(self.entitiesHandler)
+                self?.entities[stateChanged.id]?.state = stateChanged.newState
             }
             .store(in: &cancellable)
     }
@@ -79,12 +75,16 @@ extension EntityServiceImpl: EntityService {
 
     public func trackEntities() async throws {
         try await fetcherRepository.fetchStates().forEach { [self] in insertEntity($0) }
-        entitiesHandler.updateAllEntities()
-        stateChangeSubscription = try await subscriptionRepository.subscribeToEvents(eventType: .stateChanged)
+        stateChangeSubscriptionID = try await subscriptionRepository.subscribeToEvents(eventType: .stateChanged)
         setupSubscription()
     }
 
-    public func updateEntity(_ entityID: String, service: EntityActionService) async throws {
+    public func update(entityID: String, entity: any Entity) async throws {
+        guard entities[entityID] != nil else { throw EntityServiceError.missingElement }
+        entities[entityID] = entity
+    }
+
+    public func execute(service: EntityActionService, entityID: String) async throws {
         try await commandRepository.callService(entityID: entityID, service: service)
     }
 }

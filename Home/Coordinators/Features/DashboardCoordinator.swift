@@ -8,12 +8,12 @@
 import SwiftUI
 import Dashboard
 
-struct DashboardCoordinator: View {
+struct DashboardCoordinator<ViewModel: DashboardViewModel>: View {
 
     @EnvironmentObject private var coordinator: Coordinator
-    @State private var viewModel: DashboardViewModel
+    @State private var viewModel: ViewModel
 
-    init(viewModel: DashboardViewModel) {
+    init(viewModel: ViewModel) {
         self.viewModel = viewModel
     }
 

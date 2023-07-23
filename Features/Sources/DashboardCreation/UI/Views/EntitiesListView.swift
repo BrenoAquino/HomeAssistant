@@ -10,21 +10,11 @@ import SwiftUI
 
 struct EntitiesListView: View {
 
-    let entities: [any EntityUI]
-    let selectedEntities: Set<String>
+    let entities: [EntityUI]
     @Binding var entitySearchText: String
-    let didChangeEntitySelection: ((
-        _ entity: EntityUI,
-        _ isSelected: Bool
-    ) -> Void
-    )?
+    @Binding var selectedEntities: Set<String>
     let domains: [any EntityDomainUI]
-    let selectedDomains: Set<String>
-    let didChangeDomainSelection: ((
-        _ domain: EntityDomainUI,
-        _ isSelected: Bool
-    ) -> Void
-    )?
+    @Binding var selectedDomains: Set<String>
 
     var body: some View {
         ScrollView(.vertical) {
@@ -69,7 +59,11 @@ struct EntitiesListView: View {
             .overlay(Capsule().stroke(SystemColor.label, lineWidth: 1))
             .clipShape(Capsule())
             .onTapGesture {
-                didChangeDomainSelection?(domain, !isSelected)
+                if isSelected {
+                    selectedDomains.remove(domain.name)
+                } else {
+                    selectedDomains.insert(domain.name)
+                }
             }
     }
 
@@ -95,26 +89,33 @@ struct EntitiesListView: View {
     @ViewBuilder private var entitiesList: some View {
         LazyVStack {
             ForEach(entities, id: \.id) { entity in
-                let isSelected = selectedEntities.contains(entity.id)
-                let image = isSelected ? SystemImages.check : SystemImages.uncheck
-
-                HStack(spacing: .smallM) {
-                    image.imageScale(.large)
-                    Text(entity.name)
-                    Spacer()
-                    Image(systemName: entity.domainUI.icon)
-                }
-                .frame(height: 40)
-                .background(Color.clear)
-                .onTapGesture {
-                    didChangeEntitySelection?(entity, !isSelected)
-                }
+                Toggle(
+                    isOn: .init(
+                        get: { selectedEntities.contains(entity.id) },
+                        set: { isSelected in
+                            if isSelected {
+                                selectedEntities.insert(entity.id)
+                            } else {
+                                selectedEntities.remove(entity.id)
+                            }
+                        }
+                    )) {
+                        HStack(spacing: .smallM) {
+                            Image(systemName: entity.domainUI.icon)
+                                .frame(width: 30)
+                            Text(entity.name)
+                        }
+                    }
+                    .toggleStyle(CheckboxToggleStyle())
+                    .frame(height: 40)
             }
         }
     }
 }
 
 #if DEBUG
+import Domain
+
 struct EntitiesListView_Preview: PreviewProvider {
 
     private struct DomainMock: EntityDomainUI {
@@ -122,32 +123,28 @@ struct EntitiesListView_Preview: PreviewProvider {
         let icon: String
     }
 
-    private struct EntityMock: EntityUI {
-        let id: String = UUID().uuidString
-        let name: String
-        var domainUI: EntityDomainUI
-    }
+    static var entitySearchText: String = ""
+    static var selectedEntities: Set<String> = []
+    static var selectedDomains: Set<String> = []
 
     static var previews: some View {
         let lightDomain = DomainMock(name: "light", icon: "lightbulb.led")
         let switchDomain = DomainMock(name: "switch", icon: "lightswitch.on")
         let fanDomain = DomainMock(name: "fan", icon: "fan.desk")
         let climateDomain = DomainMock(name: "climate", icon: "air.conditioner.horizontal")
-        let mainLight = EntityMock(name: "Main Light", domainUI: lightDomain)
-        let ledDesk = EntityMock(name: "Led Desk", domainUI: lightDomain)
-        let ledCeiling = EntityMock(name: "Led Ceiling", domainUI: lightDomain)
-        let climate = EntityMock(name: "Air Conditioner", domainUI: climateDomain)
-        let coffeeMachine = EntityMock(name: "Coffee Machine", domainUI: switchDomain)
-        let fan = EntityMock(name: "Bedroom's Fan", domainUI: fanDomain)
+        let mainLight = EntityUI(id: "1", name: "Main Light", domainUI: lightDomain)
+        let ledDesk = EntityUI(id: "2", name: "Led Desk", domainUI: lightDomain)
+        let ledCeiling = EntityUI(id: "3", name: "Led Ceiling", domainUI: lightDomain)
+        let climate = EntityUI(id: "4", name: "Air Conditioner", domainUI: climateDomain)
+        let coffeeMachine = EntityUI(id: "5", name: "Coffee Machine", domainUI: switchDomain)
+        let fan = EntityUI(id: "6", name: "Bedroom's Fan", domainUI: fanDomain)
 
         EntitiesListView(
             entities: [mainLight, ledDesk, ledCeiling, climate, coffeeMachine, fan],
-            selectedEntities: [],
-            entitySearchText: .constant(""),
-            didChangeEntitySelection: { _, _ in },
+            entitySearchText: .init(get: { entitySearchText }, set: { entitySearchText = $0 }),
+            selectedEntities: .init(get: { selectedEntities }, set: { selectedEntities = $0 }),
             domains: [lightDomain, switchDomain, fanDomain, climateDomain],
-            selectedDomains: [],
-            didChangeDomainSelection: { _, _ in}
+            selectedDomains: .init(get: { selectedDomains }, set: { selectedDomains = $0 })
         )
     }
 }

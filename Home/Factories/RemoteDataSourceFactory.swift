@@ -8,27 +8,9 @@
 import Data
 import Foundation
 
-class RemoteDataSourceFactory {
+protocol RemoteDataSourceFactory {
 
-    private let commandRemoteDateSource: CommandRemoteDataSource
-    private let fetcherRemoteDateSource: FetcherRemoteDataSource
-    private let subscriptionRemoteDateSource: SubscriptionRemoteDataSource
-
-    init(infrastructureFactory: InfrastructureFactory) {
-        commandRemoteDateSource = CommandRemoteDataSourceImpl(webSocketProvider: infrastructureFactory.webSocket())
-        fetcherRemoteDateSource = FetcherRemoteDataSourceImpl(webSocketProvider: infrastructureFactory.webSocket())
-        subscriptionRemoteDateSource = SubscriptionRemoteDataSourceImpl(webSocketProvider: infrastructureFactory.webSocket())
-    }
-
-    func command() -> CommandRemoteDataSource {
-        commandRemoteDateSource
-    }
-
-    func fetcher() -> FetcherRemoteDataSource {
-        fetcherRemoteDateSource
-    }
-
-    func subscription() -> SubscriptionRemoteDataSource {
-        subscriptionRemoteDateSource
-    }
+    func commandRemoteDataSource() -> CommandRemoteDataSource
+    func fetcherRemoteDataSource() -> FetcherRemoteDataSource
+    func subscriptionRemoteDataSource() -> SubscriptionRemoteDataSource
 }

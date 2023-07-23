@@ -13,6 +13,4 @@ protocol DashboardUI {
     var icon: String { get }
 }
 
-// MARK: Dashboard
-
 extension Dashboard: DashboardUI {}

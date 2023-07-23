@@ -12,7 +12,7 @@ public enum ServerState {
     case offline
 }
 
-public class ServerConfig {
+public struct ServerConfig {
 
     public let locationName: String
     public let state: ServerState

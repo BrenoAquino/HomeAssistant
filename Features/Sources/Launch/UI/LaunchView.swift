@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-public struct LaunchView: View {
+public struct LaunchView<ViewModel: LaunchViewModel>: View {
 
-    @ObservedObject private var viewModel: LaunchViewModel
+    @ObservedObject private var viewModel: ViewModel
 
-    public init(viewModel: LaunchViewModel) {
+    public init(viewModel: ViewModel) {
         self.viewModel = viewModel
     }
 
@@ -33,11 +33,13 @@ import Preview
 
 struct LaunchView_Preview: PreviewProvider {
 
+    class FakeViewModel: LaunchViewModel {
+        var launchFinished: (() -> Void)?
+        func startConfiguration() async {}
+    }
+
     static var previews: some View {
-        LaunchView(viewModel: .init(
-            entityService: EntityServiceMock(),
-            dashboardService: DashboardServiceMock()
-        ))
+        LaunchView(viewModel: FakeViewModel())
     }
 }
 #endif

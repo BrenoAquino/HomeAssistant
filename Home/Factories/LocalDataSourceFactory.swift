@@ -8,15 +8,7 @@
 import Data
 import Foundation
 
-class LocalDataSourceFactory {
+protocol LocalDataSourceFactory {
 
-    private let dashboardLocalDateSource: DashboardLocalDataSource
-
-    init(infrastructureFactory: InfrastructureFactory) {
-        dashboardLocalDateSource = DashboardLocalDataSourceImpl(databaseProvider: infrastructureFactory.database())
-    }
-
-    func dashboard() -> DashboardLocalDataSource {
-        dashboardLocalDateSource
-    }
+    func dashboardLocalDataSource() -> DashboardLocalDataSource
 }

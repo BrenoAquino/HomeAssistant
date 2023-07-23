@@ -11,26 +11,24 @@ import SwiftUI
 struct IconsCarouselView: View {
 
     var icons: [IconUI]
-    var selectedIndex: Int
-    var iconDidSelect: (_ icon: IconUI, _ index: Int) -> Void
+    @Binding var selectedIcon: IconUI?
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(spacing: .smallM) {
-                ForEach(Array(icons.enumerated()), id: \.element.name) { offset, iconUI in
-                    iconElement(iconUI, offset)
-                        .onTapGesture { iconDidSelect(iconUI, offset) }
+                ForEach(icons, id: \.name) { iconUI in
+                    iconElement(iconUI)
+                        .onTapGesture {
+                            selectedIcon = iconUI
+                        }
                 }
             }
             .padding(.horizontal, space: .normal)
         }
     }
 
-    @ViewBuilder func iconElement(
-        _ iconUI: IconUI,
-        _ offset: Int
-    ) -> some View {
-        let isSelected = offset == selectedIndex
+    @ViewBuilder func iconElement(_ iconUI: IconUI) -> some View {
+        let isSelected = selectedIcon?.name == iconUI.name
 
         Image(systemName: iconUI.name)
             .foregroundColor(isSelected ? SystemColor.background : SystemColor.label)
@@ -55,8 +53,10 @@ struct IconsCarouselView_Preview: PreviewProvider {
     static var previews: some View {
         IconsCarouselView(
             icons: IconUI.list,
-            selectedIndex: 0,
-            iconDidSelect: { _, _ in}
+            selectedIcon: .init(
+                get: { nil },
+                set: { _ in }
+            )
         )
     }
 }

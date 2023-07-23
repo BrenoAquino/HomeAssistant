@@ -7,15 +7,10 @@
 
 import Foundation
 
-class IconUI {
+public struct IconUI {
 
     let name: String
     let keywords: [String]
-
-    init(name: String, keywords: [String]) {
-        self.name = name
-        self.keywords = keywords
-    }
 }
 
 extension IconUI {

@@ -7,82 +7,99 @@
 
 import Preview
 import Combine
+import Common
 import Domain
-import Foundation
+import SwiftUI
 
-public class DashboardViewModel: ObservableObject {
+// MARK: - Interface
+
+public protocol DashboardViewModel: ObservableObject {
+
+    var editModel: Bool { get set }
+    var selectedDashboardIndex: Int? { get set }
+    var dashboards: [Dashboard] { get set }
+    var currentDashboard: Dashboard? { get }
+
+    var didSelectAddDashboard: (() -> Void)? { get set }
+    var didSelectEditDashboard: ((_ dashboard: Dashboard) -> Void)? { get set }
+
+    func didSelectAdd()
+    func didSelectEdit(_ dashboard: Dashboard)
+}
+
+// MARK: - Implementation
+
+public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: DashboardViewModel {
 
     private var cancellable: Set<AnyCancellable> = .init()
-    private var dashboardUpdateCancellable: AnyCancellable?
+
+    // MARK: Services
+
+    @ObservedObject private var entityService: EntityS
+    @ObservedObject var dashboardService: DashboardS
+
+    // MARK: Redirects
 
     public var didSelectAddDashboard: (() -> Void)?
     public var didSelectEditDashboard: ((_ dashboard: Dashboard) -> Void)?
 
     // MARK: Publishers
 
-    @Published var editModel: Bool = false
-    @Published var dashboards: [Dashboard] = []
-    @Published var selectedDashboard: String = ""
+    @Published public var editModel: Bool = false
+    @Published public var selectedDashboardIndex: Int?
 
-    // MARK: Services
+    // MARK: Gets
 
-    private let dashboardService: DashboardService
+    public var dashboards: [Dashboard] {
+        get { dashboardService.dashboards }
+        set {
+            dashboardService.dashboards = newValue
+            objectWillChange.send()
+        }
+    }
+
+    public var currentDashboard: Dashboard? {
+        guard
+            let selectedDashboardIndex,
+            selectedDashboardIndex < dashboards.count,
+            selectedDashboardIndex >= 0
+        else { return nil }
+        return dashboards[selectedDashboardIndex]
+    }
 
     // MARK: Init
 
-    public init(dashboardService: DashboardService) {
+    public init(dashboardService: DashboardS, entityService: EntityS) {
         self.dashboardService = dashboardService
+        self.entityService = entityService
 
-        setupObservers()
+        setupData()
+        setupForwards()
     }
 }
 
-// MARK: - Private Methods
+// MARK: Private Methods
 
-extension DashboardViewModel {
+extension DashboardViewModelImpl {
 
-    private func setupObservers() {
-        dashboardService
-            .dashboards
-            .filter { [weak self] incomingDashboards in
-                guard let self else { return false }
-                return incomingDashboards.map { $0.name } != self.dashboards.map { $0.name }
-            }
-            .sink { [weak self] in
-                self?.dashboards = $0
-                self?.setupDashboardsUpdate()
-            }
-            .store(in: &cancellable)
+    private func setupData() {
+        selectedDashboardIndex = dashboards.count > 0 ? 1 : nil
     }
 
-    private func setupDashboardsUpdate() {
-        guard dashboardUpdateCancellable == nil else { return }
-
-        selectedDashboard = dashboards.first?.name ?? ""
-        dashboardUpdateCancellable = $dashboards
-            .filter { [weak self] incomingDashboards in
-                guard let self else { return false }
-                return incomingDashboards.map { $0.name } != self.dashboardService.dashboards.value.map { $0.name }
-            }
-            .sink { [weak self] in
-                self?.dashboardService.updateAll(dashboards: $0)
-            }
+    private func setupForwards() {
+        dashboardService.forward(objectWillChange).store(in: &cancellable)
     }
 }
 
-// MARK: - Interfaces
+// MARK: Public Methods
 
-extension DashboardViewModel {
+extension DashboardViewModelImpl {
 
-    func removeDashboard(_ dashboard: any DashboardUI) {
-        dashboardService.delete(dashboardName: dashboard.name)
-    }
-
-    func didSelectAdd() {
+    public func didSelectAdd() {
         didSelectAddDashboard?()
     }
 
-    func didSelectEdit(_ dashboard: any DashboardUI) {
+    public func didSelectEdit(_ dashboard: Dashboard) {
         guard let dashboard = dashboards.first(where: { $0.name == dashboard.name }) else { return }
         didSelectEditDashboard?(dashboard)
         editModel = false

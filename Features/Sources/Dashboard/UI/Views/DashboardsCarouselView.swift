@@ -11,7 +11,6 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 private enum Constants {
-
     static let dashboardImageHeight: CGFloat = 80
     static let dashboardImageWidth: CGFloat = dashboardImageHeight
     static let dashboardStrokeWidth: CGFloat = 1
@@ -24,15 +23,15 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
 
     @Binding var editMode: Bool
     @Binding var dashboards: [Model]
-    @Binding var selectedDashboard: String
+    @Binding var selectedDashboardIndex: Int?
 
     let dashboardDidEdit: (_ dashboard: Model) -> Void
-    let dashboardDidRemove: (_ dashboard: Model) -> Void
     let addDidSelect: () -> Void
 
     // MARK: Private States
 
     @State private var draggedItem: Model?
+    @State private var isDragging: Bool = false
 
     // MARK: View
 
@@ -57,28 +56,33 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
     }
 
     private var carousel: some View {
-        ForEach(dashboards, id: \.name) { dashboard in
+        ForEach(Array(dashboards.enumerated()), id: \.element.name) { index, dashboard in
             let shakeAnimation = Animation.easeInOut(duration: 0.15).repeatForever(autoreverses: true)
-            let isSelected = dashboard.name == selectedDashboard
+            let isSelected = index == selectedDashboardIndex
             let squareElementView = squareElement(dashboard.name, dashboard.icon, isSelected)
+            let isCurrentElementDragging = draggedItem?.name == dashboard.name
+            let shouldHide = isDragging && isCurrentElementDragging
 
             squareElementView
                 .overlay(removeIcon(dashboard))
                 .rotationEffect(.degrees(editMode ? Constants.shakeAnimationAngle : .zero))
                 .animation(editMode ? shakeAnimation : .default, value: editMode)
+                .opacity(shouldHide ? .leastNonzeroMagnitude : 1)
                 .onTapGesture {
                     if editMode {
                         dashboardDidEdit(dashboard)
-                    } else {
-                        selectedDashboard = dashboard.name
+                    } else if !isSelected {
+                        selectedDashboardIndex = index
                     }
                 }
-                .onDrop(of: [UTType.text], delegate: DashboardDropDelegate(
+                .onDrop(of: [.text], delegate: DashboardDropDelegate(
                     dashboard: dashboard,
                     dashboards: $dashboards,
-                    draggedItem: $draggedItem
+                    draggedItem: $draggedItem,
+                    isDragging: $isDragging
                 ))
                 .onDrag {
+                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                     editMode = true
                     draggedItem = dashboard
                     return NSItemProvider(item: nil, typeIdentifier: dashboard.name)
@@ -95,7 +99,7 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
                 .opacity(editMode ? 1 : 0)
                 .animation(.default, value: editMode)
                 .onTapGesture {
-                    dashboardDidRemove(dashboard)
+                    dashboards.removeAll(where: { $0.name == dashboard.name })
                 }
         }
     }
@@ -130,12 +134,16 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
         let dashboard: Model
         @Binding var dashboards: [Model]
         @Binding var draggedItem: Model?
+        @Binding var isDragging: Bool
 
         func performDrop(info: DropInfo) -> Bool {
+            isDragging = false
+            draggedItem = nil
             return true
         }
 
         func dropEntered(info: DropInfo) {
+            isDragging = true
             guard
                 let draggedItem,
                 draggedItem.name != dashboard.name,
@@ -170,9 +178,8 @@ struct DashboardsCarouselView_Preview: PreviewProvider {
                 DashboardMock(name: "Garden", icon: "tree"),
                 DashboardMock(name: "Security", icon: "light.beacon.max"),
             ]),
-            selectedDashboard: .constant("Bedroom"),
+            selectedDashboardIndex: .constant(nil),
             dashboardDidEdit: { _ in print("dashboardDidEdit") },
-            dashboardDidRemove: { _ in print("dashboardDidRemove") },
             addDidSelect: { print("addDidSelect") }
         )
     }

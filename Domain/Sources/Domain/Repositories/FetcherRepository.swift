@@ -10,5 +10,5 @@ import Foundation
 public protocol FetcherRepository {
 
     func fetchConfig() async throws -> ServerConfig
-    func fetchStates() async throws -> [Entity]
+    func fetchStates() async throws -> [any Entity]
 }
