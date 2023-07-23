@@ -15,7 +15,6 @@
 		552783E52A64F5F200603EBA /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552783E42A64F5F200603EBA /* AppEnvironment.swift */; };
 		552783E72A64F70800603EBA /* RepositoryFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552783E62A64F70800603EBA /* RepositoryFactory.swift */; };
 		552783EA2A64F80200603EBA /* ServicesFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552783E92A64F80200603EBA /* ServicesFactory.swift */; };
-		552783ED2A6500BD00603EBA /* ViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552783EC2A6500BD00603EBA /* ViewModelFactory.swift */; };
 		552783EF2A6500DB00603EBA /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 552783EE2A6500DB00603EBA /* Domain */; };
 		552783F12A6500E000603EBA /* Features in Frameworks */ = {isa = PBXBuildFile; productRef = 552783F02A6500E000603EBA /* Features */; };
 		552783F52A65027E00603EBA /* LaunchCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552783F42A65027E00603EBA /* LaunchCoordinator.swift */; };
@@ -49,7 +48,6 @@
 		552783E42A64F5F200603EBA /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		552783E62A64F70800603EBA /* RepositoryFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryFactory.swift; sourceTree = "<group>"; };
 		552783E92A64F80200603EBA /* ServicesFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesFactory.swift; sourceTree = "<group>"; };
-		552783EC2A6500BD00603EBA /* ViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelFactory.swift; sourceTree = "<group>"; };
 		552783F42A65027E00603EBA /* LaunchCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchCoordinator.swift; sourceTree = "<group>"; };
 		552783F92A65034800603EBA /* CoordinatorFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorFactory.swift; sourceTree = "<group>"; };
 		5558B6042A68C722008651CF /* LifeCycleHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifeCycleHandler.swift; sourceTree = "<group>"; };
@@ -110,7 +108,6 @@
 				552783E22A64F5A000603EBA /* RemoteDataSourceFactory.swift */,
 				552783E62A64F70800603EBA /* RepositoryFactory.swift */,
 				552783E92A64F80200603EBA /* ServicesFactory.swift */,
-				552783EC2A6500BD00603EBA /* ViewModelFactory.swift */,
 				552783F92A65034800603EBA /* CoordinatorFactory.swift */,
 				5558B6062A68C825008651CF /* Factory.swift */,
 			);
@@ -295,7 +292,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				552783ED2A6500BD00603EBA /* ViewModelFactory.swift in Sources */,
 				552783E72A64F70800603EBA /* RepositoryFactory.swift in Sources */,
 				55E63B1A2A618C88002068A5 /* AuthenticationMessage.swift in Sources */,
 				55C0FA332A66384B00758023 /* LocalDataSourceFactory.swift in Sources */,

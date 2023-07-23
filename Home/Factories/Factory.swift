@@ -15,123 +15,123 @@ import SwiftUI
 
 class Factory {
 
-    private let webSocketProvider: WebSocketProvider
-    private let databaseProvider: DatabaseProvider
+    private let webSocketProviderInstance: WebSocketProvider
+    private let databaseProviderInstance: DatabaseProvider
 
-    private let dashboardLocalDataSource: DashboardLocalDataSource
+    private let dashboardLocalDataSourceInstance: DashboardLocalDataSource
 
-    private let commandRemoteDataSource: CommandRemoteDataSource
-    private let fetcherRemoteDataSource: FetcherRemoteDataSource
-    private let subscriptionRemoteDataSource: SubscriptionRemoteDataSource
+    private let commandRemoteDataSourceInstance: CommandRemoteDataSource
+    private let fetcherRemoteDataSourceInstance: FetcherRemoteDataSource
+    private let subscriptionRemoteDataSourceInstance: SubscriptionRemoteDataSource
 
-    private let commandRepository: CommandRepository
-    private let fetcherRepository: FetcherRepository
-    private let subscriptionRepository: SubscriptionRepository
-    private let dashboardRepository: DashboardRepository
+    private let commandRepositoryInstance: CommandRepository
+    private let fetcherRepositoryInstance: FetcherRepository
+    private let subscriptionRepositoryInstance: SubscriptionRepository
+    private let dashboardRepositoryInstance: DashboardRepository
 
-    private let configService: ConfigServiceImpl
-    private let entityService: EntityServiceImpl
-    private let dashboardService: DashboardServiceImpl
+    private let configServiceInstance: ConfigServiceImpl
+    private let entityServiceInstance: EntityServiceImpl
+    private let dashboardServiceInstance: DashboardServiceImpl
 
     init() {
-        webSocketProvider = try! WebSocket(url: AppEnvironment.homeAssistantURL, token: AppEnvironment.authToken)
-        databaseProvider = UserDefaultsDatabaseProvider()
+        webSocketProviderInstance = try! WebSocket(url: AppEnvironment.homeAssistantURL, token: AppEnvironment.authToken)
+        databaseProviderInstance = UserDefaultsDatabaseProvider()
 
-        dashboardLocalDataSource = DashboardLocalDataSourceImpl(databaseProvider: databaseProvider)
+        dashboardLocalDataSourceInstance = DashboardLocalDataSourceImpl(databaseProvider: databaseProviderInstance)
 
-        commandRemoteDataSource = CommandRemoteDataSourceImpl(webSocketProvider: webSocketProvider)
-        fetcherRemoteDataSource = FetcherRemoteDataSourceImpl(webSocketProvider: webSocketProvider)
-        subscriptionRemoteDataSource = SubscriptionRemoteDataSourceImpl(webSocketProvider: webSocketProvider)
+        commandRemoteDataSourceInstance = CommandRemoteDataSourceImpl(webSocketProvider: webSocketProviderInstance)
+        fetcherRemoteDataSourceInstance = FetcherRemoteDataSourceImpl(webSocketProvider: webSocketProviderInstance)
+        subscriptionRemoteDataSourceInstance = SubscriptionRemoteDataSourceImpl(webSocketProvider: webSocketProviderInstance)
 
-        commandRepository = CommandRepositoryImpl(commandRemoteDataSource: commandRemoteDataSource)
-        fetcherRepository = FetcherRepositoryImpl(fetcherRemoteDataSource: fetcherRemoteDataSource)
-        subscriptionRepository = SubscriptionRepositoryImpl(subscriptionRemoteDataSource: subscriptionRemoteDataSource)
-        dashboardRepository = DashboardRepositoryImpl(dashboardLocalDataSource: dashboardLocalDataSource)
+        commandRepositoryInstance = CommandRepositoryImpl(commandRemoteDataSource: commandRemoteDataSourceInstance)
+        fetcherRepositoryInstance = FetcherRepositoryImpl(fetcherRemoteDataSource: fetcherRemoteDataSourceInstance)
+        subscriptionRepositoryInstance = SubscriptionRepositoryImpl(subscriptionRemoteDataSource: subscriptionRemoteDataSourceInstance)
+        dashboardRepositoryInstance = DashboardRepositoryImpl(dashboardLocalDataSource: dashboardLocalDataSourceInstance)
 
-        configService = ConfigServiceImpl(fetcherRepository: fetcherRepository)
-        dashboardService = DashboardServiceImpl(dashboardRepository: dashboardRepository)
-        entityService = EntityServiceImpl(
-            fetcherRepository: fetcherRepository,
-            commandRepository: commandRepository,
-            subscriptionRepository: subscriptionRepository
+        configServiceInstance = ConfigServiceImpl(fetcherRepository: fetcherRepositoryInstance)
+        dashboardServiceInstance = DashboardServiceImpl(dashboardRepository: dashboardRepositoryInstance)
+        entityServiceInstance = EntityServiceImpl(
+            fetcherRepository: fetcherRepositoryInstance,
+            commandRepository: commandRepositoryInstance,
+            subscriptionRepository: subscriptionRepositoryInstance
         )
     }
 }
 
 // MARK: Infrastructure
 
-extension Factory {
+extension Factory: InfrastructureFactory {
 
-    func getWebSocket() -> WebSocketProvider {
-        webSocketProvider
+    func webSocket() -> WebSocketProvider {
+        webSocketProviderInstance
     }
 
-    func getDatabase() -> DatabaseProvider {
-        databaseProvider
+    func database() -> DatabaseProvider {
+        databaseProviderInstance
     }
 }
 
 // MARK: LocalDataSource
 
-extension Factory {
+extension Factory: LocalDataSourceFactory {
 
-    func getDashboardLocalDataSource() -> DashboardLocalDataSource {
-        dashboardLocalDataSource
+    func dashboardLocalDataSource() -> DashboardLocalDataSource {
+        dashboardLocalDataSourceInstance
     }
 }
 
 // MARK: RemoteDataSource
 
-extension Factory {
+extension Factory: RemoteDataSourceFactory {
 
-    func getCommandRemoteDataSource() -> CommandRemoteDataSource {
-        commandRemoteDataSource
+    func commandRemoteDataSource() -> CommandRemoteDataSource {
+        commandRemoteDataSourceInstance
     }
 
-    func getFetcherRemoteDataSource() -> FetcherRemoteDataSource {
-        fetcherRemoteDataSource
+    func fetcherRemoteDataSource() -> FetcherRemoteDataSource {
+        fetcherRemoteDataSourceInstance
     }
 
-    func getSubscriptionRemoteDataSource() -> SubscriptionRemoteDataSource {
-        subscriptionRemoteDataSource
+    func subscriptionRemoteDataSource() -> SubscriptionRemoteDataSource {
+        subscriptionRemoteDataSourceInstance
     }
 }
 
 // MARK: Repository
 
-extension Factory {
+extension Factory: RepositoryFactory {
 
-    func getCommandRepository() -> CommandRepository {
-        commandRepository
+    func commandRepository() -> CommandRepository {
+        commandRepositoryInstance
     }
 
-    func getFetcherRepository() -> FetcherRepository {
-        fetcherRepository
+    func fetcherRepository() -> FetcherRepository {
+        fetcherRepositoryInstance
     }
 
-    func getSubscriptionRepository() -> SubscriptionRepository {
-        subscriptionRepository
+    func subscriptionRepository() -> SubscriptionRepository {
+        subscriptionRepositoryInstance
     }
 
-    func getDashboardRepository() -> DashboardRepository {
-        dashboardRepository
+    func dashboardRepository() -> DashboardRepository {
+        dashboardRepositoryInstance
     }
 }
 
 // MARK: Service
 
-extension Factory {
+extension Factory: ServicesFactory {
 
-    func getConfigService() -> ConfigService {
-        configService
+    func configService() -> ConfigService {
+        configServiceInstance
     }
 
-    func getEntityService() -> any EntityService {
-        entityService
+    func entityService() -> any EntityService {
+        entityServiceInstance
     }
 
-    func getDashboardService() -> any DashboardService {
-        dashboardService
+    func dashboardService() -> any DashboardService {
+        dashboardServiceInstance
     }
 }
 
@@ -140,16 +140,21 @@ extension Factory {
 extension Factory {
 
     @ViewBuilder func getLaunchCoordinator() -> some View {
-        let viewModel = LaunchViewModelImpl(entityService: entityService, dashboardService: dashboardService)
+        let viewModel = LaunchViewModelImpl(entityService: entityServiceInstance, dashboardService: dashboardServiceInstance)
         LaunchCoordinator(viewModel: viewModel)
     }
 
     @ViewBuilder func getDashboardCoordinator() -> some View {
-        let viewModel = DashboardViewModelImpl(dashboardService: dashboardService, entityService: entityService)
+        let viewModel = DashboardViewModelImpl(dashboardService: dashboardServiceInstance, entityService: entityServiceInstance)
         DashboardCoordinator(viewModel: viewModel)
     }
 
-//    func getDashboardCreationCoordinator(mode: DashboardCreationMode) -> DashboardCreationCoordinator {
-//        DashboardCreationCoordinator(viewModel: getDashboardCreationViewModel(mode: mode))
-//    }
+    @ViewBuilder func getDashboardCreationCoordinator(mode: DashboardCreationMode) -> some View {
+        let viewModel = DashboardCreationViewModelImpl(
+            dashboardService: dashboardServiceInstance,
+            entitiesService: entityServiceInstance,
+            mode: mode
+        )
+        DashboardCreationCoordinator(viewModel: viewModel)
+    }
 }

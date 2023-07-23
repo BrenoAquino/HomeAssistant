@@ -1,30 +1,17 @@
-////
-////  CoordinatorFactory.swift
-////  Home
-////
-////  Created by Breno Aquino on 17/07/23.
-////
 //
-//import DashboardCreation
-//import Foundation
+//  CoordinatorFactory.swift
+//  Home
 //
-//class CoordinatorFactory {
+//  Created by Breno Aquino on 17/07/23.
 //
-//    private let viewModelFactory: ViewModelFactory
-//
-//    init(viewModelFactory: ViewModelFactory) {
-//        self.viewModelFactory = viewModelFactory
-//    }
-//
-//    func launch() -> LaunchCoordinator {
-//        LaunchCoordinator(viewModel: viewModelFactory.launch())
-//    }
-//
-//    func dashboard() -> DashboardCoordinator {
-//        DashboardCoordinator(viewModel: viewModelFactory.dashboard())
-//    }
-//
-//    func dashboardCreation(mode: DashboardCreationMode) -> DashboardCreationCoordinator {
-//        DashboardCreationCoordinator(viewModel: viewModelFactory.dashboardCreation(mode: mode))
-//    }
-//}
+
+import DashboardCreation
+import Foundation
+import SwiftUI
+
+protocol CoordinatorFactory {
+
+    func launchCoordinator<T: View>() -> T
+    func dashboardCoordinator<T: View>() -> T
+    func dashboardCreationCoordinator<T: View>(mode: DashboardCreationMode) -> T
+}

@@ -11,7 +11,7 @@ import DashboardCreation
 enum Screen: Identifiable, Hashable {
     case launch
     case dashboard
-//    case dashboardCreation(mode: DashboardCreationMode)
+    case dashboardCreation(mode: DashboardCreationMode)
 
     var id: String { String(describing: self) }
 
@@ -28,8 +28,8 @@ extension Screen {
             factory.getLaunchCoordinator()
         case .dashboard:
             factory.getDashboardCoordinator()
-//        case .dashboardCreation(let mode):
-//            factory.getDashboardCreationCoordinator(mode: mode)
+        case .dashboardCreation(let mode):
+            factory.getDashboardCreationCoordinator(mode: mode)
         }
     }
 }

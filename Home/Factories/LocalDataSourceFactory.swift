@@ -1,22 +1,14 @@
-////
-////  LocalDataSourceFactory.swift
-////  Home
-////
-////  Created by Breno Aquino on 18/07/23.
-////
 //
-//import Data
-//import Foundation
+//  LocalDataSourceFactory.swift
+//  Home
 //
-//class LocalDataSourceFactory {
+//  Created by Breno Aquino on 18/07/23.
 //
-//    private let dashboardLocalDateSource: DashboardLocalDataSource
-//
-//    init(infrastructureFactory: InfrastructureFactory) {
-//        dashboardLocalDateSource = DashboardLocalDataSourceImpl(databaseProvider: infrastructureFactory.database())
-//    }
-//
-//    func dashboard() -> DashboardLocalDataSource {
-//        dashboardLocalDateSource
-//    }
-//}
+
+import Data
+import Foundation
+
+protocol LocalDataSourceFactory {
+
+    func dashboardLocalDataSource() -> DashboardLocalDataSource
+}

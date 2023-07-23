@@ -1,41 +1,18 @@
-////
-////  RepositoryFactory.swift
-////  Home
-////
-////  Created by Breno Aquino on 17/07/23.
-////
 //
-//import Data
-//import Domain
-//import Foundation
+//  RepositoryFactory.swift
+//  Home
 //
-//class RepositoryFactory {
+//  Created by Breno Aquino on 17/07/23.
 //
-//    private let commandRepository: CommandRepository
-//    private let fetcherRepository: FetcherRepository
-//    private let subscriptionRepository: SubscriptionRepository
-//    private let dashboardRepository: DashboardRepository
-//
-//    init(localDataSourceFactory: LocalDataSourceFactory, remoteDataSourceFactory: RemoteDataSourceFactory) {
-//        commandRepository = CommandRepositoryImpl(commandRemoteDataSource: remoteDataSourceFactory.command())
-//        fetcherRepository = FetcherRepositoryImpl(fetcherRemoteDataSource: remoteDataSourceFactory.fetcher())
-//        subscriptionRepository = SubscriptionRepositoryImpl(subscriptionRemoteDataSource: remoteDataSourceFactory.subscription())
-//        dashboardRepository = DashboardRepositoryImpl(dashboardLocalDataSource: localDataSourceFactory.dashboard())
-//    }
-//
-//    func command() -> CommandRepository {
-//        commandRepository
-//    }
-//
-//    func fetcher() -> FetcherRepository {
-//        fetcherRepository
-//    }
-//
-//    func subscription() -> SubscriptionRepository {
-//        subscriptionRepository
-//    }
-//
-//    func dashboard() -> DashboardRepository {
-//        dashboardRepository
-//    }
-//}
+
+import Data
+import Domain
+import Foundation
+
+protocol RepositoryFactory {
+
+    func commandRepository() -> CommandRepository
+    func fetcherRepository() -> FetcherRepository
+    func subscriptionRepository() -> SubscriptionRepository
+    func dashboardRepository() -> DashboardRepository
+}

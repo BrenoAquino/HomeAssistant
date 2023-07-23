@@ -35,6 +35,9 @@ public protocol DashboardCreationViewModel: ObservableObject {
     var domains: [EntityDomain] { get }
     var selectedDomainsNames: Set<String> { get set }
 
+    var didFinish: (() -> Void)? { get set }
+    var didClose: (() -> Void)? { get set }
+
     func close()
     func createOrUpdateDashboard()
 }

@@ -167,6 +167,7 @@ import Domain
 struct DashboardCreationView_Preview: PreviewProvider {
 
     class FakeViewModel: DashboardCreationViewModel {
+
         var mode: DashboardCreationMode = .creation
         var dashboardName: String = ""
         var icons: [IconUI] = IconUI.list
@@ -177,6 +178,9 @@ struct DashboardCreationView_Preview: PreviewProvider {
         var entityFilterText: String = ""
         var domains: [EntityDomain] = EntityDomain.allCases
         var selectedDomainsNames: Set<String> = Set(EntityDomain.allCases.map { $0.name })
+
+        var didFinish: (() -> Void)? = { print("didFinish") }
+        var didClose: (() -> Void)? = { print("didClose") }
 
         func close() {}
         func createOrUpdateDashboard() {}
