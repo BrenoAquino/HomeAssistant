@@ -13,7 +13,7 @@ class Coordinator: ObservableObject {
 
     // MARK: Handlers
 
-    private(set) lazy var lifeCycleHandler = LifeCycleHandler(dashboardsService: factory.getDashboardService())
+//    private(set) lazy var lifeCycleHandler = LifeCycleHandler(dashboardsService: factory.getDashboardService())
 
     // MARK: Publishers
 

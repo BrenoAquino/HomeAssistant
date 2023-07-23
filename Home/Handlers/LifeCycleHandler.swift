@@ -16,11 +16,11 @@ enum AppState {
     case terminate
 }
 
-class LifeCycleHandler {
+class LifeCycleHandler<DashboardS: DashboardService> {
 
-    private let dashboardsService: DashboardService
+    private let dashboardsService: DashboardS
 
-    init(dashboardsService: DashboardService) {
+    init(dashboardsService: DashboardS) {
         self.dashboardsService = dashboardsService
     }
 }

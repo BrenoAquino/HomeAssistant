@@ -8,12 +8,12 @@
 import SwiftUI
 import Launch
 
-struct LaunchCoordinator: View {
+struct LaunchCoordinator<ViewModel: LaunchViewModel>: View {
 
     @EnvironmentObject private var coordinator: Coordinator
-    @State private var viewModel: LaunchViewModel
+    @State private var viewModel: ViewModel
 
-    init(viewModel: LaunchViewModel) {
+    init(viewModel: ViewModel) {
         self.viewModel = viewModel
     }
 

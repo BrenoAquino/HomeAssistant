@@ -10,15 +10,30 @@ import Combine
 import Domain
 import SwiftUI
 
-public class DashboardViewModel: ObservableObject {
+public protocol DashboardViewModel: ObservableObject {
+    var editModel: Bool { get set }
+    var selectedDashboard: Dashboard? { get set }
+    var dashboards: [Dashboard] { get set }
+
+    var didSelectAddDashboard: (() -> Void)? { get set }
+    var didSelectEditDashboard: ((_ dashboard: Dashboard) -> Void)? { get set }
+
+    func didSelectAdd()
+    func didSelectEdit(_ dashboard: Dashboard)
+}
+
+public class DashboardViewModelImpl<
+    EntityS: EntityService,
+    DashboardS: DashboardService
+>: DashboardViewModel {
 
     private var cancellable: Set<AnyCancellable> = .init()
     private var dashboardUpdateCancellable: AnyCancellable?
 
     // MARK: Services
 
-    private let entityService: EntityService
-    private let dashboardService: DashboardService
+    private var entityService: EntityS
+    @ObservedObject var dashboardService: DashboardS
 
     // MARK: Redirects
 
@@ -27,20 +42,23 @@ public class DashboardViewModel: ObservableObject {
 
     // MARK: Publishers
 
-    @Published var editModel: Bool = false
-    @Published var selectedDashboard: Dashboard?
+    @Published public var editModel: Bool = false
+    @Published public var selectedDashboard: Dashboard?
     @Published private(set) var entities: Int = .zero
 
     // MARK: Gets
 
-    var dashboards: [Dashboard] {
-        get { dashboardService.dashboards.value }
-        set { dashboardService.dashboards.send(newValue) }
+    public var dashboards: [Dashboard] {
+        get { dashboardService.dashboards }
+        set {
+            dashboardService.dashboards = newValue
+            objectWillChange.send()
+        }
     }
 
     // MARK: Init
 
-    public init(dashboardService: DashboardService, entityService: EntityService) {
+    public init(dashboardService: DashboardS, entityService: EntityS) {
         self.dashboardService = dashboardService
         self.entityService = entityService
 
@@ -50,23 +68,14 @@ public class DashboardViewModel: ObservableObject {
 
 // MARK: - Private Methods
 
-extension DashboardViewModel {
+extension DashboardViewModelImpl {
 
     private func setupObservers() {
-        dashboardService
-            .dashboards
-            .sink { [weak self] _ in
-                if self?.selectedDashboard == nil {
-                    self?.selectedDashboard = self?.dashboards.first
-                }
-                self?.objectWillChange.send()
-            }
-            .store(in: &cancellable)
-
         $selectedDashboard
             .compactMap { $0 }
             .sink { [weak self] dashboard in
                 self?.entities = dashboard.entitiesIDs.count
+                self?.objectWillChange.send()
             }
             .store(in: &cancellable)
     }
@@ -74,13 +83,13 @@ extension DashboardViewModel {
 
 // MARK: - Interfaces
 
-extension DashboardViewModel {
+extension DashboardViewModelImpl {
 
-    func didSelectAdd() {
+    public func didSelectAdd() {
         didSelectAddDashboard?()
     }
 
-    func didSelectEdit(_ dashboard: any DashboardUI) {
+    public func didSelectEdit(_ dashboard: Dashboard) {
         guard let dashboard = dashboards.first(where: { $0.name == dashboard.name }) else { return }
         didSelectEditDashboard?(dashboard)
         editModel = false

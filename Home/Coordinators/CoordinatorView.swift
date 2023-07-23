@@ -22,13 +22,13 @@ struct CoordinatorView: View {
         }
         .environmentObject(coordinator)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification), perform: { _ in
-            coordinator.lifeCycleHandler.appStateDidChange(.foreground)
+//            coordinator.lifeCycleHandler.appStateDidChange(.foreground)
         })
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification), perform: { _ in
-            coordinator.lifeCycleHandler.appStateDidChange(.terminate)
+//            coordinator.lifeCycleHandler.appStateDidChange(.terminate)
         })
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification), perform: { _ in
-            coordinator.lifeCycleHandler.appStateDidChange(.background)
+//            coordinator.lifeCycleHandler.appStateDidChange(.background)
         })
     }
 }

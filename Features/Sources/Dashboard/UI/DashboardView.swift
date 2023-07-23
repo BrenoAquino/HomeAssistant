@@ -10,11 +10,11 @@ import Common
 import DesignSystem
 import SwiftUI
 
-public struct DashboardView: View {
+public struct DashboardView<ViewModel: DashboardViewModel>: View {
 
-    @ObservedObject private var viewModel: DashboardViewModel
+    @ObservedObject private var viewModel: ViewModel
 
-    public init(viewModel: DashboardViewModel) {
+    public init(viewModel: ViewModel) {
         self.viewModel = viewModel
     }
 
@@ -36,10 +36,10 @@ public struct DashboardView: View {
 //                .frame(maxWidth: .infinity, alignment: .leading)
 //                .padding(.horizontal, space: .smallL)
 
-            Text(viewModel.selectedDashboard?.name ?? "nil")
-            Text("----")
-            Text(String(viewModel.entities))
-            Text("----")
+//            Text(viewModel.selectedDashboard?.name ?? "nil")
+//            Text("----")
+//            Text(String(viewModel.entities))
+//            Text("----")
         }
         .navigationTitle(Localizable.hiThere.value)
         .toolbar {
@@ -63,12 +63,21 @@ import Preview
 
 struct DashboardView_Preview: PreviewProvider {
 
+    class FakeViewModel: DashboardViewModel {
+        var didSelectAddDashboard: (() -> Void)?
+        var didSelectEditDashboard: ((Domain.Dashboard) -> Void)?
+
+        var editModel: Bool = false
+        var selectedDashboard: Dashboard? = nil
+        var dashboards: [Dashboard] = []
+
+        func didSelectAdd() {}
+        func didSelectEdit(_ dashboard: Dashboard) {}
+    }
+
     static var previews: some View {
         NavigationView {
-            DashboardView(viewModel: .init(
-                dashboardService: DashboardServiceMock(),
-                entityService: EntityServiceMock()
-            ))
+            DashboardView(viewModel: FakeViewModel())
         }
     }
 }

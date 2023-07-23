@@ -99,26 +99,15 @@ struct LightView_Preview: PreviewProvider {
     static var previews: some View {
         let size: CGFloat = 150
 
-        NavigationView {
-            DashboardView(viewModel: .init(
-                dashboardService: DashboardServiceMock(),
-                entityService: EntityServiceMock()
-            ))
-        }
-
         HStack(spacing: .bigL) {
             LightView(entity: .init(get: {
                 entityOn
-            }, set: { newValue in
-//                entityOn = newValue
-            }))
+            }, set: { newValue in }))
             .frame(width: size, height: size)
 
             LightView(entity: .init(get: {
                 entityOff
-            }, set: { newValue in
-//                entityOff = newValue
-            }))
+            }, set: { newValue in }))
             .frame(width: size, height: size)
         }
     }

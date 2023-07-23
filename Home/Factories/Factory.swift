@@ -11,6 +11,7 @@ import Dashboard
 import Launch
 import DashboardCreation
 import Foundation
+import SwiftUI
 
 class Factory {
 
@@ -28,9 +29,9 @@ class Factory {
     private let subscriptionRepository: SubscriptionRepository
     private let dashboardRepository: DashboardRepository
 
-    private let configService: ConfigService
-    private let entityService: EntityService
-    private let dashboardService: DashboardService
+    private let configService: ConfigServiceImpl
+    private let entityService: EntityServiceImpl
+    private let dashboardService: DashboardServiceImpl
 
     init() {
         webSocketProvider = try! WebSocket(url: AppEnvironment.homeAssistantURL, token: AppEnvironment.authToken)
@@ -132,29 +133,8 @@ extension Factory {
         entityService
     }
 
-    func getDashboardService() -> DashboardService {
+    func getDashboardService() -> any DashboardService {
         dashboardService
-    }
-}
-
-// MARK: ViewModel
-
-extension Factory {
-
-    func getLaunchViewModel() -> LaunchViewModel {
-        LaunchViewModel(entityService: entityService, dashboardService: dashboardService)
-    }
-
-    func getDashboardViewModel() -> DashboardViewModel {
-        DashboardViewModel(dashboardService: dashboardService, entityService: entityService)
-    }
-
-    func getDashboardCreationViewModel(mode: DashboardCreationMode) -> DashboardCreationViewModel {
-        DashboardCreationViewModel(
-            dashboardService: dashboardService,
-            entitiesService: entityService,
-            mode: mode
-        )
     }
 }
 
@@ -162,15 +142,17 @@ extension Factory {
 
 extension Factory {
 
-    func getLaunchCoordinator() -> LaunchCoordinator {
-        LaunchCoordinator(viewModel: getLaunchViewModel())
+    @ViewBuilder func getLaunchCoordinator() -> some View {
+        let viewModel = LaunchViewModelImpl(entityService: entityService, dashboardService: dashboardService)
+        LaunchCoordinator(viewModel: viewModel)
     }
 
-    func getDashboardCoordinator() -> DashboardCoordinator {
-        DashboardCoordinator(viewModel: getDashboardViewModel())
+    @ViewBuilder func getDashboardCoordinator() -> some View {
+        let viewModel = DashboardViewModelImpl(dashboardService: dashboardService, entityService: entityService)
+        DashboardCoordinator(viewModel: viewModel)
     }
 
-    func getDashboardCreationCoordinator(mode: DashboardCreationMode) -> DashboardCreationCoordinator {
-        DashboardCreationCoordinator(viewModel: getDashboardCreationViewModel(mode: mode))
-    }
+//    func getDashboardCreationCoordinator(mode: DashboardCreationMode) -> DashboardCreationCoordinator {
+//        DashboardCreationCoordinator(viewModel: getDashboardCreationViewModel(mode: mode))
+//    }
 }

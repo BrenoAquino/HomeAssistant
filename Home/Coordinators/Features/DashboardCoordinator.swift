@@ -8,12 +8,12 @@
 import SwiftUI
 import Dashboard
 
-struct DashboardCoordinator: View {
+struct DashboardCoordinator<ViewModel: DashboardViewModel>: View {
 
     @EnvironmentObject private var coordinator: Coordinator
-    @State private var viewModel: DashboardViewModel
+    @State private var viewModel: ViewModel
 
-    init(viewModel: DashboardViewModel) {
+    init(viewModel: ViewModel) {
         self.viewModel = viewModel
     }
 
@@ -24,11 +24,11 @@ struct DashboardCoordinator: View {
 
     private func setupCallbacks() {
         viewModel.didSelectAddDashboard = { [self] in
-            self.coordinator.preset(sheet: .dashboardCreation(mode: .creation))
+//            self.coordinator.preset(sheet: .dashboardCreation(mode: .creation))
         }
 
         viewModel.didSelectEditDashboard = { [self] dashboard in
-            self.coordinator.preset(sheet: .dashboardCreation(mode: .edit(dashboard)))
+//            self.coordinator.preset(sheet: .dashboardCreation(mode: .edit(dashboard)))
         }
     }
 }

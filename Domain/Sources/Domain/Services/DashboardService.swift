@@ -13,9 +13,9 @@ enum DashboardServiceError: Error {
     case dashboardDoesNotExist
 }
 
-public protocol DashboardService {
+public protocol DashboardService: ObservableObject {
 
-    var dashboards: CurrentValueSubject<[Dashboard], Never> { get }
+    var dashboards: [Dashboard] { get set }
 
     func trackDashboards() async throws
     func persist() async throws

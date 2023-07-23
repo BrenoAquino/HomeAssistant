@@ -8,28 +8,27 @@
 import Domain
 import Foundation
 
-enum LaunchViewModelStates {
-    case loading
-    case finished
-    case error
+public protocol LaunchViewModel: ObservableObject {
+
+    var launchFinished: (() -> Void)? { get set }
+
+    func startConfiguration() async
 }
 
-public class LaunchViewModel: ObservableObject {
+public class LaunchViewModelImpl<
+    DashboardS: DashboardService
+>: LaunchViewModel {
 
     private let entityService: EntityService
-    private let dashboardService: DashboardService
+    private let dashboardService: DashboardS
 
     // MARK: Redirects
 
     public var launchFinished: (() -> Void)?
 
-    // MARK: Publishers
-
-    @Published private(set) var state: LaunchViewModelStates = .loading
-
     // MARK: Init
 
-    public init(entityService: EntityService, dashboardService: DashboardService) {
+    public init(entityService: EntityService, dashboardService: DashboardS) {
         self.entityService = entityService
         self.dashboardService = dashboardService
     }
@@ -37,22 +36,18 @@ public class LaunchViewModel: ObservableObject {
 
 // MARK: - Interfaces
 
-extension LaunchViewModel {
+extension LaunchViewModelImpl {
 
-    func startConfiguration() async {
+    public func startConfiguration() async {
         do {
             try await entityService.trackEntities()
             try await dashboardService.trackDashboards()
 
             await MainActor.run { [self] in
-                state = .finished
                 launchFinished?()
             }
         } catch {
             Logger.log(level: .error, error.localizedDescription)
-            await MainActor.run { [self] in
-                state = .error
-            }
         }
     }
 }
