@@ -20,19 +20,12 @@ public struct DashboardView: View {
 
     public var body: some View {
         ScrollView(.vertical) {
-//            Localizable.welcome.text
-//                .foregroundColor(SystemColor.secondaryLabel)
-//                .frame(maxWidth: .infinity, alignment: .leading)
-//                .font(.callout)
-//                .padding(.leading, space: .smallL)
-//                .padding(.top, space: .smallS)
 
             DashboardsCarouselView(
                 editMode: $viewModel.editModel,
                 dashboards: $viewModel.dashboards,
                 selectedDashboard: $viewModel.selectedDashboard,
                 dashboardDidEdit: viewModel.didSelectEdit,
-                dashboardDidRemove: viewModel.removeDashboard,
                 addDidSelect: viewModel.didSelectAdd
             )
             .padding(.top, space: .smallS)

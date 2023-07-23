@@ -8,7 +8,7 @@
 import Preview
 import Combine
 import Domain
-import Foundation
+import SwiftUI
 
 public class DashboardViewModel: ObservableObject {
 
@@ -47,13 +47,10 @@ extension DashboardViewModel {
     private func setupObservers() {
         dashboardService
             .dashboards
-            .filter { [weak self] incomingDashboards in
-                guard let self else { return false }
-                return incomingDashboards.map { $0.name } != self.dashboards.map { $0.name }
-            }
             .sink { [weak self] in
                 self?.dashboards = $0
-                self?.setupDashboardsUpdate()
+                self?.selectedDashboard = self?.dashboards.first
+                print("dashboardService.dashboards.sink")
             }
             .store(in: &cancellable)
 
@@ -61,23 +58,9 @@ extension DashboardViewModel {
             .compactMap { $0 }
             .sink { [weak self] dashboard in
                 self?.entities = dashboard.entitiesIDs.count
-                print("VIEW MODEL count \(self?.entities)")
+                print("$selectedDashboard.sink \(String(describing: self?.entities))")
             }
             .store(in: &cancellable)
-    }
-
-    private func setupDashboardsUpdate() {
-        guard dashboardUpdateCancellable == nil else { return }
-
-        selectedDashboard = dashboards.first
-        dashboardUpdateCancellable = $dashboards
-            .filter { [weak self] incomingDashboards in
-                guard let self else { return false }
-                return incomingDashboards.map { $0.name } != self.dashboardService.dashboards.value.map { $0.name }
-            }
-            .sink { [weak self] in
-                self?.dashboardService.updateAll(dashboards: $0)
-            }
     }
 }
 
