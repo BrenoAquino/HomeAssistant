@@ -119,8 +119,8 @@ extension DashboardCreationViewModelImpl {
     }
 
     private func serviceObservers() {
-        entitiesService.forward(objectWillChange).store(in: &cancellable)
-        dashboardService.forward(objectWillChange).store(in: &cancellable)
+        entitiesService.forward(objectWillChange, on: RunLoop.main).store(in: &cancellable)
+        dashboardService.forward(objectWillChange, on: RunLoop.main).store(in: &cancellable)
     }
 
     private func uiObservers() {

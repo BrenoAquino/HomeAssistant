@@ -11,16 +11,16 @@ import DesignSystem
 import SwiftUI
 
 public struct DashboardView<ViewModel: DashboardViewModel>: View {
-
+    
     @ObservedObject private var viewModel: ViewModel
-
+    
     public init(viewModel: ViewModel) {
         self.viewModel = viewModel
     }
-
+    
     public var body: some View {
         ScrollView(.vertical) {
-
+            
             DashboardsCarouselView(
                 editMode: $viewModel.editModel,
                 dashboards: $viewModel.dashboards,
@@ -29,16 +29,16 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                 addDidSelect: viewModel.didSelectAdd
             )
             .padding(.top, space: .smallS)
-
+            
             Localizable.devices.text
                 .font(.title3)
                 .fontWeight(.semibold)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, space: .smallL)
-
-            Text("----")
-            Text(viewModel.currentDashboard?.name ?? "nil")
-            Text(String(describing: viewModel.currentDashboard?.entitiesIDs.count))
+                .padding(.top, space: .smallS)
+            
+            entitiesGrid
+                .padding(.top, space: .smallS)
         }
         .navigationTitle(Localizable.hiThere.value)
         .toolbar {
@@ -47,7 +47,7 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             }
         }
     }
-
+    
     private var doneButton: some View {
         Button {
             viewModel.editModel = false
@@ -55,29 +55,44 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             Localizable.done.text
         }
     }
+    
+    private var entitiesGrid: some View {
+        GeometryReader { proxy in
+            let numberOfElementsInRow: Int = 3
+            let space = DSSpace.smallL.rawValue
+            let totalSpace = space * (CGFloat(numberOfElementsInRow) + 1)
+            let size = (proxy.size.width - totalSpace) / CGFloat(numberOfElementsInRow)
+            let columns = [GridItem](repeating: .init(.fixed(size), spacing: space), count: numberOfElementsInRow)
+            
+            LazyVGrid(columns: columns) {
+                ForEach(Array(viewModel.entities.enumerated()), id: \.element.id) { index, entity in
+                    Group {
+                        switch entity {
+                        case let light as LightEntityUI:
+                            LightView(
+                                entity: light,
+                                updateState: viewModel.didUpdateLightState
+                            )
+                        default:
+                            UnsupportedView(
+                                name: entity.name,
+                                domain: entity.domain.name
+                            )
+                        }
+                    }
+                    .frame(height: size)
+                }
+            }
+        }
+    }
 }
 
 #if DEBUG
-import Preview
-
 struct DashboardView_Preview: PreviewProvider {
-
-    class FakeViewModel: DashboardViewModel {
-        var didSelectAddDashboard: (() -> Void)?
-        var didSelectEditDashboard: ((Domain.Dashboard) -> Void)?
-
-        var editModel: Bool = false
-        var selectedDashboardIndex: Int?
-        var dashboards: [Dashboard] = []
-        var currentDashboard: Domain.Dashboard?
-
-        func didSelectAdd() {}
-        func didSelectEdit(_ dashboard: Dashboard) {}
-    }
-
+    
     static var previews: some View {
         NavigationView {
-            DashboardView(viewModel: FakeViewModel())
+            DashboardView(viewModel: DashboardViewModelPreview())
         }
     }
 }

@@ -10,11 +10,12 @@ import SwiftUI
 
 struct LightView: View {
 
-    @Binding var entity: LightEntityUI
+    let entity: LightEntityUI
+    let updateState: (_ lightEntityUI: LightEntityUI, _ newState: LightStateUI) -> Void
 
     var body: some View {
         content
-            .padding(.vertical, space: .normal)
+            .padding(.vertical, space: .smallL)
             .padding(.horizontal, space: .smallL)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(
@@ -30,7 +31,7 @@ struct LightView: View {
             .clipShape(RoundedRectangle(cornerRadius: .hard))
             .contentShape(Rectangle())
             .onTapGesture {
-                entity.lightState = entity.lightState.inverted
+                updateState(entity, entity.lightState.inverted)
             }
     }
 
@@ -47,14 +48,10 @@ struct LightView: View {
         HStack(spacing: .smallS) {
             Image(systemName: entity.icon)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Spacer()
-            Toggle("", isOn: .init(
-                get: { entity.lightState == .on },
-                set: { entity.lightState = $0 ? .on : .off }
-            ))
-            .labelsHidden()
-            .scaleEffect(0.6)
-            .controlSize(.mini)
+            Text(entity.lightState.rawValue.uppercased())
+                .foregroundColor(SystemColor.secondaryLabel)
+                .font(.subheadline)
+                .padding(.trailing, space: .smallM)
         }
     }
 
@@ -88,6 +85,7 @@ struct LightView_Preview: PreviewProvider {
 
     struct LightEntityMock: LightEntityUI {
 
+        let id: String = ""
         let name: String
         let icon: String = "lamp.ceiling.inverse"
         var lightState: LightStateUI
@@ -100,15 +98,11 @@ struct LightView_Preview: PreviewProvider {
         let size: CGFloat = 150
 
         HStack(spacing: .bigL) {
-            LightView(entity: .init(get: {
-                entityOn
-            }, set: { newValue in }))
-            .frame(width: size, height: size)
-
-            LightView(entity: .init(get: {
-                entityOff
-            }, set: { newValue in }))
-            .frame(width: size, height: size)
+            LightView(entity: entityOn, updateState: { _, newState in entityOn.lightState = newState })
+                .frame(width: size, height: size)
+            
+            LightView(entity: entityOff, updateState: { _, newState in entityOn.lightState = newState })
+                .frame(width: size, height: size)
         }
     }
 }

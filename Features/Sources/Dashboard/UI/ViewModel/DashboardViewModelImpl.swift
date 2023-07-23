@@ -1,33 +1,14 @@
 //
 //  DashboardViewModel.swift
-//  
+//
 //
 //  Created by Breno Aquino on 17/07/23.
 //
 
-import Preview
 import Combine
 import Common
 import Domain
 import SwiftUI
-
-// MARK: - Interface
-
-public protocol DashboardViewModel: ObservableObject {
-
-    var editModel: Bool { get set }
-    var selectedDashboardIndex: Int? { get set }
-    var dashboards: [Dashboard] { get set }
-    var currentDashboard: Dashboard? { get }
-
-    var didSelectAddDashboard: (() -> Void)? { get set }
-    var didSelectEditDashboard: ((_ dashboard: Dashboard) -> Void)? { get set }
-
-    func didSelectAdd()
-    func didSelectEdit(_ dashboard: Dashboard)
-}
-
-// MARK: - Implementation
 
 public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: DashboardViewModel {
 
@@ -67,6 +48,11 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
         return dashboards[selectedDashboardIndex]
     }
 
+    public var entities: [any Entity] {
+        guard let currentDashboard else { return [] }
+        return currentDashboard.entitiesIDs.compactMap { self.entityService.entities[$0] }
+    }
+
     // MARK: Init
 
     public init(dashboardService: DashboardS, entityService: EntityS) {
@@ -78,7 +64,7 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
     }
 }
 
-// MARK: Private Methods
+// MARK: - Private Methods
 
 extension DashboardViewModelImpl {
 
@@ -87,13 +73,25 @@ extension DashboardViewModelImpl {
     }
 
     private func setupForwards() {
-        dashboardService.forward(objectWillChange).store(in: &cancellable)
+        dashboardService.forward(objectWillChange, on: RunLoop.main).store(in: &cancellable)
+        entityService.forward(objectWillChange, on: RunLoop.main).store(in: &cancellable)
     }
 }
 
-// MARK: Public Methods
+// MARK: - Public Methods
 
 extension DashboardViewModelImpl {
+
+    public func didUpdateLightState(_ lightEntityUI: LightEntityUI, newState: LightStateUI) {
+        Task {
+            let service: EntityActionService = newState == .on ? .turnOn : .turnOff
+            do {
+                try await entityService.execute(service: service, entityID: lightEntityUI.id)
+            } catch {
+                Logger.log(level: .error, "Could not execute \(String(describing: service))")
+            }
+        }
+    }
 
     public func didSelectAdd() {
         didSelectAddDashboard?()
