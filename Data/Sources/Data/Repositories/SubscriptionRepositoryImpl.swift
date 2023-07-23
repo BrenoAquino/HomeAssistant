@@ -25,9 +25,9 @@ extension SubscriptionRepositoryImpl: SubscriptionRepository {
     public var stateChangedEvent: AnyPublisher<Domain.StateChangedEvent, Error> {
         subscriptionRemoteDataSource
             .event
-            .decode(type: StateChangedEvent.self, decoder: JSONDecoder())
+            .decode(type: StateChangedEvent.self, decoder: JSONDecoder(), atKeyPath: "event")
             .filter { $0.eventType == Domain.EventType.stateChanged.string }
-            .tryMap { try $0.toDomain() }
+            .compactMap { try? $0.toDomain() }
             .eraseToAnyPublisher()
     }
 

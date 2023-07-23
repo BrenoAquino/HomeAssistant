@@ -73,8 +73,8 @@ extension DashboardViewModelImpl {
     }
 
     private func setupForwards() {
-        dashboardService.forward(objectWillChange).store(in: &cancellable)
-        entityService.forward(objectWillChange).store(in: &cancellable)
+        dashboardService.forward(objectWillChange, on: RunLoop.main).store(in: &cancellable)
+        entityService.forward(objectWillChange, on: RunLoop.main).store(in: &cancellable)
     }
 }
 
