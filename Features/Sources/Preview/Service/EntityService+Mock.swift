@@ -19,12 +19,13 @@ public enum EntityMock {
     public static let fan = Domain.FanEntity(id: "fan.bedroom_fan", name: "Bedroom's Fan", percentageStep: 20, percentage: 20, state: .on)
 
     public static var all: [any Entity] = [mainLight, ledDeskLight, ledCeilingLight, climate, coffeeMachine, fan]
+    public static var allDict: [String : any Entity] = all.reduce(into: [String : any Entity](), { $0[$1.id] = $1 })
 }
 
 public class EntityServiceMock: Domain.EntityService {
 
     @Published public private(set) var domains = Domain.EntityDomain.allCases
-    @Published public var entities = EntityMock.all.reduce(into: [String : any Entity](), { $0[$1.id] = $1 })
+    @Published public var entities = EntityMock.allDict
 
     public init() {}
 

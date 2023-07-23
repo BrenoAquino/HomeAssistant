@@ -1,33 +1,14 @@
 //
 //  DashboardViewModel.swift
-//  
+//
 //
 //  Created by Breno Aquino on 17/07/23.
 //
 
-import Preview
 import Combine
 import Common
 import Domain
 import SwiftUI
-
-// MARK: - Interface
-
-public protocol DashboardViewModel: ObservableObject {
-
-    var editModel: Bool { get set }
-    var selectedDashboardIndex: Int? { get set }
-    var dashboards: [Dashboard] { get set }
-    var currentDashboard: Dashboard? { get }
-
-    var didSelectAddDashboard: (() -> Void)? { get set }
-    var didSelectEditDashboard: ((_ dashboard: Dashboard) -> Void)? { get set }
-
-    func didSelectAdd()
-    func didSelectEdit(_ dashboard: Dashboard)
-}
-
-// MARK: - Implementation
 
 public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: DashboardViewModel {
 
@@ -67,6 +48,11 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
         return dashboards[selectedDashboardIndex]
     }
 
+    public var entities: [any Entity] {
+        guard let currentDashboard else { return [] }
+        return currentDashboard.entitiesIDs.compactMap { self.entityService.entities[$0] }
+    }
+
     // MARK: Init
 
     public init(dashboardService: DashboardS, entityService: EntityS) {
@@ -78,7 +64,7 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
     }
 }
 
-// MARK: Private Methods
+// MARK: - Private Methods
 
 extension DashboardViewModelImpl {
 
@@ -88,10 +74,11 @@ extension DashboardViewModelImpl {
 
     private func setupForwards() {
         dashboardService.forward(objectWillChange).store(in: &cancellable)
+        entityService.forward(objectWillChange).store(in: &cancellable)
     }
 }
 
-// MARK: Public Methods
+// MARK: - Public Methods
 
 extension DashboardViewModelImpl {
 
