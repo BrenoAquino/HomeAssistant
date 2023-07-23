@@ -23,7 +23,7 @@ public struct WebSocketSendMessageWrapper<T: Encodable>: Encodable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: WebSocketSendMessageWrapper<T>.CodingKeys.self)
-        try container.encode(self.id, forKey: WebSocketSendMessageWrapper<T>.CodingKeys.id)
+        try container.encodeIfPresent(self.id, forKey: WebSocketSendMessageWrapper<T>.CodingKeys.id)
         try messageData.encode(to: encoder)
     }
 }

@@ -28,10 +28,10 @@ struct CallServiceMessage<T: Encodable>: Encodable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         var targetContainer = container.nestedContainer(keyedBy: CodingKeys.TargetCodingKeys.self, forKey: .target)
-        try container.encode(type, forKey: .type)
-        try container.encode(domain, forKey: .domain)
-        try container.encode(service, forKey: .service)
-        try container.encode(serviceData, forKey: .serviceData)
-        try targetContainer.encode(entityID, forKey: .entityID)
+        try container.encodeIfPresent(type, forKey: .type)
+        try container.encodeIfPresent(domain, forKey: .domain)
+        try container.encodeIfPresent(service, forKey: .service)
+        try container.encodeIfPresent(serviceData, forKey: .serviceData)
+        try targetContainer.encodeIfPresent(entityID, forKey: .entityID)
     }
 }
