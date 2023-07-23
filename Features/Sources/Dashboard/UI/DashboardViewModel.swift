@@ -27,13 +27,13 @@ public protocol DashboardViewModel: ObservableObject {
 
 // MARK: - Implementation
 
-public class DashboardViewModelImpl<EntityS: EntityService, DashboardS: DashboardService>: DashboardViewModel {
+public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: DashboardViewModel {
 
     private var cancellable: Set<AnyCancellable> = .init()
 
     // MARK: Services
 
-    private var entityService: EntityS
+    @ObservedObject private var entityService: EntityS
     @ObservedObject var dashboardService: DashboardS
 
     // MARK: Redirects
@@ -67,7 +67,7 @@ public class DashboardViewModelImpl<EntityS: EntityService, DashboardS: Dashboar
     }
 }
 
-// MARK: - Private Methods
+// MARK: Private Methods
 
 extension DashboardViewModelImpl {
 
@@ -82,7 +82,7 @@ extension DashboardViewModelImpl {
     }
 }
 
-// MARK: - Interfaces
+// MARK: Public Methods
 
 extension DashboardViewModelImpl {
 

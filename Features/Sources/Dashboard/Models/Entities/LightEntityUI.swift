@@ -9,12 +9,11 @@ import Foundation
 import Domain
 
 enum LightStateUI: String {
-    case on = "ON"
-    case off = "OFF"
+    case on
+    case off
 
-    func toggle() -> LightStateUI {
-        self == .on ? .off : .on
-    }
+    var isOn: Bool { self == .on }
+    var inverted: Self { self == .on ? .off : .on }
 }
 
 protocol LightEntityUI {
@@ -22,10 +21,6 @@ protocol LightEntityUI {
     var name: String { get }
     var icon: String { get }
     var lightState: LightStateUI { get set }
-}
-
-extension LightEntityUI {
-    var isOn: Bool { lightState == .on }
 }
 
 extension LightEntity: LightEntityUI {

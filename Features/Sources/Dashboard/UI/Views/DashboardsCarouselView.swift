@@ -11,7 +11,6 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 private enum Constants {
-
     static let dashboardImageHeight: CGFloat = 80
     static let dashboardImageWidth: CGFloat = dashboardImageHeight
     static let dashboardStrokeWidth: CGFloat = 1
@@ -21,6 +20,10 @@ private enum Constants {
 }
 
 struct DashboardsCarouselView<Model: DashboardUI>: View {
+
+    enum Constants {
+
+    }
 
     @Binding var editMode: Bool
     @Binding var dashboards: [Model]
