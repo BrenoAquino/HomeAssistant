@@ -1,5 +1,5 @@
 //
-//  DashboardViewModel.swift
+//  DashboardViewModelImpl.swift
 //
 //
 //  Created by Breno Aquino on 17/07/23.

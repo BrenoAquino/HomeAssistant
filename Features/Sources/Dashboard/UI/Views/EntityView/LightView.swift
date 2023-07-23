@@ -19,13 +19,13 @@ struct LightView: View {
             .padding(.horizontal, space: .smallL)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(
-                SystemColor.orange
+                DSColor.orange
                     .blur(radius: 50)
                     .opacity(entity.lightState.isOn ? 1 : 0)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: .hard)
-                    .stroke(SystemColor.gray3, lineWidth: 1)
+                    .stroke(DSColor.gray3, lineWidth: 1)
                     .opacity(entity.lightState.isOn ? 0 : 1)
             )
             .clipShape(RoundedRectangle(cornerRadius: .hard))
@@ -49,7 +49,7 @@ struct LightView: View {
             Image(systemName: entity.icon)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Text(entity.lightState.rawValue.uppercased())
-                .foregroundColor(SystemColor.secondaryLabel)
+                .foregroundColor(DSColor.secondaryLabel)
                 .font(.subheadline)
                 .padding(.trailing, space: .smallM)
         }
@@ -60,7 +60,7 @@ struct LightView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .font(.subheadline)
             .fontWeight(.semibold)
-            .foregroundColor(SystemColor.label)
+            .foregroundColor(DSColor.label)
 
 //        VStack(spacing: .smallS) {
 //            Text(entity.name)

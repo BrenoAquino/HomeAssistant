@@ -111,13 +111,13 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
     ) -> some View {
         VStack(spacing: .smallM) {
             Image(systemName: icon)
-                .foregroundColor(isSelected ? SystemColor.background : SystemColor.label)
+                .foregroundColor(isSelected ? DSColor.background : DSColor.label)
                 .frame(width: Constants.dashboardImageWidth, height: Constants.dashboardImageHeight)
-                .background(isSelected ? SystemColor.label : SystemColor.background)
+                .background(isSelected ? DSColor.label : DSColor.background)
                 .overlay(
                     RoundedRectangle(cornerRadius: .hard)
                         .stroke(
-                            isSelected ? SystemColor.background : SystemColor.gray3,
+                            isSelected ? DSColor.background : DSColor.gray3,
                             lineWidth: Constants.dashboardStrokeWidth
                         )
                 )

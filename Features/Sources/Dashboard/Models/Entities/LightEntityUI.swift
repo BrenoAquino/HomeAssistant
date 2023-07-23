@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  LightEntityUI.swift
 //  
 //
 //  Created by Breno Aquino on 20/07/23.

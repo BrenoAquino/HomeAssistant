@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  DSColor.swift
 //  
 //
 //  Created by Breno Aquino on 17/07/23.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public enum SystemColor {
+public enum DSColor {
 
     // MARK: Label Colors
 

@@ -31,13 +31,13 @@ struct IconsCarouselView: View {
         let isSelected = selectedIcon?.name == iconUI.name
 
         Image(systemName: iconUI.name)
-            .foregroundColor(isSelected ? SystemColor.background : SystemColor.label)
+            .foregroundColor(isSelected ? DSColor.background : DSColor.label)
             .frame(width: 50, height: 50)
-            .background(isSelected ? SystemColor.label : SystemColor.background)
+            .background(isSelected ? DSColor.label : DSColor.background)
             .overlay(
                 RoundedRectangle(cornerRadius: .hard)
                     .stroke(
-                        isSelected ? SystemColor.background : SystemColor.gray3,
+                        isSelected ? DSColor.background : DSColor.gray3,
                         lineWidth: 1
                     )
             )

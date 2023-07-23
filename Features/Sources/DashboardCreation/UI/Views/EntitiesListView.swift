@@ -54,9 +54,9 @@ struct EntitiesListView: View {
         Text(domain.name)
             .padding(.vertical, space: .smallS)
             .padding(.horizontal, space: .smallL)
-            .foregroundColor(isSelected ? SystemColor.background : SystemColor.label)
-            .background(isSelected ? SystemColor.label : SystemColor.background)
-            .overlay(Capsule().stroke(SystemColor.label, lineWidth: 1))
+            .foregroundColor(isSelected ? DSColor.background : DSColor.label)
+            .background(isSelected ? DSColor.label : DSColor.background)
+            .overlay(Capsule().stroke(DSColor.label, lineWidth: 1))
             .clipShape(Capsule())
             .onTapGesture {
                 if isSelected {
@@ -71,7 +71,7 @@ struct EntitiesListView: View {
         VStack(spacing: .smallS) {
             VStack(spacing: .zero) {
                 TextField("", text: $entitySearchText, axis: .horizontal)
-                    .foregroundColor(SystemColor.secondaryLabel)
+                    .foregroundColor(DSColor.secondaryLabel)
                     .font(.subheadline)
                     .frame(height: 20)
 
@@ -79,7 +79,7 @@ struct EntitiesListView: View {
             }
 
             Localizable.entitiesHint.text
-                .foregroundColor(SystemColor.secondaryLabel)
+                .foregroundColor(DSColor.secondaryLabel)
                 .font(.footnote)
                 .fontWeight(.medium)
                 .frame(maxWidth: .infinity, alignment: .leading)

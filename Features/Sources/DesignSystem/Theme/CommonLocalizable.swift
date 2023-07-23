@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  CommonLocalizable.swift
 //  
 //
 //  Created by Breno Aquino on 18/07/23.

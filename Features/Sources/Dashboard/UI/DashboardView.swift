@@ -22,7 +22,7 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
         ScrollView(.vertical) {
 
             Localizable.welcome.text
-                .foregroundColor(SystemColor.secondaryLabel)
+                .foregroundColor(DSColor.secondaryLabel)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.callout)
                 .padding(.leading, space: .smallL)
@@ -56,7 +56,7 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                     configButton
                 }
             }
-            .foregroundColor(SystemColor.label)
+            .foregroundColor(DSColor.label)
         }
     }
     

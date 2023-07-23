@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  EntityDomain.swift
 //  
 //
 //  Created by Breno Aquino on 16/07/23.
