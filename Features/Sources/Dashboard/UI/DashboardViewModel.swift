@@ -15,20 +15,28 @@ public class DashboardViewModel: ObservableObject {
     private var cancellable: Set<AnyCancellable> = .init()
     private var dashboardUpdateCancellable: AnyCancellable?
 
+    // MARK: Services
+
+    private let entityService: EntityService
+    private let dashboardService: DashboardService
+
+    // MARK: Redirects
+
     public var didSelectAddDashboard: (() -> Void)?
     public var didSelectEditDashboard: ((_ dashboard: Dashboard) -> Void)?
 
     // MARK: Publishers
 
     @Published var editModel: Bool = false
-    @Published var dashboards: [Dashboard] = []
     @Published var selectedDashboard: Dashboard?
     @Published private(set) var entities: Int = .zero
 
-    // MARK: Services
+    // MARK: Gets
 
-    private let entityService: EntityService
-    private let dashboardService: DashboardService
+    var dashboards: [Dashboard] {
+        get { dashboardService.dashboards.value }
+        set { dashboardService.dashboards.send(newValue) }
+    }
 
     // MARK: Init
 
@@ -47,10 +55,11 @@ extension DashboardViewModel {
     private func setupObservers() {
         dashboardService
             .dashboards
-            .sink { [weak self] in
-                self?.dashboards = $0
-                self?.selectedDashboard = self?.dashboards.first
-                print("dashboardService.dashboards.sink")
+            .sink { [weak self] _ in
+                if self?.selectedDashboard == nil {
+                    self?.selectedDashboard = self?.dashboards.first
+                }
+                self?.objectWillChange.send()
             }
             .store(in: &cancellable)
 
@@ -58,7 +67,6 @@ extension DashboardViewModel {
             .compactMap { $0 }
             .sink { [weak self] dashboard in
                 self?.entities = dashboard.entitiesIDs.count
-                print("$selectedDashboard.sink \(String(describing: self?.entities))")
             }
             .store(in: &cancellable)
     }
@@ -67,10 +75,6 @@ extension DashboardViewModel {
 // MARK: - Interfaces
 
 extension DashboardViewModel {
-
-    func removeDashboard(_ dashboard: any DashboardUI) {
-        dashboardService.delete(dashboardName: dashboard.name)
-    }
 
     func didSelectAdd() {
         didSelectAddDashboard?()
