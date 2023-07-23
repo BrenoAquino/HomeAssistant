@@ -10,13 +10,22 @@ import Domain
 import Foundation
 import SwiftUI
 
+// MARK: - Interface
+
 enum AppState {
     case foreground
     case background
     case terminate
 }
 
-class LifeCycleHandler<DashboardS: DashboardService> {
+protocol LifeCycleHandler {
+
+    func appStateDidChange(_ state: AppState)
+}
+
+// MARK: - Implementation
+
+class LifeCycleHandlerImpl<DashboardS: DashboardService>: LifeCycleHandler {
 
     private let dashboardsService: DashboardS
 
@@ -25,7 +34,7 @@ class LifeCycleHandler<DashboardS: DashboardService> {
     }
 }
 
-extension LifeCycleHandler {
+extension LifeCycleHandlerImpl {
 
     func appStateDidChange(_ state: AppState) {
         guard state == .background || state == .terminate else { return }

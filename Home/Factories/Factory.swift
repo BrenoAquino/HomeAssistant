@@ -158,3 +158,12 @@ extension Factory {
         DashboardCreationCoordinator(viewModel: viewModel)
     }
 }
+
+// MARK: Handlers
+
+extension Factory {
+
+    func lifeCycleHandler() -> LifeCycleHandler {
+        LifeCycleHandlerImpl(dashboardsService: dashboardServiceInstance)
+    }
+}

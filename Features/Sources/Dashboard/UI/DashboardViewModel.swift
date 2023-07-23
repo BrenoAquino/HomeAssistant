@@ -7,6 +7,7 @@
 
 import Preview
 import Combine
+import Common
 import Domain
 import SwiftUI
 
@@ -15,8 +16,9 @@ import SwiftUI
 public protocol DashboardViewModel: ObservableObject {
 
     var editModel: Bool { get set }
-    var selectedDashboard: Dashboard? { get set }
+    var selectedDashboardName: String? { get set }
     var dashboards: [Dashboard] { get set }
+    var currentDashboard: Dashboard? { get }
 
     var didSelectAddDashboard: (() -> Void)? { get set }
     var didSelectEditDashboard: ((_ dashboard: Dashboard) -> Void)? { get set }
@@ -44,8 +46,7 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
     // MARK: Publishers
 
     @Published public var editModel: Bool = false
-    @Published public var selectedDashboard: Dashboard?
-    @Published private(set) var entities: Int = .zero
+    @Published public var selectedDashboardName: String?
 
     // MARK: Gets
 
@@ -55,6 +56,10 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
             dashboardService.dashboards = newValue
             objectWillChange.send()
         }
+    }
+
+    public var currentDashboard: Dashboard? {
+        dashboards.first(where: { $0.name == selectedDashboardName })
     }
 
     // MARK: Init
@@ -73,24 +78,11 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
 extension DashboardViewModelImpl {
 
     private func setupData() {
-        selectedDashboard = dashboards.first
+        selectedDashboardName = dashboards.first?.name
     }
 
     private func setupObservers() {
-        dashboardService
-            .objectWillChange
-            .sink { result in
-                print(result)
-            }
-            .store(in: &cancellable)
-
-        $selectedDashboard
-            .compactMap { $0 }
-            .sink { [weak self] dashboard in
-                self?.entities = dashboard.entitiesIDs.count
-                self?.objectWillChange.send()
-            }
-            .store(in: &cancellable)
+        dashboardService.forward(objectWillChange).store(in: &cancellable)
     }
 }
 

@@ -70,20 +70,22 @@ public class DashboardCreationViewModelImpl<DashboardS: DashboardService, Entity
     @Published public var selectedIcon: IconUI?
     @Published public var iconFilterText: String = ""
 
+    @Published public var entities: [EntityUI] = []
     @Published public var selectedEntitiesIDs: Set<String> = []
     @Published public var entityFilterText: String = ""
 
-    @Published public private(set) var domains: [EntityDomain] = []
     @Published public var selectedDomainsNames: Set<String> = []
 
     // MARK: Services
 
-    @ObservedObject private var dashboardService: DashboardS
+    private var dashboardService: DashboardS
     @ObservedObject private var entitiesService: EntityS
 
     // MARK: Gets
 
-    @Published public var entities: [EntityUI] = []
+    public var domains: [EntityDomain] {
+        entitiesService.domains
+    }
 
     // MARK: Init
 
@@ -102,6 +104,8 @@ public class DashboardCreationViewModelImpl<DashboardS: DashboardService, Entity
 extension DashboardCreationViewModelImpl {
 
     private func setupData(_ mode: DashboardCreationMode) {
+        selectedDomainsNames = Set(entitiesService.domains.map { $0.name })
+
         guard case .edit(let dashboard) = mode else { return }
         originalName = dashboard.name
         dashboardName = dashboard.name
@@ -115,6 +119,8 @@ extension DashboardCreationViewModelImpl {
     }
 
     private func serviceObservers() {
+        entitiesService.forward(objectWillChange).store(in: &cancellable)
+        dashboardService.forward(objectWillChange).store(in: &cancellable)
     }
 
     private func uiObservers() {

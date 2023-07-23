@@ -24,22 +24,21 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             DashboardsCarouselView(
                 editMode: $viewModel.editModel,
                 dashboards: $viewModel.dashboards,
-                selectedDashboard: $viewModel.selectedDashboard,
+                selectedDashboardName: $viewModel.selectedDashboardName,
                 dashboardDidEdit: viewModel.didSelectEdit,
                 addDidSelect: viewModel.didSelectAdd
             )
             .padding(.top, space: .smallS)
 
-//            Localizable.devices.text
-//                .font(.title3)
-//                .fontWeight(.semibold)
-//                .frame(maxWidth: .infinity, alignment: .leading)
-//                .padding(.horizontal, space: .smallL)
+            Localizable.devices.text
+                .font(.title3)
+                .fontWeight(.semibold)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, space: .smallL)
 
-//            Text(viewModel.selectedDashboard?.name ?? "nil")
-//            Text("----")
-//            Text(String(viewModel.entities))
-//            Text("----")
+            Text("----")
+            Text(viewModel.currentDashboard?.name ?? "nil")
+            Text(String(describing: viewModel.currentDashboard?.entitiesIDs.count))
         }
         .navigationTitle(Localizable.hiThere.value)
         .toolbar {
@@ -64,12 +63,14 @@ import Preview
 struct DashboardView_Preview: PreviewProvider {
 
     class FakeViewModel: DashboardViewModel {
+
         var didSelectAddDashboard: (() -> Void)?
         var didSelectEditDashboard: ((Domain.Dashboard) -> Void)?
 
         var editModel: Bool = false
-        var selectedDashboard: Dashboard? = nil
+        var selectedDashboardName: String?
         var dashboards: [Dashboard] = []
+        var currentDashboard: Domain.Dashboard?
 
         func didSelectAdd() {}
         func didSelectEdit(_ dashboard: Dashboard) {}
