@@ -25,7 +25,7 @@ enum DashboardCreationViewModelError: Error {
 public class DashboardCreationViewModel: ObservableObject {
 
     private var cancellable: Set<AnyCancellable> = []
-    private var allEntities: Entities = .init()
+    private var allEntities: [String : any Entity] = [:]
     private var originalName: String = ""
     let mode: DashboardCreationMode
 
@@ -37,14 +37,17 @@ public class DashboardCreationViewModel: ObservableObject {
     // MARK: Publishers
 
     @Published var dashboardName: String = ""
+
     @Published private(set) var icons: [IconUI] = IconUI.list
-    @Published private(set) var selectedIconIndex: Int = .zero
+    @Published var selectedIcon: IconUI?
     @Published var iconFilterText: String = ""
+
     @Published private(set) var entities: [EntityUI] = []
-    @Published private(set) var selectedEntitiesIDs: Set<String> = []
+    @Published var selectedEntitiesIDs: Set<String> = []
     @Published var entityFilterText: String = ""
+
     @Published private(set) var domains: [EntityDomainUI] = []
-    @Published private(set) var selectedDomains: Set<String> = []
+    @Published var selectedDomainsNames: Set<String> = []
 
     // MARK: Services
 
@@ -53,8 +56,8 @@ public class DashboardCreationViewModel: ObservableObject {
 
     // MARK: Gets
 
-    private var sortedEntities: [Entity] {
-        Array(allEntities.all.values).sorted(by: { $0.name < $1.name })
+    private var sortedEntities: [any Entity] {
+        Array(allEntities.values).sorted(by: { $0.name < $1.name })
     }
 
     // MARK: Init
@@ -69,6 +72,42 @@ public class DashboardCreationViewModel: ObservableObject {
     }
 }
 
+// MARK: - Setups
+
+extension DashboardCreationViewModel {
+
+    private func setupObservers() {
+        serviceObservers()
+        uiObservers()
+    }
+
+    private func serviceObservers() {
+        entitiesService
+            .entities
+            .sink { [weak self] in self?.allEntities = $0 }
+            .store(in: &cancellable)
+
+        entitiesService
+            .domains
+            .sink { [weak self] domains in
+                self?.domains = domains
+                self?.selectedDomainsNames = Set(domains.map { $0.name })
+            }
+            .store(in: &cancellable)
+    }
+
+    private func uiObservers() {
+        $iconFilterText
+            .sink { [weak self] in self?.filterIcon($0) }
+            .store(in: &cancellable)
+
+        Publishers
+            .CombineLatest($entityFilterText, $selectedDomainsNames)
+            .sink { [weak self] in self?.filterEntity($0, domainNames: $1) }
+            .store(in: &cancellable)
+    }
+}
+
 // MARK: - Private Methods
 
 extension DashboardCreationViewModel {
@@ -78,33 +117,8 @@ extension DashboardCreationViewModel {
 
         originalName = dashboard.name
         dashboardName = dashboard.name
-        selectedIconIndex = icons.firstIndex(where: { $0.name == dashboard.icon }) ?? .zero
-        selectedEntitiesIDs = Set(dashboard.entities.map { $0.id })
-    }
-
-    private func setupObservers() {
-        entitiesService
-            .entities
-            .sink { [weak self] in
-                self?.allEntities = $0
-            }
-            .store(in: &cancellable)
-
-        entitiesService
-            .domains
-            .sink { [weak self] domains in
-                self?.domains = domains
-                self?.selectedDomains = Set(domains.map { $0.name })
-            }
-            .store(in: &cancellable)
-
-        $iconFilterText
-            .sink { [weak self] in self?.filterIcon($0) }
-            .store(in: &cancellable)
-
-        $entityFilterText
-            .sink { [weak self] in self?.filterEntity($0) }
-            .store(in: &cancellable)
+        selectedIcon = icons.first(where: { $0.name == dashboard.icon })
+        selectedEntitiesIDs = Set(dashboard.entitiesIDs)
     }
 
     private func filterIcon(_ text: String) {
@@ -112,28 +126,23 @@ extension DashboardCreationViewModel {
             icons = IconUI.list
             return
         }
-
         let result = IconUI.list.filter { icon in
             [icon.name].appended(contentsOf: icon.keywords).contains(text, options: [.caseInsensitive, .diacriticInsensitive])
         }
-        
         icons = result.isEmpty ? IconUI.list : result
     }
 
-    private func filterEntity(_ text: String) {
-        let allEntities = sortedEntities
-        guard !text.isEmpty || !selectedDomains.isEmpty else {
+    private func filterEntity(_ text: String, domainNames: Set<String>) {
+        let allEntities = sortedEntities.map { $0.toUI() }
+        guard !text.isEmpty || !domainNames.isEmpty else {
             entities = allEntities
             return
         }
-
-        let result = allEntities.filter { [weak self] entity in
-            guard let self else { return false }
-            let nameCheck = [entity.name, entity.domain.name].contains(text, options: [.caseInsensitive, .diacriticInsensitive])
-            let domainCheck = self.selectedDomains.contains(entity.domain.name)
+        let result = allEntities.filter { entity in
+            let nameCheck = [entity.name, entity.domainUI.name].contains(text, options: [.caseInsensitive, .diacriticInsensitive])
+            let domainCheck = domainNames.contains(entity.domainUI.name)
             return nameCheck && domainCheck
         }
-
         entities = result.isEmpty ? allEntities : result
     }
 
@@ -149,48 +158,21 @@ extension DashboardCreationViewModel {
             }
         }
 
-        let icon = icons[selectedIconIndex].name
-        guard !icon.isEmpty else {
+        guard let selectedIcon else {
             throw DashboardCreationViewModelError.missingIcon
         }
 
-        let entities = Array(allEntities.all.values).filter { [weak self] entity in
-            self?.selectedEntitiesIDs.contains(entity.id) == true
-        }
-        guard !entities.isEmpty else {
+        guard !selectedEntitiesIDs.isEmpty else {
             throw DashboardCreationViewModelError.missingEntities
         }
 
-        return Dashboard(name: name, icon: icon, entities: entities)
+        return Dashboard(name: name, icon: selectedIcon.name, entities: Array(selectedEntitiesIDs))
     }
 }
 
 // MARK: - Interfaces
 
 extension DashboardCreationViewModel {
-
-    func selectIcon(_ icon: IconUI, index: Int) {
-        guard index < icons.count && index >= 0 else { return }
-        selectedIconIndex = index
-    }
-
-    func updateEntitySelection(_ entity: EntityUI, isSelected: Bool) {
-        if isSelected {
-            selectedEntitiesIDs.insert(entity.id)
-        } else {
-            selectedEntitiesIDs.remove(entity.id)
-        }
-    }
-
-    func updateDomainSelection(_ domain: EntityDomainUI, isSelected: Bool) {
-        if isSelected {
-            selectedDomains.insert(domain.name)
-        } else {
-            selectedDomains.remove(domain.name)
-        }
-
-        filterEntity(entityFilterText)
-    }
 
     func createOrUpdateDashboard() {
         do {

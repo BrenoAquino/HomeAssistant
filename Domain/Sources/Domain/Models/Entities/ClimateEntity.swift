@@ -7,10 +7,14 @@
 
 import Foundation
 
-public class ClimateEntity: Entity {
+public struct ClimateEntity: Entity {
 
+    public let id: String
+    public let name: String
+    public let domain: EntityDomain = .climate
+    public var state: EntityState
     public var hvac: HVAC?
-    public let temperature: Temperature?
+    public var temperature: Temperature?
 
     public init(
         id: String,
@@ -24,6 +28,9 @@ public class ClimateEntity: Entity {
         currentTemperature: Double? = nil,
         stepTemperature: Double? = nil
     ) {
+        self.id = id
+        self.name = name
+        self.state = state
         self.hvac = HVAC(current: currentHvacMode, allModes: hvacModes)
         self.temperature = Temperature(
             minimum: minimumTemperature,
@@ -32,34 +39,28 @@ public class ClimateEntity: Entity {
             current: currentTemperature,
             step: stepTemperature
         )
-        super.init(id: id, name: name, domain: .climate, state: state)
     }
 
-    public class HVAC {
+    public struct HVAC {
 
         public var current: String?
         public let allModes: [String]?
-
-        init(current: String?, allModes: [String]?) {
-            self.current = current
-            self.allModes = allModes
-        }
     }
 
-    public class Temperature {
+    public struct Temperature {
 
         public let minimum: Double?
         public let maximum: Double?
         public var target: Double?
         public var current: Double?
         public let step: Double?
+    }
+}
 
-        init(minimum: Double?, maximum: Double?, target: Double?, current: Double?, step: Double?) {
-            self.minimum = minimum
-            self.maximum = maximum
-            self.target = target
-            self.current = current
-            self.step = step
-        }
+// MARK: - Equatable
+
+extension ClimateEntity {
+    public static func == (lhs: ClimateEntity, rhs: ClimateEntity) -> Bool {
+        lhs.id == rhs.id
     }
 }

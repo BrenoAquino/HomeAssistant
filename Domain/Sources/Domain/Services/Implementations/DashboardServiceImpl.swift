@@ -30,12 +30,7 @@ extension DashboardServiceImpl: DashboardService {
 
     public func trackDashboards() async throws {
         let fetchedDashboards = try? await dashboardRepository.fetchDashboards()
-        allDashboards = []
-
-        for dashboard in fetchedDashboards ?? [] {
-            dashboard.entities = dashboard.entitiesIDs.compactMap { entityService.entities.value.all[$0] }
-            allDashboards.append(dashboard)
-        }
+        allDashboards = fetchedDashboards ?? []
     }
 
     public func persist() async throws {

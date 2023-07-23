@@ -20,34 +20,26 @@ public struct DashboardView: View {
 
     public var body: some View {
         ScrollView(.vertical) {
-            Localizable.welcome.text
-                .foregroundColor(SystemColor.secondaryLabel)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .font(.callout)
-                .padding(.leading, space: .smallL)
-                .padding(.top, space: .smallS)
 
             DashboardsCarouselView(
                 editMode: $viewModel.editModel,
                 dashboards: $viewModel.dashboards,
                 selectedDashboard: $viewModel.selectedDashboard,
                 dashboardDidEdit: viewModel.didSelectEdit,
-                dashboardDidRemove: viewModel.removeDashboard,
                 addDidSelect: viewModel.didSelectAdd
             )
             .padding(.top, space: .smallS)
 
-            Localizable.devices.text
-                .font(.title3)
-                .fontWeight(.semibold)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, space: .smallL)
+//            Localizable.devices.text
+//                .font(.title3)
+//                .fontWeight(.semibold)
+//                .frame(maxWidth: .infinity, alignment: .leading)
+//                .padding(.horizontal, space: .smallL)
 
-            VStack {
-                ForEach(viewModel.entities, id: \.id) { entity in
-                    Text(entity.name)
-                }
-            }
+            Text(viewModel.selectedDashboard?.name ?? "nil")
+            Text("----")
+            Text(String(viewModel.entities))
+            Text("----")
         }
         .navigationTitle(Localizable.hiThere.value)
         .toolbar {

@@ -12,14 +12,8 @@ import Foundation
 
 public class EntityServiceMock: Domain.EntityService {
 
-    public var entities: CurrentValueSubject<Entities, Never> = .init(.init())
+    public var entities: CurrentValueSubject<[String : any Entity], Never> = .init([:])
     public var domains: CurrentValueSubject<[EntityDomain], Never> = .init(Domain.EntityDomain.allCases)
-
-    var entitiesHandler: Domain.Entities = .init()
-
-    public var allEntities: [Entity] {
-        Array(entities.value.all.values)
-    }
 
     public init() {
         let mainLight = LightEntity(id: "light.main_light", name: "Main Light", state: .on)
@@ -27,17 +21,15 @@ public class EntityServiceMock: Domain.EntityService {
         let ledCeiling = LightEntity(id: "light.led_ceiling", name: "Led Ceiling", state: .on)
         let climate = ClimateEntity(id: "climate.air_conditioner", name: "Air Conditioner", state: .on)
         let coffeeMachine = SwitchEntity(id: "switch.coffee_machine", name: "Coffee Machine", state: .off)
-        let fan = FanEntity(id: "fan.bedroom_fan", name: "Bedroom's Fan", state: .on)
-        entitiesHandler.lights = [
+        let fan = FanEntity(id: "fan.bedroom_fan", name: "Bedroom's Fan", percentageStep: 20, percentage: 20, state: .on)
+        entities.send([
             mainLight.id: mainLight,
             ledDesk.id: ledDesk,
             ledCeiling.id: ledCeiling,
-        ]
-        entitiesHandler.switches = [coffeeMachine.id: coffeeMachine]
-        entitiesHandler.fans = [fan.id: fan]
-        entitiesHandler.climates = [climate.id: climate]
-        entitiesHandler.updateAllEntities()
-        entities.send(entitiesHandler)
+            coffeeMachine.id: coffeeMachine,
+            fan.id: fan,
+            climate.id: climate
+        ])
     }
 
     public func trackEntities() async throws {
@@ -46,9 +38,12 @@ public class EntityServiceMock: Domain.EntityService {
         }
     }
 
-    public func updateEntity(_ entityID: String, service: Domain.EntityActionService) async throws {
+    public func update(entityID: String, entity: any Entity) async throws {
+
+    }
+
+    public func execute(service: EntityActionService, entityID: String) async throws {
 
     }
 }
-
 #endif

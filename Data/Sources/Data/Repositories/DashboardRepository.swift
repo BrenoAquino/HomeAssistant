@@ -42,6 +42,6 @@ extension DashboardRepositoryImpl: Domain.DashboardRepository {
 extension Domain.Dashboard {
 
     func toData() -> Dashboard {
-        Dashboard(name: name, icon: icon, entities: entities.map { $0.id })
+        Dashboard(name: name, icon: icon, entities: entitiesIDs)
     }
 }

@@ -27,7 +27,6 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
     @Binding var selectedDashboard: Model?
 
     let dashboardDidEdit: (_ dashboard: Model) -> Void
-    let dashboardDidRemove: (_ dashboard: Model) -> Void
     let addDidSelect: () -> Void
 
     // MARK: Private States
@@ -73,7 +72,7 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
                 .onTapGesture {
                     if editMode {
                         dashboardDidEdit(dashboard)
-                    } else {
+                    } else if selectedDashboard?.name != dashboard.name {
                         selectedDashboard = dashboard
                     }
                 }
@@ -101,7 +100,7 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
                 .opacity(editMode ? 1 : 0)
                 .animation(.default, value: editMode)
                 .onTapGesture {
-                    dashboardDidRemove(dashboard)
+                    dashboards.removeAll(where: { $0.name == dashboard.name })
                 }
         }
     }
@@ -182,7 +181,6 @@ struct DashboardsCarouselView_Preview: PreviewProvider {
             ]),
             selectedDashboard: .constant(nil),
             dashboardDidEdit: { _ in print("dashboardDidEdit") },
-            dashboardDidRemove: { _ in print("dashboardDidRemove") },
             addDidSelect: { print("addDidSelect") }
         )
     }

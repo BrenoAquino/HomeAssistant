@@ -8,13 +8,19 @@
 import Preview
 import Combine
 import Domain
-import Foundation
+import SwiftUI
 
 public class DashboardViewModel: ObservableObject {
 
-    private var allEntities: [Entity] = []
     private var cancellable: Set<AnyCancellable> = .init()
     private var dashboardUpdateCancellable: AnyCancellable?
+
+    // MARK: Services
+
+    private let entityService: EntityService
+    private let dashboardService: DashboardService
+
+    // MARK: Redirects
 
     public var didSelectAddDashboard: (() -> Void)?
     public var didSelectEditDashboard: ((_ dashboard: Dashboard) -> Void)?
@@ -22,13 +28,15 @@ public class DashboardViewModel: ObservableObject {
     // MARK: Publishers
 
     @Published var editModel: Bool = false
-    @Published var dashboards: [Dashboard] = []
     @Published var selectedDashboard: Dashboard?
-    @Published var entities: [Entity] = []
-    // MARK: Services
+    @Published private(set) var entities: Int = .zero
 
-    private let entityService: EntityService
-    private let dashboardService: DashboardService
+    // MARK: Gets
+
+    var dashboards: [Dashboard] {
+        get { dashboardService.dashboards.value }
+        set { dashboardService.dashboards.send(newValue) }
+    }
 
     // MARK: Init
 
@@ -47,62 +55,26 @@ extension DashboardViewModel {
     private func setupObservers() {
         dashboardService
             .dashboards
-            .filter { [weak self] incomingDashboards in
-                guard let self else { return false }
-                return incomingDashboards.map { $0.name } != self.dashboards.map { $0.name }
-            }
-            .sink { [weak self] in
-                self?.dashboards = $0
-                self?.setupDashboardsUpdate()
-            }
-            .store(in: &cancellable)
-
-        entityService
-            .entities
-            .sink { [weak self] entities in
-                self?.allEntities = Array(entities.all.values)
+            .sink { [weak self] _ in
+                if self?.selectedDashboard == nil {
+                    self?.selectedDashboard = self?.dashboards.first
+                }
+                self?.objectWillChange.send()
             }
             .store(in: &cancellable)
 
         $selectedDashboard
             .compactMap { $0 }
             .sink { [weak self] dashboard in
-                self?.entities = self?.allEntities.filter {
-                    dashboard.entitiesIDs.contains($0.id)
-                } ?? []
-                print("VIEW MODEL count \(self?.entities.count)")
+                self?.entities = dashboard.entitiesIDs.count
             }
             .store(in: &cancellable)
-
-        $entities
-            .sink { entities in
-                print("DEBUG \(entities.map { $0.id })")
-            }
-            .store(in: &cancellable)
-    }
-
-    private func setupDashboardsUpdate() {
-        guard dashboardUpdateCancellable == nil else { return }
-
-        selectedDashboard = dashboards.first
-        dashboardUpdateCancellable = $dashboards
-            .filter { [weak self] incomingDashboards in
-                guard let self else { return false }
-                return incomingDashboards.map { $0.name } != self.dashboardService.dashboards.value.map { $0.name }
-            }
-            .sink { [weak self] in
-                self?.dashboardService.updateAll(dashboards: $0)
-            }
     }
 }
 
 // MARK: - Interfaces
 
 extension DashboardViewModel {
-
-    func removeDashboard(_ dashboard: any DashboardUI) {
-        dashboardService.delete(dashboardName: dashboard.name)
-    }
 
     func didSelectAdd() {
         didSelectAddDashboard?()

@@ -8,13 +8,15 @@
 import Domain
 import Foundation
 
-protocol EntityUI {
+struct EntityUI {
 
-    var id: String { get }
-    var name: String { get }
-    var domainUI: EntityDomainUI { get }
+    let id: String
+    let name: String
+    let domainUI: EntityDomainUI
 }
 
-extension Entity: EntityUI {
-    var domainUI: EntityDomainUI { domain }
+extension Entity {
+    func toUI() -> EntityUI {
+        EntityUI(id: id, name: name, domainUI: domain)
+    }
 }
