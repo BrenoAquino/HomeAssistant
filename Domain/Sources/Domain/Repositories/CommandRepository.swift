@@ -20,17 +20,23 @@ extension CommandRepository {
     func fireEvent<T: Encodable>(
         eventType: String,
         eventData: T? = EmptyCodable.nil
-    ) async throws {}
+    ) async throws {
+        Logger.log("CommandRepository.fireEvent")
+    }
 
     func callService<T: Encodable>(
         entityID: String,
         service: EntityActionService,
         serviceData: T? = EmptyCodable.nil
-    ) async throws {}
+    ) async throws {
+        Logger.log("CommandRepository.callService.entityID")
+    }
 
     func callService<T: Encodable>(
         domain: EntityDomain,
         service: EntityActionService,
         serviceData: T? = EmptyCodable.nil
-    ) async throws {}
+    ) async throws {
+        Logger.log("CommandRepository.callService.domain")
+    }
 }

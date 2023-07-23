@@ -82,6 +82,17 @@ extension DashboardViewModelImpl {
 
 extension DashboardViewModelImpl {
 
+    public func didUpdateLightState(_ lightEntityUI: LightEntityUI, newState: LightStateUI) {
+        Task {
+            let service: EntityActionService = newState == .on ? .turnOn : .turnOff
+            do {
+                try await entityService.execute(service: service, entityID: lightEntityUI.id)
+            } catch {
+                Logger.log(level: .error, "Could not execute \(String(describing: service))")
+            }
+        }
+    }
+
     public func didSelectAdd() {
         didSelectAddDashboard?()
     }

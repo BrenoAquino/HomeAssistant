@@ -29,7 +29,16 @@ class DashboardViewModelPreview: DashboardViewModel {
     var didSelectAddDashboard: (() -> Void)?
     var didSelectEditDashboard: ((Dashboard) -> Void)?
 
-    func didSelectAdd() { print("didSelectAdd") }
-    func didSelectEdit(_ dashboard: Dashboard) { print("didSelectEdit \(dashboard.name)") }
+    func didUpdateLightState(_ lightEntityUI: LightEntityUI, newState: LightStateUI) {
+        print("didUpdateLightState \(lightEntityUI.name) \(newState.rawValue)")
+    }
+
+    func didSelectAdd() {
+        print("didSelectAdd")
+    }
+
+    func didSelectEdit(_ dashboard: Dashboard) {
+        print("didSelectEdit \(dashboard.name)")
+    }
 }
 #endif

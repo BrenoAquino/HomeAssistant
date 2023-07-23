@@ -21,15 +21,15 @@ struct UnsupportedView: View {
                 .minimumScaleFactor(0.5)
                 .foregroundColor(SystemColor.label)
                 .font(.headline)
+                .frame(maxHeight: .infinity, alignment: .center)
 
             Localizable.unsupported.text
                 .textCase(.uppercase)
                 .scaledToFill()
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)
-                .foregroundColor(SystemColor.tertiaryLabel)
+                .foregroundColor(SystemColor.secondaryLabel)
                 .font(.subheadline)
-                .frame(maxHeight: .infinity, alignment: .bottom)
         }
         .padding(.vertical, space: .smallL)
         .padding(.horizontal, space: .smallL)

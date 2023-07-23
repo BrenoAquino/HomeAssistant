@@ -69,7 +69,10 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                     Group {
                         switch entity {
                         case let light as LightEntityUI:
-                            LightView(entity: .init(get: { light }, set: { _ in }))
+                            LightView(
+                                entity: light,
+                                updateState: viewModel.didUpdateLightState
+                            )
                         default:
                             UnsupportedView(
                                 name: entity.name,

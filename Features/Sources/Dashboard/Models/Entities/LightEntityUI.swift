@@ -8,7 +8,7 @@
 import Foundation
 import Domain
 
-enum LightStateUI: String {
+public enum LightStateUI: String {
     case on
     case off
 
@@ -16,8 +16,9 @@ enum LightStateUI: String {
     var inverted: Self { self == .on ? .off : .on }
 }
 
-protocol LightEntityUI {
+public protocol LightEntityUI {
 
+    var id: String { get }
     var name: String { get }
     var icon: String { get }
     var lightState: LightStateUI { get set }
@@ -25,8 +26,8 @@ protocol LightEntityUI {
 
 extension LightEntity: LightEntityUI {
 
-    var icon: String { domain.icon }
-    var lightState: LightStateUI {
+    public var icon: String { domain.icon }
+    public var lightState: LightStateUI {
         get { state == .on ? .on : .off }
         set { state = newValue == .on ? .on : .off }
     }

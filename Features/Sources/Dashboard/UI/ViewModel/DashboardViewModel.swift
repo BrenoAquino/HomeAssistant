@@ -19,6 +19,7 @@ public protocol DashboardViewModel: ObservableObject {
     var didSelectAddDashboard: (() -> Void)? { get set }
     var didSelectEditDashboard: ((_ dashboard: Dashboard) -> Void)? { get set }
 
+    func didUpdateLightState(_ lightEntityUI: LightEntityUI, newState: LightStateUI)
     func didSelectAdd()
     func didSelectEdit(_ dashboard: Dashboard)
 }
