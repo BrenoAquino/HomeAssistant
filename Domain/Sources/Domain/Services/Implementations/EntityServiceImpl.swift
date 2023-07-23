@@ -17,23 +17,24 @@ public class EntityServiceImpl {
 
     // MARK: Publishers
 
+    @Published public var hiddenEntities: Set<String> = []
     @Published public var entities: [String : any Entity] = [:]
     @Published public private(set) var domains: [EntityDomain] = EntityDomain.allCases
 
     // MARK: Repositories
 
-    private let fetcherRepository: FetcherRepository
+    private let entityRepository: EntityRepository
     private let commandRepository: CommandRepository
     private let subscriptionRepository: SubscriptionRepository
 
     // MARK: Init
 
     public init(
-        fetcherRepository: FetcherRepository,
+        entityRepository: EntityRepository,
         commandRepository: CommandRepository,
         subscriptionRepository: SubscriptionRepository
     ) {
-        self.fetcherRepository = fetcherRepository
+        self.entityRepository = entityRepository
         self.commandRepository = commandRepository
         self.subscriptionRepository = subscriptionRepository
     }
@@ -73,9 +74,14 @@ extension EntityServiceImpl {
 
 extension EntityServiceImpl: EntityService {
 
+    public func persistHiddenEntities() async throws {
+        try await entityRepository.save(hiddenEntityIDs: hiddenEntities)
+    }
+
     public func trackEntities() async throws {
-        try await fetcherRepository.fetchStates().forEach { [self] in insertEntity($0) }
+        try await entityRepository.fetchStates().forEach { [self] in insertEntity($0) }
         stateChangeSubscriptionID = try await subscriptionRepository.subscribeToEvents(eventType: .stateChanged)
+        hiddenEntities = try await entityRepository.fetchHiddenEntityIDs()
         setupSubscription()
     }
 

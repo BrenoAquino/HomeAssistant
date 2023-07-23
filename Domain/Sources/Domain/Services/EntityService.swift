@@ -14,8 +14,11 @@ public enum EntityServiceError: Error {
 
 public protocol EntityService: ObservableObject {
 
+    var hiddenEntities: Set<String> { get set }
     var entities: [String : any Entity] { get set }
     var domains: [EntityDomain] { get }
+
+    func persistHiddenEntities() async throws
 
     func trackEntities() async throws
     func update(entityID: String, entity: any Entity) async throws

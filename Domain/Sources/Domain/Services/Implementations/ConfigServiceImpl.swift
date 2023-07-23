@@ -9,10 +9,10 @@ import Foundation
 
 public class ConfigServiceImpl {
 
-    private let fetcherRepository: FetcherRepository
+    private let serverRepository: ServerRepository
 
-    public init(fetcherRepository: FetcherRepository) {
-        self.fetcherRepository = fetcherRepository
+    public init(serverRepository: ServerRepository) {
+        self.serverRepository = serverRepository
     }
 }
 
@@ -21,6 +21,6 @@ public class ConfigServiceImpl {
 extension ConfigServiceImpl: ConfigService {
 
     public func config() async throws -> ServerConfig {
-        try await fetcherRepository.fetchConfig()
+        try await serverRepository.fetchConfig()
     }
 }

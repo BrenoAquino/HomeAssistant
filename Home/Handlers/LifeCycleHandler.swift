@@ -25,12 +25,14 @@ protocol LifeCycleHandler {
 
 // MARK: - Implementation
 
-class LifeCycleHandlerImpl<DashboardS: DashboardService>: LifeCycleHandler {
+class LifeCycleHandlerImpl<DashboardS: DashboardService, EntityS: EntityService>: LifeCycleHandler {
 
     private let dashboardsService: DashboardS
+    private let entityService: EntityS
 
-    init(dashboardsService: DashboardS) {
+    init(dashboardsService: DashboardS, entityService: EntityS) {
         self.dashboardsService = dashboardsService
+        self.entityService = entityService
     }
 }
 
@@ -41,6 +43,7 @@ extension LifeCycleHandlerImpl {
         let semaphore = DispatchSemaphore(value: 0)
         Task {
             try? await dashboardsService.persist()
+            try? await entityService.persistHiddenEntities()
             semaphore.signal()
         }
         semaphore.wait()
