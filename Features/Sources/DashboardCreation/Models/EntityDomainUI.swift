@@ -15,7 +15,5 @@ protocol EntityDomainUI {
 }
 
 extension EntityDomain: EntityDomainUI {
-    var name: String {
-        String(describing: self)
-    }
+    var name: String { String(describing: self) }
 }

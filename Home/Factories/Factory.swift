@@ -49,14 +49,11 @@ class Factory {
         dashboardRepository = DashboardRepositoryImpl(dashboardLocalDataSource: dashboardLocalDataSource)
 
         configService = ConfigServiceImpl(fetcherRepository: fetcherRepository)
+        dashboardService = DashboardServiceImpl(dashboardRepository: dashboardRepository)
         entityService = EntityServiceImpl(
             fetcherRepository: fetcherRepository,
             commandRepository: commandRepository,
             subscriptionRepository: subscriptionRepository
-        )
-        dashboardService = DashboardServiceImpl(
-            entityService: entityService,
-            dashboardRepository: dashboardRepository
         )
     }
 }
@@ -129,7 +126,7 @@ extension Factory {
         configService
     }
 
-    func getEntityService() -> EntityService {
+    func getEntityService() -> any EntityService {
         entityService
     }
 

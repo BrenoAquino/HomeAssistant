@@ -1,6 +1,6 @@
 ////
 ////  DashboardCreationViewModel.swift
-////  
+////
 ////
 ////  Created by Breno Aquino on 18/07/23.
 ////
@@ -9,24 +9,34 @@
 //import Common
 //import Domain
 //import Foundation
+//import SwiftUI
 //
-//public protocol DashboardCreationViewModel: ObservableObject {
-//
-//    var dashboardName: String { get set }
-//    var icons: [IconUI] { get }
-//    var selectedIcon: IconUI? { get set }
-//    var iconFilterText: String { get set }
-//    var entities: [any Entity] { get }
-//    var selectedEntitiesIDs: Set<String> { get set }
-//    var entityFilterText: String { get set }
-//    var domains: [EntityDomain] { get }
-//    var selectedDomainsNames: Set<String> { get set }
-//}
+//// MARK: - Interface
 //
 //public enum DashboardCreationMode: Equatable {
 //    case creation
 //    case edit(_ dashboard: Dashboard)
 //}
+//
+//public protocol DashboardCreationViewModel: ObservableObject {
+//
+//    var mode: DashboardCreationMode { get }
+//
+//    var dashboardName: String { get set }
+//
+//    var icons: [IconUI] { get }
+//    var selectedIcon: IconUI? { get set }
+//    var iconFilterText: String { get set }
+//
+//    var entities: [any Entity] { get }
+//    var selectedEntitiesIDs: Set<String> { get set }
+//    var entityFilterText: String { get set }
+//
+//    var domains: [EntityDomain] { get }
+//    var selectedDomainsNames: Set<String> { get set }
+//}
+//
+//// MARK: - Implementation
 //
 //enum DashboardCreationViewModelImplError: Error {
 //    case missingName
@@ -35,16 +45,14 @@
 //    case missingEntities
 //}
 //
-//public class DashboardCreationViewModelImpl<
-//    DashboardS: DashboardService
-//>: DashboardCreationViewModel {
+//public class DashboardCreationViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: DashboardCreationViewModel {
 //
+//    private var allEntities: [any Entity] = []
 //    private var cancellable: Set<AnyCancellable> = []
-//    private var allEntities: [String : any Entity] = [:]
 //    private var originalName: String = ""
-//    let mode: DashboardCreationMode
+//    public let mode: DashboardCreationMode
 //
-//    // MARK: External Actions
+//    // MARK: Redirects
 //
 //    public var didFinish: (() -> Void)?
 //    public var didClose: (() -> Void)?
@@ -52,29 +60,29 @@
 //    // MARK: Publishers
 //
 //    @Published public var dashboardName: String = ""
+//
 //    @Published public private(set) var icons: [IconUI] = IconUI.list
 //    @Published public var selectedIcon: IconUI?
 //    @Published public var iconFilterText: String = ""
-//    @Published public private(set) var entities: [any Entity] = []
+//
 //    @Published public var selectedEntitiesIDs: Set<String> = []
 //    @Published public var entityFilterText: String = ""
+//
 //    @Published public private(set) var domains: [EntityDomain] = []
 //    @Published public var selectedDomainsNames: Set<String> = []
 //
 //    // MARK: Services
 //
-//    private let dashboardService: DashboardS
-//    private let entitiesService: EntityService
+//    @ObservedObject private var dashboardService: DashboardS
+//    @ObservedObject private var entitiesService: EntityS
 //
 //    // MARK: Gets
 //
-//    private var sortedEntities: [any Entity] {
-//        Array(allEntities.values).sorted(by: { $0.name < $1.name })
-//    }
+//    @Published public var entities: [any Entity]
 //
 //    // MARK: Init
 //
-//    public init(dashboardService: DashboardS, entitiesService: EntityService, mode: DashboardCreationMode) {
+//    public init(dashboardService: DashboardS, entitiesService: EntityS, mode: DashboardCreationMode) {
 //        self.dashboardService = dashboardService
 //        self.entitiesService = entitiesService
 //        self.mode = mode
@@ -88,24 +96,21 @@
 //
 //extension DashboardCreationViewModelImpl {
 //
+//    private func setupData(_ mode: DashboardCreationMode) {
+//        guard case .edit(let dashboard) = mode else { return }
+//
+//        originalName = dashboard.name
+//        dashboardName = dashboard.name
+//        selectedIcon = icons.first(where: { $0.name == dashboard.icon })
+//        selectedEntitiesIDs = Set(dashboard.entitiesIDs)
+//    }
+//
 //    private func setupObservers() {
 //        serviceObservers()
 //        uiObservers()
 //    }
 //
 //    private func serviceObservers() {
-//        entitiesService
-//            .entities
-//            .sink { [weak self] in self?.allEntities = $0 }
-//            .store(in: &cancellable)
-//
-//        entitiesService
-//            .domains
-//            .sink { [weak self] domains in
-//                self?.domains = domains
-//                self?.selectedDomainsNames = Set(domains.map { $0.name })
-//            }
-//            .store(in: &cancellable)
 //    }
 //
 //    private func uiObservers() {
@@ -123,15 +128,6 @@
 //// MARK: - Private Methods
 //
 //extension DashboardCreationViewModelImpl {
-//
-//    private func setupData(_ mode: DashboardCreationMode) {
-//        guard case .edit(let dashboard) = mode else { return }
-//
-//        originalName = dashboard.name
-//        dashboardName = dashboard.name
-//        selectedIcon = icons.first(where: { $0.name == dashboard.icon })
-//        selectedEntitiesIDs = Set(dashboard.entitiesIDs)
-//    }
 //
 //    private func filterIcon(_ text: String) {
 //        guard !text.isEmpty else {

@@ -63,6 +63,7 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
         self.dashboardService = dashboardService
         self.entityService = entityService
 
+        setupData()
         setupObservers()
     }
 }
@@ -71,7 +72,18 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
 
 extension DashboardViewModelImpl {
 
+    private func setupData() {
+        selectedDashboard = dashboards.first
+    }
+
     private func setupObservers() {
+        dashboardService
+            .objectWillChange
+            .sink { result in
+                print(result)
+            }
+            .store(in: &cancellable)
+
         $selectedDashboard
             .compactMap { $0 }
             .sink { [weak self] dashboard in

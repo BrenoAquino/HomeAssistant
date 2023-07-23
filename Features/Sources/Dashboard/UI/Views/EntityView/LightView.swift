@@ -20,17 +20,17 @@ struct LightView: View {
             .background(
                 SystemColor.orange
                     .blur(radius: 50)
-                    .opacity(entity.isOn ? 1 : 0)
+                    .opacity(entity.lightState.isOn ? 1 : 0)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: .hard)
                     .stroke(SystemColor.gray3, lineWidth: 1)
-                    .opacity(entity.isOn ? 0 : 1)
+                    .opacity(entity.lightState.isOn ? 0 : 1)
             )
             .clipShape(RoundedRectangle(cornerRadius: .hard))
             .contentShape(Rectangle())
             .onTapGesture {
-                entity.lightState = entity.lightState.toggle()
+                entity.lightState = entity.lightState.inverted
             }
     }
 

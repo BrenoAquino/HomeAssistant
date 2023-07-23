@@ -21,10 +21,6 @@ private enum Constants {
 
 struct DashboardsCarouselView<Model: DashboardUI>: View {
 
-    enum Constants {
-
-    }
-
     @Binding var editMode: Bool
     @Binding var dashboards: [Model]
     @Binding var selectedDashboard: Model?

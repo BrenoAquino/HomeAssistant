@@ -12,11 +12,9 @@ public class DashboardServiceImpl {
 
     @Published public var dashboards: [Dashboard] = []
 
-    private let entityService: EntityService
     private let dashboardRepository: DashboardRepository
 
-    public init(entityService: EntityService, dashboardRepository: DashboardRepository) {
-        self.entityService = entityService
+    public init(dashboardRepository: DashboardRepository) {
         self.dashboardRepository = dashboardRepository
     }
 }
