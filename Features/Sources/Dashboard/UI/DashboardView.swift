@@ -24,7 +24,7 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             DashboardsCarouselView(
                 editMode: $viewModel.editModel,
                 dashboards: $viewModel.dashboards,
-                selectedDashboardName: $viewModel.selectedDashboardName,
+                selectedDashboardIndex: $viewModel.selectedDashboardIndex,
                 dashboardDidEdit: viewModel.didSelectEdit,
                 addDidSelect: viewModel.didSelectAdd
             )
@@ -63,12 +63,11 @@ import Preview
 struct DashboardView_Preview: PreviewProvider {
 
     class FakeViewModel: DashboardViewModel {
-
         var didSelectAddDashboard: (() -> Void)?
         var didSelectEditDashboard: ((Domain.Dashboard) -> Void)?
 
         var editModel: Bool = false
-        var selectedDashboardName: String?
+        var selectedDashboardIndex: Int?
         var dashboards: [Dashboard] = []
         var currentDashboard: Domain.Dashboard?
 

@@ -23,7 +23,7 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
 
     @Binding var editMode: Bool
     @Binding var dashboards: [Model]
-    @Binding var selectedDashboardName: String?
+    @Binding var selectedDashboardIndex: Int?
 
     let dashboardDidEdit: (_ dashboard: Model) -> Void
     let addDidSelect: () -> Void
@@ -56,9 +56,9 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
     }
 
     private var carousel: some View {
-        ForEach(dashboards, id: \.name) { dashboard in
+        ForEach(Array(dashboards.enumerated()), id: \.element.name) { index, dashboard in
             let shakeAnimation = Animation.easeInOut(duration: 0.15).repeatForever(autoreverses: true)
-            let isSelected = dashboard.name == selectedDashboardName
+            let isSelected = index == selectedDashboardIndex
             let squareElementView = squareElement(dashboard.name, dashboard.icon, isSelected)
             let isCurrentElementDragging = draggedItem?.name == dashboard.name
             let shouldHide = isDragging && isCurrentElementDragging
@@ -72,7 +72,7 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
                     if editMode {
                         dashboardDidEdit(dashboard)
                     } else if !isSelected {
-                        selectedDashboardName = dashboard.name
+                        selectedDashboardIndex = index
                     }
                 }
                 .onDrop(of: [.text], delegate: DashboardDropDelegate(
@@ -178,7 +178,7 @@ struct DashboardsCarouselView_Preview: PreviewProvider {
                 DashboardMock(name: "Garden", icon: "tree"),
                 DashboardMock(name: "Security", icon: "light.beacon.max"),
             ]),
-            selectedDashboardName: .constant(nil),
+            selectedDashboardIndex: .constant(nil),
             dashboardDidEdit: { _ in print("dashboardDidEdit") },
             addDidSelect: { print("addDidSelect") }
         )

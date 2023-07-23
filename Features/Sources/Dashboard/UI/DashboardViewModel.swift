@@ -16,7 +16,7 @@ import SwiftUI
 public protocol DashboardViewModel: ObservableObject {
 
     var editModel: Bool { get set }
-    var selectedDashboardName: String? { get set }
+    var selectedDashboardIndex: Int? { get set }
     var dashboards: [Dashboard] { get set }
     var currentDashboard: Dashboard? { get }
 
@@ -46,7 +46,7 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
     // MARK: Publishers
 
     @Published public var editModel: Bool = false
-    @Published public var selectedDashboardName: String?
+    @Published public var selectedDashboardIndex: Int?
 
     // MARK: Gets
 
@@ -59,7 +59,12 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
     }
 
     public var currentDashboard: Dashboard? {
-        dashboards.first(where: { $0.name == selectedDashboardName })
+        guard
+            let selectedDashboardIndex,
+            selectedDashboardIndex < dashboards.count,
+            selectedDashboardIndex >= 0
+        else { return nil }
+        return dashboards[selectedDashboardIndex]
     }
 
     // MARK: Init
@@ -69,7 +74,7 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
         self.entityService = entityService
 
         setupData()
-        setupObservers()
+        setupForwards()
     }
 }
 
@@ -78,10 +83,10 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
 extension DashboardViewModelImpl {
 
     private func setupData() {
-        selectedDashboardName = dashboards.first?.name
+        selectedDashboardIndex = dashboards.count > 0 ? 1 : nil
     }
 
-    private func setupObservers() {
+    private func setupForwards() {
         dashboardService.forward(objectWillChange).store(in: &cancellable)
     }
 }
