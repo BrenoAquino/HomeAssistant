@@ -11,14 +11,14 @@ import Domain
 import Foundation
 
 public enum EntityMock {
-    static let mainLight = LightEntity(id: "light.main_light", name: "Main Light", state: .on)
-    static let ledDeskLight = LightEntity(id: "light.led_desk", name: "Led Desk", state: .off)
-    static let ledCeilingLight = LightEntity(id: "light.led_ceiling", name: "Led Ceiling", state: .on)
-    static let climate = ClimateEntity(id: "climate.air_conditioner", name: "Air Conditioner", state: .on)
-    static let coffeeMachine = SwitchEntity(id: "switch.coffee_machine", name: "Coffee Machine", state: .off)
-    static let fan = FanEntity(id: "fan.bedroom_fan", name: "Bedroom's Fan", percentageStep: 20, percentage: 20, state: .on)
+    public static let mainLight = LightEntity(id: "light.main_light", name: "Main Light", state: .on)
+    public static let ledDeskLight = LightEntity(id: "light.led_desk", name: "Led Desk", state: .off)
+    public static let ledCeilingLight = LightEntity(id: "light.led_ceiling", name: "Led Ceiling", state: .on)
+    public static let climate = ClimateEntity(id: "climate.air_conditioner", name: "Air Conditioner", state: .on)
+    public static let coffeeMachine = SwitchEntity(id: "switch.coffee_machine", name: "Coffee Machine", state: .off)
+    public static let fan = FanEntity(id: "fan.bedroom_fan", name: "Bedroom's Fan", percentageStep: 20, percentage: 20, state: .on)
 
-    static var all: [any Entity] = [mainLight, ledDeskLight, ledCeilingLight, climate, coffeeMachine, fan]
+    public static var all: [any Entity] = [mainLight, ledDeskLight, ledCeilingLight, climate, coffeeMachine, fan]
 }
 
 public class EntityServiceMock: Domain.EntityService {

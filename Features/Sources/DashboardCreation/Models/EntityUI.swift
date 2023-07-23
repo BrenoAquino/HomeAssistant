@@ -8,7 +8,7 @@
 import Domain
 import Foundation
 
-struct EntityUI {
+public struct EntityUI {
 
     let id: String
     let name: String
