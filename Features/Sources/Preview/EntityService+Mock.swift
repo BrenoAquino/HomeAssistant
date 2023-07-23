@@ -24,6 +24,7 @@ public enum EntityMock {
 
 public class EntityServiceMock: Domain.EntityService {
 
+    @Published public var hiddenEntities: Set<String> = []
     @Published public private(set) var domains = Domain.EntityDomain.allCases
     @Published public var entities = EntityMock.allDict
 
@@ -33,6 +34,10 @@ public class EntityServiceMock: Domain.EntityService {
         if #available(iOS 16.0, *) {
             try await Task.sleep(for: .seconds(2))
         }
+    }
+
+    public func persistHiddenEntities() async throws {
+
     }
 
     public func update(entityID: String, entity: any Entity) async throws {

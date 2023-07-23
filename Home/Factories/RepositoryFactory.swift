@@ -12,7 +12,8 @@ import Foundation
 protocol RepositoryFactory {
 
     func commandRepository() -> CommandRepository
-    func fetcherRepository() -> FetcherRepository
+    func entityRepository() -> EntityRepository
+    func serverRepository() -> ServerRepository
     func subscriptionRepository() -> SubscriptionRepository
     func dashboardRepository() -> DashboardRepository
 }
