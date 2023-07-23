@@ -20,13 +20,20 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
     
     public var body: some View {
         ScrollView(.vertical) {
-            
+
+            Localizable.welcome.text
+                .foregroundColor(SystemColor.secondaryLabel)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .font(.callout)
+                .padding(.leading, space: .smallL)
+                .padding(.top, space: .smallS)
+
             DashboardsCarouselView(
                 editMode: $viewModel.editModel,
                 dashboards: $viewModel.dashboards,
                 selectedDashboardIndex: $viewModel.selectedDashboardIndex,
-                dashboardDidEdit: viewModel.didSelectEdit,
-                addDidSelect: viewModel.didSelectAdd
+                dashboardDidEdit: viewModel.didClickEdit,
+                addDidSelect: viewModel.didClickAdd
             )
             .padding(.top, space: .smallS)
             
@@ -42,9 +49,14 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
         }
         .navigationTitle(Localizable.hiThere.value)
         .toolbar {
-            if viewModel.editModel {
-                doneButton
+            Group {
+                if viewModel.editModel {
+                    doneButton
+                } else {
+                    configButton
+                }
             }
+            .foregroundColor(SystemColor.label)
         }
     }
     
@@ -53,6 +65,14 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             viewModel.editModel = false
         } label: {
             Localizable.done.text
+        }
+    }
+
+    private var configButton: some View {
+        Button {
+            viewModel.didClickConfig()
+        } label: {
+            SystemImages.config
         }
     }
     
@@ -71,7 +91,7 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                         case let light as LightEntityUI:
                             LightView(
                                 entity: light,
-                                updateState: viewModel.didUpdateLightState
+                                updateState: viewModel.didClickUpdateLightState
                             )
                         default:
                             UnsupportedView(

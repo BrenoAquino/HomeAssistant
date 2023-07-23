@@ -21,6 +21,7 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
 
     // MARK: Redirects
 
+    public var didSelectConfig: (() -> Void)?
     public var didSelectAddDashboard: (() -> Void)?
     public var didSelectEditDashboard: ((_ dashboard: Dashboard) -> Void)?
 
@@ -82,7 +83,20 @@ extension DashboardViewModelImpl {
 
 extension DashboardViewModelImpl {
 
-    public func didUpdateLightState(_ lightEntityUI: LightEntityUI, newState: LightStateUI) {
+    public func didClickAdd() {
+        didSelectAddDashboard?()
+    }
+
+    public func didClickEdit(_ dashboard: Dashboard) {
+        didSelectEditDashboard?(dashboard)
+        editModel = false
+    }
+
+    public func didClickConfig() {
+        didSelectConfig?()
+    }
+
+    public func didClickUpdateLightState(_ lightEntityUI: LightEntityUI, newState: LightStateUI) {
         Task {
             let service: EntityActionService = newState == .on ? .turnOn : .turnOff
             do {
@@ -91,15 +105,5 @@ extension DashboardViewModelImpl {
                 Logger.log(level: .error, "Could not execute \(String(describing: service))")
             }
         }
-    }
-
-    public func didSelectAdd() {
-        didSelectAddDashboard?()
-    }
-
-    public func didSelectEdit(_ dashboard: Dashboard) {
-        guard let dashboard = dashboards.first(where: { $0.name == dashboard.name }) else { return }
-        didSelectEditDashboard?(dashboard)
-        editModel = false
     }
 }
