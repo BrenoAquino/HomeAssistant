@@ -1,6 +1,6 @@
 //
 //  Logger.swift
-//  
+//
 //
 //  Created by Breno Aquino on 19/07/23.
 //
@@ -13,7 +13,7 @@ class Logger: CommonLogger {
 #if DEBUG
     static var logger: OSLog = .init(
         subsystem: Bundle.main.bundleIdentifier ?? "",
-        category: "Features.Launch"
+        category: "Features.Dashboard"
     )
 #endif
 }

@@ -8,6 +8,8 @@
 import Domain
 import Foundation
 
+// MARK: - Interface
+
 public protocol LaunchViewModel: ObservableObject {
 
     var launchFinished: (() -> Void)? { get set }
@@ -15,11 +17,11 @@ public protocol LaunchViewModel: ObservableObject {
     func startConfiguration() async
 }
 
-public class LaunchViewModelImpl<
-    DashboardS: DashboardService
->: LaunchViewModel {
+// MARK: - Implementation
 
-    private let entityService: EntityService
+public class LaunchViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: LaunchViewModel {
+
+    private let entityService: EntityS
     private let dashboardService: DashboardS
 
     // MARK: Redirects
@@ -28,13 +30,13 @@ public class LaunchViewModelImpl<
 
     // MARK: Init
 
-    public init(entityService: EntityService, dashboardService: DashboardS) {
+    public init(entityService: EntityS, dashboardService: DashboardS) {
         self.entityService = entityService
         self.dashboardService = dashboardService
     }
 }
 
-// MARK: - Interfaces
+// MARK: Public Methods
 
 extension LaunchViewModelImpl {
 

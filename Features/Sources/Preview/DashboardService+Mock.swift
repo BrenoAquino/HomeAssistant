@@ -40,7 +40,7 @@ public class DashboardServiceMock: Domain.DashboardService {
     }
 
     public func updateAll(dashboards: [Domain.Dashboard]) {
-        
+        self.dashboards = dashboards
     }
 }
 

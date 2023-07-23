@@ -10,27 +10,23 @@ import Combine
 import Domain
 import Foundation
 
+public enum EntityMock {
+    static let mainLight = LightEntity(id: "light.main_light", name: "Main Light", state: .on)
+    static let ledDeskLight = LightEntity(id: "light.led_desk", name: "Led Desk", state: .off)
+    static let ledCeilingLight = LightEntity(id: "light.led_ceiling", name: "Led Ceiling", state: .on)
+    static let climate = ClimateEntity(id: "climate.air_conditioner", name: "Air Conditioner", state: .on)
+    static let coffeeMachine = SwitchEntity(id: "switch.coffee_machine", name: "Coffee Machine", state: .off)
+    static let fan = FanEntity(id: "fan.bedroom_fan", name: "Bedroom's Fan", percentageStep: 20, percentage: 20, state: .on)
+
+    static var all: [any Entity] = [mainLight, ledDeskLight, ledCeilingLight, climate, coffeeMachine, fan]
+}
+
 public class EntityServiceMock: Domain.EntityService {
 
-    public var entities: CurrentValueSubject<[String : any Entity], Never> = .init([:])
-    public var domains: CurrentValueSubject<[EntityDomain], Never> = .init(Domain.EntityDomain.allCases)
+    @Published public private(set) var domains = Domain.EntityDomain.allCases
+    @Published public var entities = EntityMock.all.reduce(into: [String : any Entity](), { $0[$1.id] = $1 })
 
-    public init() {
-        let mainLight = LightEntity(id: "light.main_light", name: "Main Light", state: .on)
-        let ledDesk = LightEntity(id: "light.led_desk", name: "Led Desk", state: .off)
-        let ledCeiling = LightEntity(id: "light.led_ceiling", name: "Led Ceiling", state: .on)
-        let climate = ClimateEntity(id: "climate.air_conditioner", name: "Air Conditioner", state: .on)
-        let coffeeMachine = SwitchEntity(id: "switch.coffee_machine", name: "Coffee Machine", state: .off)
-        let fan = FanEntity(id: "fan.bedroom_fan", name: "Bedroom's Fan", percentageStep: 20, percentage: 20, state: .on)
-        entities.send([
-            mainLight.id: mainLight,
-            ledDesk.id: ledDesk,
-            ledCeiling.id: ledCeiling,
-            coffeeMachine.id: coffeeMachine,
-            fan.id: fan,
-            climate.id: climate
-        ])
-    }
+    public init() {}
 
     public func trackEntities() async throws {
         if #available(iOS 16.0, *) {
@@ -39,7 +35,7 @@ public class EntityServiceMock: Domain.EntityService {
     }
 
     public func update(entityID: String, entity: any Entity) async throws {
-
+        entities[entityID] = entity
     }
 
     public func execute(service: EntityActionService, entityID: String) async throws {

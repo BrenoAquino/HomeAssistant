@@ -10,7 +10,10 @@ import Combine
 import Domain
 import SwiftUI
 
+// MARK: - Interface
+
 public protocol DashboardViewModel: ObservableObject {
+
     var editModel: Bool { get set }
     var selectedDashboard: Dashboard? { get set }
     var dashboards: [Dashboard] { get set }
@@ -22,13 +25,11 @@ public protocol DashboardViewModel: ObservableObject {
     func didSelectEdit(_ dashboard: Dashboard)
 }
 
-public class DashboardViewModelImpl<
-    EntityS: EntityService,
-    DashboardS: DashboardService
->: DashboardViewModel {
+// MARK: - Implementation
+
+public class DashboardViewModelImpl<EntityS: EntityService, DashboardS: DashboardService>: DashboardViewModel {
 
     private var cancellable: Set<AnyCancellable> = .init()
-    private var dashboardUpdateCancellable: AnyCancellable?
 
     // MARK: Services
 
