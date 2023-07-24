@@ -5,6 +5,7 @@
 //  Created by Breno Aquino on 17/07/23.
 //
 
+import Domain
 import SwiftUI
 import Dashboard
 
@@ -19,16 +20,21 @@ struct DashboardCoordinator<ViewModel: DashboardViewModel>: View {
 
     var body: some View {
         DashboardView(viewModel: viewModel)
-            .task { setupCallbacks() }
+            .task { viewModel.delegate = self }
+    }
+}
+
+extension DashboardCoordinator: DashboardExternalFlow {
+    
+    func didSelectConfig() -> Void {
+
     }
 
-    private func setupCallbacks() {
-        viewModel.didSelectAddDashboard = { [self] in
-            self.coordinator.preset(sheet: .dashboardCreation(mode: .creation))
-        }
+    func didSelectAddDashboard() -> Void {
+        coordinator.preset(sheet: .dashboardCreation(mode: .creation))
+    }
 
-        viewModel.didSelectEditDashboard = { [self] dashboard in
-            self.coordinator.preset(sheet: .dashboardCreation(mode: .edit(dashboard)))
-        }
+    func didSelectEditDashboard(_ dashboard: Dashboard) -> Void {
+        coordinator.preset(sheet: .dashboardCreation(mode: .edit(dashboard)))
     }
 }

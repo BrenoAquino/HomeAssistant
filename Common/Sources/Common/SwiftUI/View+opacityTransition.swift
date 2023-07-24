@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  View+opacityTransition.swift
 //  
 //
 //  Created by Breno Aquino on 19/07/23.

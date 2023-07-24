@@ -1,5 +1,5 @@
 //
-//  RadiusDesignConstant.swift
+//  DSRadius.swift
 //  
 //
 //  Created by Breno Aquino on 16/06/23.
@@ -36,17 +36,6 @@ public struct DSBlurRadius {
     public static let normal: DSBlurRadius = DSBlurRadius(rawValue: 16)
     /// Easy - 4
     public static let easy: DSBlurRadius = DSBlurRadius(rawValue: 8)
-}
-
-// MARK: - General Proposal
-
-public enum RadiusDesignConstant {
-    public static let hard: CGFloat = DSRadius.hard.rawValue
-    public static let normal: CGFloat = DSRadius.normal.rawValue
-    public static let easy: CGFloat = DSRadius.easy.rawValue
-    public static let blurHard: CGFloat = DSBlurRadius.hard.rawValue
-    public static let blurNormal: CGFloat = DSBlurRadius.normal.rawValue
-    public static let blurEasy: CGFloat = DSBlurRadius.easy.rawValue
 }
 
 // MARK: - SwiftUI

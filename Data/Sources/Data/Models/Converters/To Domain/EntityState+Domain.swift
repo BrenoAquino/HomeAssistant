@@ -12,20 +12,19 @@ extension GenericEntity {
 
     func toDomain() throws -> any Domain.Entity {
         let domain = try Domain.EntityDomain(id: id)
-        let state = try Domain.EntityState(rawValue: state)
         switch domain {
         case .light:
             return Domain.LightEntity(
                 id: id,
                 name: attributes.name,
-                state: state
+                state: .init(rawValue: state) ?? .off
             )
 
         case .switch:
             return Domain.SwitchEntity(
                 id: id,
                 name: attributes.name,
-                state: state
+                state: .init(rawValue: state) ?? .off
             )
 
         case .fan:
@@ -34,14 +33,14 @@ extension GenericEntity {
                 name: attributes.name,
                 percentageStep: attributes.percentageStep,
                 percentage: attributes.currentPercentage,
-                state: state
+                state: .init(rawValue: state) ?? .off
             )
 
         case .climate:
             return Domain.ClimateEntity(
                 id: id,
                 name: attributes.name,
-                state: state,
+                state: .init(rawValue: state) ?? .off,
                 hvacModes: attributes.hvacModes,
                 currentHvacMode: attributes.currentHvac,
                 minimumTemperature: attributes.minTemperature,

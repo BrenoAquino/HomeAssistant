@@ -16,4 +16,7 @@ public enum SystemImages {
     public static let uncheck = Image(systemName: "circle")
     public static let check = Image(systemName: "checkmark.circle.fill")
     public static let remove = Image(systemName: "minus.circle.fill")
+    public static let config = Image(systemName: "gear")
+    public static let visible = Image(systemName: "eye")
+    public static let hidden = Image(systemName: "eye.slash")
 }

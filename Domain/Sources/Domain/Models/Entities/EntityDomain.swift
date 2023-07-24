@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  EntityDomain.swift
 //  
 //
 //  Created by Breno Aquino on 16/07/23.
@@ -7,17 +7,12 @@
 
 import Foundation
 
-public enum EntityState {
-    case on
-    case off
-}
-
 public enum EntityActionService {
     case turnOn
     case turnOff
 }
 
-public enum EntityDomain: Hashable, CaseIterable {
+public enum EntityDomain: String, CaseIterable {
     case light
     case `switch`
     case fan

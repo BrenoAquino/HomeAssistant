@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Logger.swift
 //  
 //
 //  Created by Breno Aquino on 23/07/23.

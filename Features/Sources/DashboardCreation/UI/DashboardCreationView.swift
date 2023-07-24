@@ -22,7 +22,7 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
                 .padding(.horizontal, space: .normal)
 
             Localizable.dashboardDescription.text
-                .foregroundColor(SystemColor.secondaryLabel)
+                .foregroundColor(DSColor.secondaryLabel)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.callout)
                 .padding(.horizontal, space: .normal)
@@ -50,7 +50,7 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
             let title = viewModel.mode == .creation ? Localizable.dashboardCreation : Localizable.dashboardEdit
 
             title.text
-                .foregroundColor(SystemColor.label)
+                .foregroundColor(DSColor.label)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.largeTitle)
                 .fontWeight(.bold)
@@ -59,7 +59,7 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
             Button(action: viewModel.close) {
                 SystemImages.close
                     .imageScale(.large)
-                    .foregroundColor(SystemColor.label)
+                    .foregroundColor(DSColor.label)
             }
             .padding(.top, space: .normal)
         }
@@ -68,7 +68,7 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
     private var nameField: some View {
         VStack(spacing: .smallM) {
             Localizable.name.text
-                .foregroundColor(SystemColor.label)
+                .foregroundColor(DSColor.label)
                 .font(.headline)
                 .fontWeight(.medium)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -79,11 +79,11 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
                     .padding(.horizontal, space: .smallL)
                     .overlay(
                         RoundedRectangle(cornerRadius: .normal)
-                            .stroke(SystemColor.secondaryLabel)
+                            .stroke(DSColor.secondaryLabel)
                     )
 
                 Localizable.nameHint.text
-                    .foregroundColor(SystemColor.secondaryLabel)
+                    .foregroundColor(DSColor.secondaryLabel)
                     .font(.footnote)
                     .fontWeight(.medium)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -95,7 +95,7 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
     private var iconField: some View {
         VStack(spacing: .smallL) {
             Localizable.icon.text
-                .foregroundColor(SystemColor.label)
+                .foregroundColor(DSColor.label)
                 .font(.headline)
                 .fontWeight(.medium)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -103,13 +103,13 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
 
             IconsCarouselView(
                 icons: viewModel.icons,
-                selectedIcon: $viewModel.selectedIcon
+                selectedIconName: $viewModel.selectedIconName
             )
 
             VStack(spacing: .smallS) {
                 VStack(spacing: .zero) {
                     TextField("", text: $viewModel.iconFilterText, axis: .horizontal)
-                        .foregroundColor(SystemColor.secondaryLabel)
+                        .foregroundColor(DSColor.secondaryLabel)
                         .font(.subheadline)
                         .frame(height: 20)
 
@@ -117,7 +117,7 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
                 }
 
                 Localizable.iconHint.text
-                    .foregroundColor(SystemColor.secondaryLabel)
+                    .foregroundColor(DSColor.secondaryLabel)
                     .font(.footnote)
                     .fontWeight(.medium)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -129,7 +129,7 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
     private var entitiesList: some View {
         VStack(spacing: .smallL) {
             Localizable.entities.text
-                .foregroundColor(SystemColor.label)
+                .foregroundColor(DSColor.label)
                 .font(.headline)
                 .fontWeight(.medium)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -154,41 +154,18 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
             }
         }
         .buttonStyle(DefaultButtonStyle(
-            foregroundColor: SystemColor.background,
-            backgroundColor: SystemColor.label
+            foregroundColor: DSColor.background,
+            backgroundColor: DSColor.label
         ))
     }
 }
 
 #if DEBUG
-import Preview
-import Domain
-
 struct DashboardCreationView_Preview: PreviewProvider {
-
-    class FakeViewModel: DashboardCreationViewModel {
-
-        var mode: DashboardCreationMode = .creation
-        var dashboardName: String = ""
-        var icons: [IconUI] = IconUI.list
-        var selectedIcon: IconUI? = IconUI.list.first
-        var iconFilterText: String = ""
-        var entities: [EntityUI] = EntityMock.all.map { $0.toUI() }
-        var selectedEntitiesIDs: Set<String> = []
-        var entityFilterText: String = ""
-        var domains: [EntityDomain] = EntityDomain.allCases
-        var selectedDomainsNames: Set<String> = Set(EntityDomain.allCases.map { $0.name })
-
-        var didFinish: (() -> Void)? = { print("didFinish") }
-        var didClose: (() -> Void)? = { print("didClose") }
-
-        func close() {}
-        func createOrUpdateDashboard() {}
-    }
 
     static var previews: some View {
 
-        DashboardCreationView(viewModel: FakeViewModel())
+        DashboardCreationView(viewModel: DashboardCreationViewModelPreview())
     }
 }
 #endif

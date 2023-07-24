@@ -21,8 +21,8 @@ extension StateChangedEvent {
             id: newState.id,
             domain: try Domain.EntityDomain(id: newState.id),
             name: newState.attributes.name,
-            oldState: try Domain.EntityState(rawValue: oldState.state),
-            newState: try Domain.EntityState(rawValue: newState.state)
+            oldState: oldState.state,
+            newState: newState.state
         )
     }
 }

@@ -10,16 +10,16 @@ import SwiftUI
 
 struct IconsCarouselView: View {
 
-    var icons: [IconUI]
-    @Binding var selectedIcon: IconUI?
+    var icons: [Icon]
+    @Binding var selectedIconName: String?
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(spacing: .smallM) {
-                ForEach(icons, id: \.name) { iconUI in
-                    iconElement(iconUI)
+                ForEach(icons, id: \.name) { icon in
+                    iconElement(icon)
                         .onTapGesture {
-                            selectedIcon = iconUI
+                            selectedIconName = icon.name
                         }
                 }
             }
@@ -27,17 +27,17 @@ struct IconsCarouselView: View {
         }
     }
 
-    @ViewBuilder func iconElement(_ iconUI: IconUI) -> some View {
-        let isSelected = selectedIcon?.name == iconUI.name
+    @ViewBuilder func iconElement(_ icon: Icon) -> some View {
+        let isSelected = selectedIconName == icon.name
 
-        Image(systemName: iconUI.name)
-            .foregroundColor(isSelected ? SystemColor.background : SystemColor.label)
+        Image(systemName: icon.name)
+            .foregroundColor(isSelected ? DSColor.background : DSColor.label)
             .frame(width: 50, height: 50)
-            .background(isSelected ? SystemColor.label : SystemColor.background)
+            .background(isSelected ? DSColor.label : DSColor.background)
             .overlay(
                 RoundedRectangle(cornerRadius: .hard)
                     .stroke(
-                        isSelected ? SystemColor.background : SystemColor.gray3,
+                        isSelected ? DSColor.background : DSColor.gray3,
                         lineWidth: 1
                     )
             )
@@ -52,8 +52,8 @@ struct IconsCarouselView_Preview: PreviewProvider {
 
     static var previews: some View {
         IconsCarouselView(
-            icons: IconUI.list,
-            selectedIcon: .init(
+            icons: Icon.list,
+            selectedIconName: .init(
                 get: { nil },
                 set: { _ in }
             )

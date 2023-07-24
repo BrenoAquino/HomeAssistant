@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  UnsupportedView.swift
 //  
 //
 //  Created by Breno Aquino on 23/07/23.
@@ -19,7 +19,7 @@ struct UnsupportedView: View {
                 .textCase(.uppercase)
                 .multilineTextAlignment(.center)
                 .minimumScaleFactor(0.5)
-                .foregroundColor(SystemColor.label)
+                .foregroundColor(DSColor.label)
                 .font(.headline)
                 .frame(maxHeight: .infinity, alignment: .center)
 
@@ -28,16 +28,16 @@ struct UnsupportedView: View {
                 .scaledToFill()
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)
-                .foregroundColor(SystemColor.secondaryLabel)
+                .foregroundColor(DSColor.secondaryLabel)
                 .font(.subheadline)
         }
         .padding(.vertical, space: .smallL)
         .padding(.horizontal, space: .smallL)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(SystemColor.gray5)
+        .background(DSColor.gray5)
         .overlay(
             RoundedRectangle(cornerRadius: .hard)
-                .stroke(SystemColor.gray4, lineWidth: 1)
+                .stroke(DSColor.gray4, lineWidth: 1)
         )
         .clipShape(RoundedRectangle(cornerRadius: .hard))
         .contentShape(Rectangle())

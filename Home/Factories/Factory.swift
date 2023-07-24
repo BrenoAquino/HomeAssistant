@@ -19,13 +19,15 @@ class Factory {
     private let databaseProviderInstance: DatabaseProvider
 
     private let dashboardLocalDataSourceInstance: DashboardLocalDataSource
+    private let entityLocalDataSourceInstance: EntityLocalDataSource
 
     private let commandRemoteDataSourceInstance: CommandRemoteDataSource
     private let fetcherRemoteDataSourceInstance: FetcherRemoteDataSource
     private let subscriptionRemoteDataSourceInstance: SubscriptionRemoteDataSource
 
     private let commandRepositoryInstance: CommandRepository
-    private let fetcherRepositoryInstance: FetcherRepository
+    private let entityRepositoryInstance: EntityRepository
+    private let serverRepositoryInstance: ServerRepository
     private let subscriptionRepositoryInstance: SubscriptionRepository
     private let dashboardRepositoryInstance: DashboardRepository
 
@@ -38,20 +40,25 @@ class Factory {
         databaseProviderInstance = UserDefaultsDatabaseProvider()
 
         dashboardLocalDataSourceInstance = DashboardLocalDataSourceImpl(databaseProvider: databaseProviderInstance)
+        entityLocalDataSourceInstance = EntityLocalDataSourceImpl(databaseProvider: databaseProviderInstance)
 
         commandRemoteDataSourceInstance = CommandRemoteDataSourceImpl(webSocketProvider: webSocketProviderInstance)
         fetcherRemoteDataSourceInstance = FetcherRemoteDataSourceImpl(webSocketProvider: webSocketProviderInstance)
         subscriptionRemoteDataSourceInstance = SubscriptionRemoteDataSourceImpl(webSocketProvider: webSocketProviderInstance)
 
         commandRepositoryInstance = CommandRepositoryImpl(commandRemoteDataSource: commandRemoteDataSourceInstance)
-        fetcherRepositoryInstance = FetcherRepositoryImpl(fetcherRemoteDataSource: fetcherRemoteDataSourceInstance)
         subscriptionRepositoryInstance = SubscriptionRepositoryImpl(subscriptionRemoteDataSource: subscriptionRemoteDataSourceInstance)
         dashboardRepositoryInstance = DashboardRepositoryImpl(dashboardLocalDataSource: dashboardLocalDataSourceInstance)
+        serverRepositoryInstance = ServerRepositoryImpl(fetcherRemoteDataSource: fetcherRemoteDataSourceInstance)
+        entityRepositoryInstance = EntityRepositoryImpl(
+            entityLocalDataSource: entityLocalDataSourceInstance,
+            fetcherRemoteDataSource: fetcherRemoteDataSourceInstance
+        )
 
-        configServiceInstance = ConfigServiceImpl(fetcherRepository: fetcherRepositoryInstance)
+        configServiceInstance = ConfigServiceImpl(serverRepository: serverRepositoryInstance)
         dashboardServiceInstance = DashboardServiceImpl(dashboardRepository: dashboardRepositoryInstance)
         entityServiceInstance = EntityServiceImpl(
-            fetcherRepository: fetcherRepositoryInstance,
+            entityRepository: entityRepositoryInstance,
             commandRepository: commandRepositoryInstance,
             subscriptionRepository: subscriptionRepositoryInstance
         )
@@ -105,8 +112,12 @@ extension Factory: RepositoryFactory {
         commandRepositoryInstance
     }
 
-    func fetcherRepository() -> FetcherRepository {
-        fetcherRepositoryInstance
+    func entityRepository() -> EntityRepository {
+        entityRepositoryInstance
+    }
+
+    func serverRepository() -> ServerRepository {
+        serverRepositoryInstance
     }
 
     func subscriptionRepository() -> SubscriptionRepository {
@@ -164,6 +175,9 @@ extension Factory {
 extension Factory {
 
     func lifeCycleHandler() -> LifeCycleHandler {
-        LifeCycleHandlerImpl(dashboardsService: dashboardServiceInstance)
+        LifeCycleHandlerImpl(
+            dashboardsService: dashboardServiceInstance,
+            entityService: entityServiceInstance
+        )
     }
 }

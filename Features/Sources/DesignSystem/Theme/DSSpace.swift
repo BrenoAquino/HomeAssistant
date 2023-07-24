@@ -1,5 +1,5 @@
 //
-//  SpaceDesignConstant.swift
+//  DSSpace.swift
 //  
 //
 //  Created by Breno Aquino on 16/06/23.
@@ -31,19 +31,6 @@ public struct DSSpace {
     public static let smallS: DSSpace = DSSpace(rawValue: 4)
     /// Zero - 0
     public static let zero: DSSpace = DSSpace(rawValue: 0)
-}
-
-// MARK: - General Proposal
-
-public enum SpaceDesignConstant {
-    public static let bigL: CGFloat = DSSpace.bigL.rawValue
-    public static let bigM: CGFloat = DSSpace.bigM.rawValue
-    public static let bigS: CGFloat = DSSpace.bigS.rawValue
-    public static let normal: CGFloat = DSSpace.normal.rawValue
-    public static let smallL: CGFloat = DSSpace.smallL.rawValue
-    public static let smallM: CGFloat = DSSpace.smallM.rawValue
-    public static let smallS: CGFloat = DSSpace.smallS.rawValue
-    public static let zero: CGFloat = DSSpace.zero.rawValue
 }
 
 // MARK: - SwiftUI

@@ -1,5 +1,5 @@
 //
-//  DashboardViewModel.swift
+//  DashboardViewModelImpl.swift
 //
 //
 //  Created by Breno Aquino on 17/07/23.
@@ -12,17 +12,13 @@ import SwiftUI
 
 public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: DashboardViewModel {
 
+    public var delegate: DashboardExternalFlow?
     private var cancellable: Set<AnyCancellable> = .init()
 
     // MARK: Services
 
     @ObservedObject private var entityService: EntityS
     @ObservedObject var dashboardService: DashboardS
-
-    // MARK: Redirects
-
-    public var didSelectAddDashboard: (() -> Void)?
-    public var didSelectEditDashboard: ((_ dashboard: Dashboard) -> Void)?
 
     // MARK: Publishers
 
@@ -82,24 +78,27 @@ extension DashboardViewModelImpl {
 
 extension DashboardViewModelImpl {
 
-    public func didUpdateLightState(_ lightEntityUI: LightEntityUI, newState: LightStateUI) {
+    public func didClickAdd() {
+        delegate?.didSelectAddDashboard()
+    }
+
+    public func didClickEdit(_ dashboard: Dashboard) {
+        delegate?.didSelectEditDashboard(dashboard)
+        editModel = false
+    }
+
+    public func didClickConfig() {
+        delegate?.didSelectConfig()
+    }
+
+    public func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State) {
         Task {
             let service: EntityActionService = newState == .on ? .turnOn : .turnOff
             do {
-                try await entityService.execute(service: service, entityID: lightEntityUI.id)
+                try await entityService.execute(service: service, entityID: lightEntity.id)
             } catch {
                 Logger.log(level: .error, "Could not execute \(String(describing: service))")
             }
         }
-    }
-
-    public func didSelectAdd() {
-        didSelectAddDashboard?()
-    }
-
-    public func didSelectEdit(_ dashboard: Dashboard) {
-        guard let dashboard = dashboards.first(where: { $0.name == dashboard.name }) else { return }
-        didSelectEditDashboard?(dashboard)
-        editModel = false
     }
 }

@@ -1,5 +1,5 @@
 //
-//  FetcherRepository.swift
+//  ServerRepository.swift
 //  
 //
 //  Created by Breno Aquino on 15/07/23.
@@ -7,8 +7,7 @@
 
 import Foundation
 
-public protocol FetcherRepository {
+public protocol ServerRepository {
 
     func fetchConfig() async throws -> ServerConfig
-    func fetchStates() async throws -> [any Entity]
 }

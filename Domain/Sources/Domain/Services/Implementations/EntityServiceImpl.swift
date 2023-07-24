@@ -17,23 +17,24 @@ public class EntityServiceImpl {
 
     // MARK: Publishers
 
+    @Published public var hiddenEntities: Set<String> = []
     @Published public var entities: [String : any Entity] = [:]
     @Published public private(set) var domains: [EntityDomain] = EntityDomain.allCases
 
     // MARK: Repositories
 
-    private let fetcherRepository: FetcherRepository
+    private let entityRepository: EntityRepository
     private let commandRepository: CommandRepository
     private let subscriptionRepository: SubscriptionRepository
 
     // MARK: Init
 
     public init(
-        fetcherRepository: FetcherRepository,
+        entityRepository: EntityRepository,
         commandRepository: CommandRepository,
         subscriptionRepository: SubscriptionRepository
     ) {
-        self.fetcherRepository = fetcherRepository
+        self.entityRepository = entityRepository
         self.commandRepository = commandRepository
         self.subscriptionRepository = subscriptionRepository
     }
@@ -48,12 +49,12 @@ extension EntityServiceImpl {
         switch entity {
         case let light as LightEntity:
             entities[id] = light
+        case let climate as ClimateEntity:
+            entities[id] = climate
         case let `switch` as SwitchEntity:
             entities[id] = `switch`
         case let fan as FanEntity:
             entities[id] = fan
-        case let climate as ClimateEntity:
-            entities[id] = climate
         default:
             break
         }
@@ -63,7 +64,8 @@ extension EntityServiceImpl {
         subscriptionRepository
             .stateChangedEvent
             .sink { _ in } receiveValue: { [weak self] stateChanged in
-                self?.entities[stateChanged.id]?.state = stateChanged.newState
+                guard let entity = self?.entities[stateChanged.id] else { return }
+                self?.entities[stateChanged.id] = entity.stateUpdated(stateChanged.newState) as any Entity
             }
             .store(in: &cancellable)
     }
@@ -73,9 +75,17 @@ extension EntityServiceImpl {
 
 extension EntityServiceImpl: EntityService {
 
+    public func persistHiddenEntities() async throws {
+        try await entityRepository.save(hiddenEntityIDs: hiddenEntities)
+    }
+
     public func trackEntities() async throws {
-        try await fetcherRepository.fetchStates().forEach { [self] in insertEntity($0) }
+        try await entityRepository.fetchStates().forEach { [self] in insertEntity($0) }
         stateChangeSubscriptionID = try await subscriptionRepository.subscribeToEvents(eventType: .stateChanged)
+
+        let fetchedHiddenEntities = try? await entityRepository.fetchHiddenEntityIDs()
+        hiddenEntities = fetchedHiddenEntities ?? []
+        
         setupSubscription()
     }
 

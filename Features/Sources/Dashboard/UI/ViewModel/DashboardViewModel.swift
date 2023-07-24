@@ -8,7 +8,16 @@
 import Combine
 import Domain
 
+public protocol DashboardExternalFlow {
+
+    func didSelectConfig() -> Void
+    func didSelectAddDashboard() -> Void
+    func didSelectEditDashboard(_ dashboard: Dashboard) -> Void
+}
+
 public protocol DashboardViewModel: ObservableObject {
+
+    var delegate: DashboardExternalFlow? { get set }
 
     var editModel: Bool { get set }
     var selectedDashboardIndex: Int? { get set }
@@ -16,10 +25,8 @@ public protocol DashboardViewModel: ObservableObject {
     var currentDashboard: Dashboard? { get }
     var entities: [any Entity] { get }
 
-    var didSelectAddDashboard: (() -> Void)? { get set }
-    var didSelectEditDashboard: ((_ dashboard: Dashboard) -> Void)? { get set }
-
-    func didUpdateLightState(_ lightEntityUI: LightEntityUI, newState: LightStateUI)
-    func didSelectAdd()
-    func didSelectEdit(_ dashboard: Dashboard)
+    func didClickAdd()
+    func didClickEdit(_ dashboard: Dashboard)
+    func didClickConfig()
+    func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State)
 }

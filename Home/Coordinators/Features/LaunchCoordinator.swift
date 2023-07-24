@@ -19,12 +19,13 @@ struct LaunchCoordinator<ViewModel: LaunchViewModel>: View {
 
     var body: some View {
         LaunchView(viewModel: viewModel)
-            .onAppear(perform: setupCallbacks)
+            .task { viewModel.delegate = self }
     }
+}
 
-    private func setupCallbacks() {
-        viewModel.launchFinished = { [self] in
-            coordinator.root = .dashboard
-        }
+extension LaunchCoordinator: LaunchExternalFlow {
+
+    func launchFinished() {
+        coordinator.root = .dashboard
     }
 }

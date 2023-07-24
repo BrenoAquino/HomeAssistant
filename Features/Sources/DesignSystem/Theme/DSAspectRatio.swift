@@ -1,5 +1,5 @@
 //
-//  AspectDesignConstant.swift
+//  DSAspectRatio.swift
 //  
 //
 //  Created by Breno Aquino on 16/06/23.
@@ -19,13 +19,6 @@ public struct DSAspectRatio {
     public static let portrait: DSAspectRatio = DSAspectRatio(rawValue: CGSize(width: 2, height: 3))
     /// Landscape - Width (2) x Height (3)
     public static let landscape: DSAspectRatio = DSAspectRatio(rawValue: CGSize(width: 16, height: 9))
-}
-
-// MARK: - General Proposal
-
-public enum AspectDesignConstant {
-    public static let portrait: CGSize = DSAspectRatio.portrait.rawValue
-    public static let landscape: CGSize = DSAspectRatio.landscape.rawValue
 }
 
 // MARK: - Utils

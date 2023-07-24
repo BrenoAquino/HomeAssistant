@@ -9,17 +9,24 @@ import Foundation
 
 public struct ClimateEntity: Entity {
 
+    public enum State: String {
+        case cool
+        case dry
+        case fan
+        case off
+    }
+
     public let id: String
     public let name: String
     public let domain: EntityDomain = .climate
-    public var state: EntityState
+    public var state: ClimateEntity.State
     public var hvac: HVAC?
     public var temperature: Temperature?
 
     public init(
         id: String,
         name: String,
-        state: EntityState,
+        state: ClimateEntity.State,
         hvacModes: [String]? = nil,
         currentHvacMode: String? = nil,
         minimumTemperature: Double? = nil,

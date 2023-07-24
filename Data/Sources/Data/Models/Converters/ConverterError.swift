@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  ConverterError.swift
 //  
 //
 //  Created by Breno Aquino on 16/07/23.

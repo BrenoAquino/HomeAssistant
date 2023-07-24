@@ -1,6 +1,6 @@
 //
-//  FetcherRepositoryImpl.swift
-//  
+//  ServerRepositoryImpl.swift
+//
 //
 //  Created by Breno Aquino on 16/07/23.
 //
@@ -8,7 +8,7 @@
 import Domain
 import Foundation
 
-public class FetcherRepositoryImpl {
+public class ServerRepositoryImpl {
 
     private let fetcherRemoteDataSource: FetcherRemoteDataSource
 
@@ -17,15 +17,11 @@ public class FetcherRepositoryImpl {
     }
 }
 
-// MARK: - FetcherRepository
+// MARK: - ServerRepository
 
-extension FetcherRepositoryImpl: FetcherRepository {
+extension ServerRepositoryImpl: ServerRepository {
 
     public func fetchConfig() async throws -> Domain.ServerConfig {
         try await fetcherRemoteDataSource.fetchConfig().toDomain()
-    }
-
-    public func fetchStates() async throws -> [any Domain.Entity] {
-        try await fetcherRemoteDataSource.fetchStates().compactMap { try? $0.toDomain() }
     }
 }
