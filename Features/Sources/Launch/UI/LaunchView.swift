@@ -29,17 +29,11 @@ public struct LaunchView<ViewModel: LaunchViewModel>: View {
 }
 
 #if DEBUG
-import Preview
-
 struct LaunchView_Preview: PreviewProvider {
 
-    class FakeViewModel: LaunchViewModel {
-        var launchFinished: (() -> Void)?
-        func startConfiguration() async {}
-    }
-
     static var previews: some View {
-        LaunchView(viewModel: FakeViewModel())
+
+        LaunchView(viewModel: LaunchViewModelPreview())
     }
 }
 #endif

@@ -1,6 +1,6 @@
 //
-//  LaunchViewModel.swift
-//  
+//  LaunchViewModelImpl.swift
+//
 //
 //  Created by Breno Aquino on 17/07/23.
 //
@@ -8,25 +8,14 @@
 import Domain
 import Foundation
 
-// MARK: - Interface
-
-public protocol LaunchViewModel: ObservableObject {
-
-    var launchFinished: (() -> Void)? { get set }
-
-    func startConfiguration() async
-}
-
-// MARK: - Implementation
-
 public class LaunchViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: LaunchViewModel {
+
+    public weak var delegate: LaunchExternalFlow?
+
+    // MARK: Services
 
     private let entityService: EntityS
     private let dashboardService: DashboardS
-
-    // MARK: Redirects
-
-    public var launchFinished: (() -> Void)?
 
     // MARK: Init
 
@@ -46,7 +35,7 @@ extension LaunchViewModelImpl {
             try await dashboardService.trackDashboards()
 
             await MainActor.run { [self] in
-                launchFinished?()
+                delegate?.launchFinished()
             }
         } catch {
             Logger.log(level: .error, error.localizedDescription)
