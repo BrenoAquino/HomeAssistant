@@ -20,6 +20,7 @@
 		552783F52A65027E00603EBA /* LaunchCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552783F42A65027E00603EBA /* LaunchCoordinator.swift */; };
 		5558B6052A68C722008651CF /* LifeCycleHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5558B6042A68C722008651CF /* LifeCycleHandler.swift */; };
 		5558B6072A68C825008651CF /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5558B6062A68C825008651CF /* Factory.swift */; };
+		557C953E2A6E243200D980DB /* ConfigCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557C953D2A6E243200D980DB /* ConfigCoordinator.swift */; };
 		5598DB912A677C5B00614AC0 /* DashboardCreationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5598DB902A677C5B00614AC0 /* DashboardCreationCoordinator.swift */; };
 		55B85F352A68238500C8E667 /* InfrastructureFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B85F342A68238500C8E667 /* InfrastructureFactory.swift */; };
 		55C0FA332A66384B00758023 /* LocalDataSourceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C0FA322A66384B00758023 /* LocalDataSourceFactory.swift */; };
@@ -50,6 +51,7 @@
 		552783F42A65027E00603EBA /* LaunchCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchCoordinator.swift; sourceTree = "<group>"; };
 		5558B6042A68C722008651CF /* LifeCycleHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifeCycleHandler.swift; sourceTree = "<group>"; };
 		5558B6062A68C825008651CF /* Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
+		557C953D2A6E243200D980DB /* ConfigCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigCoordinator.swift; sourceTree = "<group>"; };
 		5594C06E2A6388750015AE11 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = text; path = Domain; sourceTree = SOURCE_ROOT; };
 		5598DB902A677C5B00614AC0 /* DashboardCreationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardCreationCoordinator.swift; sourceTree = "<group>"; };
 		55B85F342A68238500C8E667 /* InfrastructureFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfrastructureFactory.swift; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 				552783F42A65027E00603EBA /* LaunchCoordinator.swift */,
 				5508EC892A65C67D00100E18 /* DashboardCoordinator.swift */,
 				5598DB902A677C5B00614AC0 /* DashboardCreationCoordinator.swift */,
+				557C953D2A6E243200D980DB /* ConfigCoordinator.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -299,6 +302,7 @@
 				5558B6072A68C825008651CF /* Factory.swift in Sources */,
 				55C25BA82A60FB6B00E52C5F /* WebSocket.swift in Sources */,
 				552783E32A64F5A000603EBA /* RemoteDataSourceFactory.swift in Sources */,
+				557C953E2A6E243200D980DB /* ConfigCoordinator.swift in Sources */,
 				5508EC8A2A65C67D00100E18 /* DashboardCoordinator.swift in Sources */,
 				5508EC972A65D82300100E18 /* CoordinatorView.swift in Sources */,
 				55C25B952A60D8C700E52C5F /* HomeApp.swift in Sources */,

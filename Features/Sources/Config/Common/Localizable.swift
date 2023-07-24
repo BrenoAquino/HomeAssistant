@@ -11,6 +11,8 @@ import SwiftUI
 enum Localizable: String, CommonLocalizable {
 
     case devices
+    case config
+    case entitiesHint = "entities_hint"
 }
 
 extension Localizable {

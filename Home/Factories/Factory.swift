@@ -12,6 +12,7 @@ import Launch
 import DashboardCreation
 import Foundation
 import SwiftUI
+import Config
 
 class Factory {
 
@@ -167,6 +168,11 @@ extension Factory {
             mode: mode
         )
         DashboardCreationCoordinator(viewModel: viewModel)
+    }
+
+    @ViewBuilder func getConfigCoordinator() -> some View {
+        let viewModel = ConfigViewModelImpl(entityService: entityServiceInstance)
+        ConfigCoordinator(viewModel: viewModel)
     }
 }
 
