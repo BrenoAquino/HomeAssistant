@@ -88,15 +88,15 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                 ForEach(Array(viewModel.entities.enumerated()), id: \.element.id) { index, entity in
                     Group {
                         switch entity {
-                        case let light as LightEntityUI:
+                        case let light as LightEntity:
                             LightView(
-                                entity: light,
+                                lightEntity: light,
                                 updateState: viewModel.didClickUpdateLightState
                             )
                         default:
                             UnsupportedView(
                                 name: entity.name,
-                                domain: entity.domain.name
+                                domain: entity.domain.rawValue
                             )
                         }
                     }

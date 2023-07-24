@@ -12,18 +12,13 @@ import SwiftUI
 
 public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: DashboardViewModel {
 
+    public weak var delegate: DashboardExternalFlow?
     private var cancellable: Set<AnyCancellable> = .init()
 
     // MARK: Services
 
     @ObservedObject private var entityService: EntityS
     @ObservedObject var dashboardService: DashboardS
-
-    // MARK: Redirects
-
-    public var didSelectConfig: (() -> Void)?
-    public var didSelectAddDashboard: (() -> Void)?
-    public var didSelectEditDashboard: ((_ dashboard: Dashboard) -> Void)?
 
     // MARK: Publishers
 
@@ -84,23 +79,23 @@ extension DashboardViewModelImpl {
 extension DashboardViewModelImpl {
 
     public func didClickAdd() {
-        didSelectAddDashboard?()
+        delegate?.didSelectAddDashboard()
     }
 
     public func didClickEdit(_ dashboard: Dashboard) {
-        didSelectEditDashboard?(dashboard)
+        delegate?.didSelectEditDashboard(dashboard)
         editModel = false
     }
 
     public func didClickConfig() {
-        didSelectConfig?()
+        delegate?.didSelectConfig()
     }
 
-    public func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightStateUI) {
+    public func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State) {
         Task {
             let service: EntityActionService = newState == .on ? .turnOn : .turnOff
             do {
-                try await entityService.execute(service: service, entityID: lightEntityUI.id)
+                try await entityService.execute(service: service, entityID: lightEntity.id)
             } catch {
                 Logger.log(level: .error, "Could not execute \(String(describing: service))")
             }

@@ -12,6 +12,8 @@ import Preview
 
 class DashboardViewModelPreview: DashboardViewModel {
 
+    weak var delegate: DashboardExternalFlow?
+
     @Published var editModel: Bool = false
     @Published var selectedDashboardIndex: Int? = 0
     @Published var dashboards: [Dashboard] = DashboardMock.all
@@ -26,12 +28,8 @@ class DashboardViewModelPreview: DashboardViewModel {
         return currentDashboard.entitiesIDs.compactMap { EntityMock.allDict[$0] }
     }
 
-    var didSelectConfig: (() -> Void)?
-    var didSelectAddDashboard: (() -> Void)?
-    var didSelectEditDashboard: ((Dashboard) -> Void)?
-
-    func didClickUpdateLightState(_ lightEntityUI: LightEntityUI, newState: LightStateUI) {
-        print("didUpdateLightState \(lightEntityUI.name) \(newState.rawValue)")
+    func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State) {
+        print("didUpdateLightState \(lightEntity.name) \(newState.rawValue)")
     }
 
     func didClickAdd() {

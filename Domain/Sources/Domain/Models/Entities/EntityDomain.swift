@@ -12,7 +12,7 @@ public enum EntityActionService {
     case turnOff
 }
 
-public enum EntityDomain: Hashable, CaseIterable {
+public enum EntityDomain: String, CaseIterable {
     case light
     case `switch`
     case fan

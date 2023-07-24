@@ -5,6 +5,7 @@
 //  Created by Breno Aquino on 17/07/23.
 //
 
+import Domain
 import Common
 import DesignSystem
 import SwiftUI
@@ -19,18 +20,18 @@ private enum Constants {
     static let removeIconWidth: CGFloat = removeIconHeight
 }
 
-struct DashboardsCarouselView<Model: DashboardUI>: View {
+struct DashboardsCarouselView: View {
 
     @Binding var editMode: Bool
-    @Binding var dashboards: [Model]
+    @Binding var dashboards: [Dashboard]
     @Binding var selectedDashboardIndex: Int?
 
-    let dashboardDidEdit: (_ dashboard: Model) -> Void
+    let dashboardDidEdit: (_ dashboard: Dashboard) -> Void
     let addDidSelect: () -> Void
 
     // MARK: Private States
 
-    @State private var draggedItem: Model?
+    @State private var draggedItem: Dashboard?
     @State private var isDragging: Bool = false
 
     // MARK: View
@@ -90,7 +91,7 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
         }
     }
 
-    private func removeIcon(_ dashboard: Model) -> some View {
+    private func removeIcon(_ dashboard: Dashboard) -> some View {
         GeometryReader { _ in
             SystemImages.remove
                 .imageScale(.large)
@@ -129,11 +130,11 @@ struct DashboardsCarouselView<Model: DashboardUI>: View {
         }
     }
 
-    private struct DashboardDropDelegate<Model: DashboardUI>: DropDelegate {
+    private struct DashboardDropDelegate: DropDelegate {
 
-        let dashboard: Model
-        @Binding var dashboards: [Model]
-        @Binding var draggedItem: Model?
+        let dashboard: Dashboard
+        @Binding var dashboards: [Dashboard]
+        @Binding var draggedItem: Dashboard?
         @Binding var isDragging: Bool
 
         func performDrop(info: DropInfo) -> Bool {
@@ -163,21 +164,10 @@ import Preview
 
 struct DashboardsCarouselView_Preview: PreviewProvider {
 
-    struct DashboardMock: DashboardUI {
-        let name: String
-        let icon: String
-    }
-
     static var previews: some View {
         DashboardsCarouselView(
             editMode: .constant(true),
-            dashboards: .constant([
-                DashboardMock(name: "Bedroom", icon: "bed.double"),
-                DashboardMock(name: "Living Room", icon: "sofa"),
-                DashboardMock(name: "Kitchen", icon: "refrigerator"),
-                DashboardMock(name: "Garden", icon: "tree"),
-                DashboardMock(name: "Security", icon: "light.beacon.max"),
-            ]),
+            dashboards: .constant(DashboardMock.all),
             selectedDashboardIndex: .constant(nil),
             dashboardDidEdit: { _ in print("dashboardDidEdit") },
             addDidSelect: { print("addDidSelect") }
