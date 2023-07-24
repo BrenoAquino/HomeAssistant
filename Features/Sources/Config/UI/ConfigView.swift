@@ -20,21 +20,25 @@ public struct ConfigView<ViewModel: ConfigViewModel>: View {
     public var body: some View {
         List {
             title
-                .padding(.horizontal, space: .smallM)
+                .padding(.horizontal, space: .horizontal)
+                .listRowInsets(EdgeInsets())
                 .listRowSeparator(.hidden)
 
             searchField
-                .padding(.top, space: .smallS)
+                .padding(.top, space: .normal)
+                .padding(.horizontal, space: .horizontal)
+                .listRowInsets(EdgeInsets())
                 .listRowSeparator(.hidden)
 
             ForEach(viewModel.entities, id: \.id) { entity in
                 entityCell(entity)
-                    .padding(.horizontal, space: .normal)
+                    .padding(.horizontal, space: .horizontal)
                     .listRowInsets(EdgeInsets())
                     .listRowSeparator(.hidden)
             }
             .padding(.top, space: .smallS)
         }
+        .scrollIndicators(.hidden)
         .listStyle(.plain)
     }
 
@@ -98,6 +102,7 @@ public struct ConfigView<ViewModel: ConfigViewModel>: View {
                 .scaledToFit()
         }
         .frame(height: 40)
+        .contentShape(Rectangle())
         .onTapGesture {
             if isHidden {
                 viewModel.hiddenEntityIDs.remove(entity.id)

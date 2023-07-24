@@ -17,7 +17,7 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
     }
 
     public var body: some View {
-        ScrollView(.vertical) {
+        ScrollView(.vertical, showsIndicators: false) {
             title
                 .padding(.horizontal, space: .horizontal)
 
