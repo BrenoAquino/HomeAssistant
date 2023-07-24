@@ -25,13 +25,13 @@ struct EntitiesListView: View {
 
             searchField
                 .padding(.top, space: .smallL)
-                .padding(.horizontal, space: .normal)
+                .padding(.horizontal, space: .horizontal)
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets())
 
             entitiesList
                 .padding(.top, space: .smallL)
-                .padding(.horizontal, space: .normal)
+                .padding(.horizontal, space: .horizontal)
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets())
 
@@ -46,7 +46,7 @@ struct EntitiesListView: View {
                     domainElement(domain)
                 }
             }
-            .padding(.horizontal, space: .normal)
+            .padding(.horizontal, space: .horizontal)
         }
     }
 
@@ -54,7 +54,7 @@ struct EntitiesListView: View {
         let isSelected = selectedDomains.contains(domain.rawValue)
         Text(domain.rawValue)
             .padding(.vertical, space: .smallS)
-            .padding(.horizontal, space: .smallL)
+            .padding(.horizontal, space: .horizontal)
             .foregroundColor(isSelected ? DSColor.background : DSColor.label)
             .background(isSelected ? DSColor.label : DSColor.background)
             .overlay(Capsule().stroke(DSColor.label, lineWidth: 1))

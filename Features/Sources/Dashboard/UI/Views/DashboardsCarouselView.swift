@@ -42,8 +42,8 @@ struct DashboardsCarouselView: View {
                 carousel
                 add
             }
-            .padding(.horizontal, space: .smallL)
             .padding(.vertical, space: .normal)
+            .padding(.horizontal, space: .horizontal)
         }
     }
 

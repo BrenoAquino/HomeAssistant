@@ -110,16 +110,21 @@ extension DashboardCreationViewModelImpl {
     }
 
     private func filterEntity(_ text: String, domainNames: Set<String>) {
-        let allEntities = Array(entitiesService.entities.values).sorted(by: { $0.name < $1.name })
+        let allEntities = Array(entitiesService.entities.values)
+            .filter { !self.entitiesService.hiddenEntities.contains($0.id) }
+            .sorted(by: { $0.name < $1.name })
+
         guard !text.isEmpty || !domainNames.isEmpty else {
             entities = allEntities
             return
         }
+
         let result = allEntities.filter { entity in
             let nameCheck = [entity.name, entity.domain.rawValue].contains(text, options: [.caseInsensitive, .diacriticInsensitive])
             let domainCheck = domainNames.contains(entity.domain.rawValue)
             return nameCheck && domainCheck
         }
+        
         entities = result.isEmpty ? allEntities : result
     }
 

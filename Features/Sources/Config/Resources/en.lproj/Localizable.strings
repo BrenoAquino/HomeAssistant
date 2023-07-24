@@ -6,4 +6,6 @@
   
 */
 
+"config" = "Configuration";
 "devices" = "Devices";
+"entities_hint" = "You can search for a name";

@@ -29,10 +29,7 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
 
     public var dashboards: [Dashboard] {
         get { dashboardService.dashboards }
-        set {
-            dashboardService.dashboards = newValue
-            objectWillChange.send()
-        }
+        set { dashboardService.dashboards = newValue }
     }
 
     public var currentDashboard: Dashboard? {

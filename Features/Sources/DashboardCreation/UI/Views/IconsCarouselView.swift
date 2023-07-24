@@ -23,7 +23,7 @@ struct IconsCarouselView: View {
                         }
                 }
             }
-            .padding(.horizontal, space: .normal)
+            .padding(.horizontal, space: .horizontal)
         }
     }
 

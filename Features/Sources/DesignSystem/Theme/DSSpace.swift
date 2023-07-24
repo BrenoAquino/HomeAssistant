@@ -15,6 +15,8 @@ public struct DSSpace {
         self.rawValue = rawValue
     }
 
+    /// Default Horizontal Space - 24
+    public static let horizontal: DSSpace = .smallL
     /// Big Large - 40
     public static let bigL: DSSpace = DSSpace(rawValue: 40)
     /// Big Medium - 32
