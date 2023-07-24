@@ -62,7 +62,7 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
 extension DashboardViewModelImpl {
 
     private func setupData() {
-        selectedDashboardIndex = dashboards.count > 0 ? 1 : nil
+        selectedDashboardIndex = dashboards.count > 0 ? .zero : nil
     }
 
     private func setupForwards() {
