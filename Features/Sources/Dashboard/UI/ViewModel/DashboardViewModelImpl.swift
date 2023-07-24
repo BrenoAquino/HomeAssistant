@@ -96,7 +96,7 @@ extension DashboardViewModelImpl {
         didSelectConfig?()
     }
 
-    public func didClickUpdateLightState(_ lightEntityUI: LightEntityUI, newState: LightStateUI) {
+    public func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightStateUI) {
         Task {
             let service: EntityActionService = newState == .on ? .turnOn : .turnOff
             do {

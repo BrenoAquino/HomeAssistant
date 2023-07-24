@@ -14,7 +14,7 @@ public enum EntityMock {
     public static let mainLight = Domain.LightEntity(id: "light.main_light", name: "Main Light", state: .on)
     public static let ledDeskLight = Domain.LightEntity(id: "light.led_desk", name: "Led Desk", state: .off)
     public static let ledCeilingLight = Domain.LightEntity(id: "light.led_ceiling", name: "Led Ceiling", state: .on)
-    public static let climate = Domain.ClimateEntity(id: "climate.air_conditioner", name: "Air Conditioner", state: .on)
+    public static let climate = Domain.ClimateEntity(id: "climate.air_conditioner", name: "Air Conditioner", state: .cool)
     public static let coffeeMachine = Domain.SwitchEntity(id: "switch.coffee_machine", name: "Coffee Machine", state: .off)
     public static let fan = Domain.FanEntity(id: "fan.bedroom_fan", name: "Bedroom's Fan", percentageStep: 20, percentage: 20, state: .on)
 

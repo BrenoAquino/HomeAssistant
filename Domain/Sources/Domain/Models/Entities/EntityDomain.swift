@@ -7,11 +7,6 @@
 
 import Foundation
 
-public enum EntityState {
-    case on
-    case off
-}
-
 public enum EntityActionService {
     case turnOn
     case turnOff

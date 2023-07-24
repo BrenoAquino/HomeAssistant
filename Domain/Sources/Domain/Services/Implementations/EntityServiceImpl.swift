@@ -49,10 +49,6 @@ extension EntityServiceImpl {
         switch entity {
         case let light as LightEntity:
             entities[id] = light
-        case let `switch` as SwitchEntity:
-            entities[id] = `switch`
-        case let fan as FanEntity:
-            entities[id] = fan
         case let climate as ClimateEntity:
             entities[id] = climate
         default:
@@ -64,7 +60,8 @@ extension EntityServiceImpl {
         subscriptionRepository
             .stateChangedEvent
             .sink { _ in } receiveValue: { [weak self] stateChanged in
-                self?.entities[stateChanged.id]?.state = stateChanged.newState
+                guard let entity = self?.entities[stateChanged.id] else { return }
+                self?.entities[stateChanged.id] = entity.stateUpdated(stateChanged.newState) as any Entity
             }
             .store(in: &cancellable)
     }

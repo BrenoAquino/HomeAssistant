@@ -9,12 +9,17 @@ import Foundation
 
 public struct SwitchEntity: Entity {
 
+    public enum State: String {
+        case on
+        case off
+    }
+
     public let id: String
     public let name: String
     public let domain: EntityDomain = .switch
-    public var state: EntityState
+    public var state: SwitchEntity.State
 
-    public init(id: String, name: String, state: EntityState) {
+    public init(id: String, name: String, state: SwitchEntity.State) {
         self.id = id
         self.name = name
         self.state = state
