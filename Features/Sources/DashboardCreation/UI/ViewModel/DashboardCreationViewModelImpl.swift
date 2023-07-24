@@ -11,66 +11,25 @@ import Domain
 import Foundation
 import SwiftUI
 
-// MARK: - Interface
-
-public enum DashboardCreationMode: Equatable {
-    case creation
-    case edit(_ dashboard: Dashboard)
-}
-
-public protocol DashboardCreationViewModel: ObservableObject {
-
-    var mode: DashboardCreationMode { get }
-
-    var dashboardName: String { get set }
-
-    var icons: [IconUI] { get }
-    var selectedIcon: IconUI? { get set }
-    var iconFilterText: String { get set }
-
-    var entities: [EntityUI] { get }
-    var selectedEntitiesIDs: Set<String> { get set }
-    var entityFilterText: String { get set }
-
-    var domains: [EntityDomain] { get }
-    var selectedDomainsNames: Set<String> { get set }
-
-    var didFinish: (() -> Void)? { get set }
-    var didClose: (() -> Void)? { get set }
-
-    func close()
-    func createOrUpdateDashboard()
-}
-
-// MARK: - Implementation
-
-enum DashboardCreationViewModelImplError: Error {
-    case missingName
-    case nameAlreadyExists
-    case missingIcon
-    case missingEntities
-}
-
 public class DashboardCreationViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: DashboardCreationViewModel {
+
+    public let mode: DashboardCreationMode
+    public weak var delegate: DashboardCreationExternalFlow?
+
+    // MARK: Private Variables
 
     private var cancellable: Set<AnyCancellable> = []
     private var originalName: String = ""
-    public let mode: DashboardCreationMode
-
-    // MARK: Redirects
-
-    public var didFinish: (() -> Void)?
-    public var didClose: (() -> Void)?
 
     // MARK: Publishers
 
     @Published public var dashboardName: String = ""
 
-    @Published public private(set) var icons: [IconUI] = IconUI.list
-    @Published public var selectedIcon: IconUI?
+    @Published public private(set) var icons: [Icon] = Icon.list
+    @Published public var selectedIconName: String?
     @Published public var iconFilterText: String = ""
 
-    @Published public var entities: [EntityUI] = []
+    @Published public var entities: [any Entity] = []
     @Published public var selectedEntitiesIDs: Set<String> = []
     @Published public var entityFilterText: String = ""
 
@@ -104,12 +63,12 @@ public class DashboardCreationViewModelImpl<DashboardS: DashboardService, Entity
 extension DashboardCreationViewModelImpl {
 
     private func setupData(_ mode: DashboardCreationMode) {
-        selectedDomainsNames = Set(entitiesService.domains.map { $0.name })
+        selectedDomainsNames = Set(entitiesService.domains.map { $0.rawValue })
 
         guard case .edit(let dashboard) = mode else { return }
         originalName = dashboard.name
         dashboardName = dashboard.name
-        selectedIcon = icons.first(where: { $0.name == dashboard.icon })
+        selectedIconName = icons.first(where: { $0.name == dashboard.icon })?.name
         selectedEntitiesIDs = Set(dashboard.entitiesIDs)
     }
 
@@ -141,24 +100,24 @@ extension DashboardCreationViewModelImpl {
 
     private func filterIcon(_ text: String) {
         guard !text.isEmpty else {
-            icons = IconUI.list
+            icons = Icon.list
             return
         }
-        let result = IconUI.list.filter { icon in
+        let result = Icon.list.filter { icon in
             [icon.name].appended(contentsOf: icon.keywords).contains(text, options: [.caseInsensitive, .diacriticInsensitive])
         }
-        icons = result.isEmpty ? IconUI.list : result
+        icons = result.isEmpty ? Icon.list : result
     }
 
     private func filterEntity(_ text: String, domainNames: Set<String>) {
-        let allEntities = Array(entitiesService.entities.values).sorted(by: { $0.name < $1.name }).map { $0.toUI() }
+        let allEntities = Array(entitiesService.entities.values).sorted(by: { $0.name < $1.name })
         guard !text.isEmpty || !domainNames.isEmpty else {
             entities = allEntities
             return
         }
         let result = allEntities.filter { entity in
-            let nameCheck = [entity.name, entity.domainUI.name].contains(text, options: [.caseInsensitive, .diacriticInsensitive])
-            let domainCheck = domainNames.contains(entity.domainUI.name)
+            let nameCheck = [entity.name, entity.domain.rawValue].contains(text, options: [.caseInsensitive, .diacriticInsensitive])
+            let domainCheck = domainNames.contains(entity.domain.rawValue)
             return nameCheck && domainCheck
         }
         entities = result.isEmpty ? allEntities : result
@@ -167,24 +126,24 @@ extension DashboardCreationViewModelImpl {
     private func createDashboard() throws -> Dashboard {
         let name = dashboardName
         guard !name.isEmpty else {
-            throw DashboardCreationViewModelImplError.missingName
+            throw DashboardCreationViewModelError.missingName
         }
 
         if name != originalName {
             guard !dashboardService.dashboards.contains(where: { $0.name == name }) else {
-                throw DashboardCreationViewModelImplError.nameAlreadyExists
+                throw DashboardCreationViewModelError.nameAlreadyExists
             }
         }
 
-        guard let selectedIcon else {
-            throw DashboardCreationViewModelImplError.missingIcon
+        guard let selectedIconName else {
+            throw DashboardCreationViewModelError.missingIcon
         }
 
         guard !selectedEntitiesIDs.isEmpty else {
-            throw DashboardCreationViewModelImplError.missingEntities
+            throw DashboardCreationViewModelError.missingEntities
         }
 
-        return Dashboard(name: name, icon: selectedIcon.name, entities: Array(selectedEntitiesIDs))
+        return Dashboard(name: name, icon: selectedIconName, entities: Array(selectedEntitiesIDs))
     }
 }
 
@@ -200,13 +159,13 @@ extension DashboardCreationViewModelImpl {
             } else {
                 try dashboardService.update(dashboardName: originalName, dashboard: dashboard)
             }
-            didFinish?()
+            delegate?.didFinish()
         } catch {
             Logger.log(level: .error, error.localizedDescription)
         }
     }
 
     public func close() {
-        didClose?()
+        delegate?.didClose()
     }
 }

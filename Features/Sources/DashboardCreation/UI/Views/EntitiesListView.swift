@@ -5,15 +5,16 @@
 //  Created by Breno Aquino on 18/07/23.
 //
 
+import Domain
 import DesignSystem
 import SwiftUI
 
 struct EntitiesListView: View {
 
-    let entities: [EntityUI]
+    let entities: [any Entity]
     @Binding var entitySearchText: String
     @Binding var selectedEntities: Set<String>
-    let domains: [any EntityDomainUI]
+    let domains: [EntityDomain]
     @Binding var selectedDomains: Set<String>
 
     var body: some View {
@@ -41,7 +42,7 @@ struct EntitiesListView: View {
     private var filters: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: .smallM) {
-                ForEach(domains, id: \.name) { domain in
+                ForEach(domains, id: \.rawValue) { domain in
                     domainElement(domain)
                 }
             }
@@ -49,9 +50,9 @@ struct EntitiesListView: View {
         }
     }
 
-    @ViewBuilder private func domainElement(_ domain: EntityDomainUI) -> some View {
-        let isSelected = selectedDomains.contains(domain.name)
-        Text(domain.name)
+    @ViewBuilder private func domainElement(_ domain: EntityDomain) -> some View {
+        let isSelected = selectedDomains.contains(domain.rawValue)
+        Text(domain.rawValue)
             .padding(.vertical, space: .smallS)
             .padding(.horizontal, space: .smallL)
             .foregroundColor(isSelected ? DSColor.background : DSColor.label)
@@ -60,9 +61,9 @@ struct EntitiesListView: View {
             .clipShape(Capsule())
             .onTapGesture {
                 if isSelected {
-                    selectedDomains.remove(domain.name)
+                    selectedDomains.remove(domain.rawValue)
                 } else {
-                    selectedDomains.insert(domain.name)
+                    selectedDomains.insert(domain.rawValue)
                 }
             }
     }
@@ -101,7 +102,7 @@ struct EntitiesListView: View {
                         }
                     )) {
                         HStack(spacing: .smallM) {
-                            Image(systemName: entity.domainUI.icon)
+                            Image(systemName: entity.domain.icon)
                                 .frame(width: 30)
                             Text(entity.name)
                         }
@@ -114,36 +115,20 @@ struct EntitiesListView: View {
 }
 
 #if DEBUG
-import Domain
+import Preview
 
 struct EntitiesListView_Preview: PreviewProvider {
-
-    private struct DomainMock: EntityDomainUI {
-        let name: String
-        let icon: String
-    }
 
     static var entitySearchText: String = ""
     static var selectedEntities: Set<String> = []
     static var selectedDomains: Set<String> = []
 
     static var previews: some View {
-        let lightDomain = DomainMock(name: "light", icon: "lightbulb.led")
-        let switchDomain = DomainMock(name: "switch", icon: "lightswitch.on")
-        let fanDomain = DomainMock(name: "fan", icon: "fan.desk")
-        let climateDomain = DomainMock(name: "climate", icon: "air.conditioner.horizontal")
-        let mainLight = EntityUI(id: "1", name: "Main Light", domainUI: lightDomain)
-        let ledDesk = EntityUI(id: "2", name: "Led Desk", domainUI: lightDomain)
-        let ledCeiling = EntityUI(id: "3", name: "Led Ceiling", domainUI: lightDomain)
-        let climate = EntityUI(id: "4", name: "Air Conditioner", domainUI: climateDomain)
-        let coffeeMachine = EntityUI(id: "5", name: "Coffee Machine", domainUI: switchDomain)
-        let fan = EntityUI(id: "6", name: "Bedroom's Fan", domainUI: fanDomain)
-
         EntitiesListView(
-            entities: [mainLight, ledDesk, ledCeiling, climate, coffeeMachine, fan],
+            entities: EntityMock.all,
             entitySearchText: .init(get: { entitySearchText }, set: { entitySearchText = $0 }),
             selectedEntities: .init(get: { selectedEntities }, set: { selectedEntities = $0 }),
-            domains: [lightDomain, switchDomain, fanDomain, climateDomain],
+            domains: EntityDomain.allCases,
             selectedDomains: .init(get: { selectedDomains }, set: { selectedDomains = $0 })
         )
     }

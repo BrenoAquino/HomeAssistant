@@ -103,7 +103,7 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
 
             IconsCarouselView(
                 icons: viewModel.icons,
-                selectedIcon: $viewModel.selectedIcon
+                selectedIconName: $viewModel.selectedIconName
             )
 
             VStack(spacing: .smallS) {
@@ -161,34 +161,11 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
 }
 
 #if DEBUG
-import Preview
-import Domain
-
 struct DashboardCreationView_Preview: PreviewProvider {
-
-    class FakeViewModel: DashboardCreationViewModel {
-
-        var mode: DashboardCreationMode = .creation
-        var dashboardName: String = ""
-        var icons: [IconUI] = IconUI.list
-        var selectedIcon: IconUI? = IconUI.list.first
-        var iconFilterText: String = ""
-        var entities: [EntityUI] = EntityMock.all.map { $0.toUI() }
-        var selectedEntitiesIDs: Set<String> = []
-        var entityFilterText: String = ""
-        var domains: [EntityDomain] = EntityDomain.allCases
-        var selectedDomainsNames: Set<String> = Set(EntityDomain.allCases.map { $0.name })
-
-        var didFinish: (() -> Void)? = { print("didFinish") }
-        var didClose: (() -> Void)? = { print("didClose") }
-
-        func close() {}
-        func createOrUpdateDashboard() {}
-    }
 
     static var previews: some View {
 
-        DashboardCreationView(viewModel: FakeViewModel())
+        DashboardCreationView(viewModel: DashboardCreationViewModelPreview())
     }
 }
 #endif

@@ -1,5 +1,5 @@
 //
-//  IconUI.swift
+//  Icon.swift
 //  
 //
 //  Created by Breno Aquino on 18/07/23.
@@ -7,15 +7,15 @@
 
 import Foundation
 
-public struct IconUI {
+public struct Icon {
 
     let name: String
     let keywords: [String]
 }
 
-extension IconUI {
+extension Icon {
 
-    static let list: [IconUI] = [
+    static let list: [Icon] = [
         .init(name: "bed.double", keywords: []),
         .init(name: "sofa", keywords: []),
         .init(name: "refrigerator", keywords: []),
