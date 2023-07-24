@@ -25,8 +25,8 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                 .foregroundColor(DSColor.secondaryLabel)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.callout)
-                .padding(.leading, space: .smallL)
                 .padding(.top, space: .smallS)
+                .padding(.horizontal, space: .horizontal)
 
             DashboardsCarouselView(
                 editMode: $viewModel.editModel,
@@ -41,8 +41,8 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                 .font(.title3)
                 .fontWeight(.semibold)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, space: .smallL)
                 .padding(.top, space: .smallS)
+                .padding(.horizontal, space: .horizontal)
             
             entitiesGrid
                 .padding(.top, space: .smallS)
@@ -79,7 +79,7 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
     private var entitiesGrid: some View {
         GeometryReader { proxy in
             let numberOfElementsInRow: Int = 3
-            let space = DSSpace.smallL.rawValue
+            let space = DSSpace.horizontal.rawValue
             let totalSpace = space * (CGFloat(numberOfElementsInRow) + 1)
             let size = (proxy.size.width - totalSpace) / CGFloat(numberOfElementsInRow)
             let columns = [GridItem](repeating: .init(.fixed(size), spacing: space), count: numberOfElementsInRow)

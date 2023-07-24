@@ -19,28 +19,27 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
     public var body: some View {
         ScrollView(.vertical) {
             title
-                .padding(.horizontal, space: .normal)
+                .padding(.horizontal, space: .horizontal)
 
             Localizable.dashboardDescription.text
                 .foregroundColor(DSColor.secondaryLabel)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.callout)
-                .padding(.horizontal, space: .normal)
                 .padding(.top, space: .smallS)
+                .padding(.horizontal, space: .horizontal)
 
             iconField
                 .padding(.top, space: .smallS)
 
             nameField
-                .padding(.horizontal, space: .normal)
                 .padding(.top, space: .smallS)
+                .padding(.horizontal, space: .horizontal)
 
             entitiesList
                 .padding(.top, space: .smallS)
 
             createButton
-                .padding(.top, space: .normal)
-                .padding(.bottom, space: .normal)
+                .padding(.vertical, space: .normal)
         }
         .scrollDismissesKeyboard(.immediately)
     }
@@ -99,7 +98,7 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
                 .font(.headline)
                 .fontWeight(.medium)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, space: .normal)
+                .padding(.horizontal, space: .horizontal)
 
             IconsCarouselView(
                 icons: viewModel.icons,
@@ -122,7 +121,7 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
                     .fontWeight(.medium)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(.horizontal, space: .normal)
+            .padding(.horizontal, space: .horizontal)
         }
     }
 
@@ -133,7 +132,7 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
                 .font(.headline)
                 .fontWeight(.medium)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, space: .normal)
+                .padding(.horizontal, space: .horizontal)
 
             EntitiesListView(
                 entities: viewModel.entities,
