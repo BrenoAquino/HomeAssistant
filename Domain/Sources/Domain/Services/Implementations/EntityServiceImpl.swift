@@ -51,6 +51,10 @@ extension EntityServiceImpl {
             entities[id] = light
         case let climate as ClimateEntity:
             entities[id] = climate
+        case let `switch` as SwitchEntity:
+            entities[id] = `switch`
+        case let fan as FanEntity:
+            entities[id] = fan
         default:
             break
         }
@@ -78,7 +82,10 @@ extension EntityServiceImpl: EntityService {
     public func trackEntities() async throws {
         try await entityRepository.fetchStates().forEach { [self] in insertEntity($0) }
         stateChangeSubscriptionID = try await subscriptionRepository.subscribeToEvents(eventType: .stateChanged)
-        hiddenEntities = try await entityRepository.fetchHiddenEntityIDs()
+
+        let fetchedHiddenEntities = try? await entityRepository.fetchHiddenEntityIDs()
+        hiddenEntities = fetchedHiddenEntities ?? []
+        
         setupSubscription()
     }
 
