@@ -12,7 +12,7 @@ import SwiftUI
 
 public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: DashboardViewModel {
 
-    public weak var delegate: DashboardExternalFlow?
+    public var delegate: DashboardExternalFlow?
     private var cancellable: Set<AnyCancellable> = .init()
 
     // MARK: Services

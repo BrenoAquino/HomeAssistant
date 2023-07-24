@@ -10,7 +10,7 @@ import Preview
 
 class LaunchViewModelPreview: LaunchViewModel {
 
-    weak var delegate: LaunchExternalFlow?
+    var delegate: LaunchExternalFlow?
 
     func startConfiguration() async {}
 }

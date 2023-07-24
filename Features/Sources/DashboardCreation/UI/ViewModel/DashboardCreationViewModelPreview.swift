@@ -11,7 +11,7 @@ import Domain
 
 class DashboardCreationViewModelPreview: DashboardCreationViewModel {
 
-    weak var delegate: DashboardCreationExternalFlow?
+    var delegate: DashboardCreationExternalFlow?
     var mode: DashboardCreationMode = .creation
     var dashboardName: String = ""
     var icons: [Icon] = Icon.list

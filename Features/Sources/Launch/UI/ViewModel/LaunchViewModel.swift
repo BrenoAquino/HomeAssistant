@@ -8,7 +8,7 @@
 import Domain
 import Foundation
 
-public protocol LaunchExternalFlow: AnyObject {
+public protocol LaunchExternalFlow {
 
     func launchFinished()
 }

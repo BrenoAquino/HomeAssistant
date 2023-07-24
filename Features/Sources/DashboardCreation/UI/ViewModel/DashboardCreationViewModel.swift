@@ -27,7 +27,7 @@ public enum DashboardCreationViewModelError: Error {
     case missingEntities
 }
 
-public protocol DashboardCreationExternalFlow: AnyObject {
+public protocol DashboardCreationExternalFlow {
 
     func didFinish() -> Void
     func didClose() -> Void

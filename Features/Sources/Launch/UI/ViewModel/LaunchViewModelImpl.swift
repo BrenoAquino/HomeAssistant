@@ -10,7 +10,7 @@ import Foundation
 
 public class LaunchViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: LaunchViewModel {
 
-    public weak var delegate: LaunchExternalFlow?
+    public var delegate: LaunchExternalFlow?
 
     // MARK: Services
 

@@ -8,7 +8,7 @@
 import Combine
 import Domain
 
-public protocol DashboardExternalFlow: AnyObject {
+public protocol DashboardExternalFlow {
 
     func didSelectConfig() -> Void
     func didSelectAddDashboard() -> Void

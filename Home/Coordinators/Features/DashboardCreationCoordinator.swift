@@ -19,16 +19,17 @@ struct DashboardCreationCoordinator<ViewModel: DashboardCreationViewModel>: View
 
     var body: some View {
         DashboardCreationView(viewModel: viewModel)
-            .task { setupCallbacks() }
+            .task { viewModel.delegate = self }
+    }
+}
+
+extension DashboardCreationCoordinator: DashboardCreationExternalFlow {
+
+    func didFinish() {
+        coordinator.dismiss()
     }
 
-    private func setupCallbacks() {
-        viewModel.didClose = { [self] in
-            coordinator.dismiss()
-        }
-
-        viewModel.didFinish = { [self] in
-            coordinator.dismiss()
-        }
+    func didClose() {
+        coordinator.dismiss()
     }
 }

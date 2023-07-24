@@ -12,7 +12,7 @@ import Preview
 
 class DashboardViewModelPreview: DashboardViewModel {
 
-    weak var delegate: DashboardExternalFlow?
+    var delegate: DashboardExternalFlow?
 
     @Published var editModel: Bool = false
     @Published var selectedDashboardIndex: Int? = 0

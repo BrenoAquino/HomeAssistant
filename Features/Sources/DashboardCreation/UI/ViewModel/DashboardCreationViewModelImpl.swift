@@ -14,7 +14,7 @@ import SwiftUI
 public class DashboardCreationViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: DashboardCreationViewModel {
 
     public let mode: DashboardCreationMode
-    public weak var delegate: DashboardCreationExternalFlow?
+    public var delegate: DashboardCreationExternalFlow?
 
     // MARK: Private Variables
 
