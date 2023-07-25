@@ -10,9 +10,7 @@ import SwiftUI
 // MARK: PresentationStyle
 
 extension PresentationStyle {
-    static let `default`: PresentationStyle = .init(transition: nil)
-    static let opacity: PresentationStyle = .init(transition: .opacity)
-    static let none: PresentationStyle = .init(transition: .none)
+    static let `default`: PresentationStyle = .init()
 }
 
 // MARK: Screen
@@ -50,10 +48,6 @@ extension View {
 
     @ViewBuilder
     func style(_ style: PresentationStyle?) -> some View {
-        if let style = style?.transition {
-            transition(style)
-        } else {
-            self
-        }
+        self
     }
 }

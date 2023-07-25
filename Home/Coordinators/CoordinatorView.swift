@@ -21,7 +21,6 @@ struct CoordinatorView: View {
                     .sheet(item: $coordinator.sheet, content: { coordinator.build(screen: $0) })
                     .fullScreenCover(item: $coordinator.fullScreenCover, content: { coordinator.build(screen: $0) })
             }
-            .opacityTransition()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 
             if let block = coordinator.block {
@@ -30,7 +29,6 @@ struct CoordinatorView: View {
                     .opacityTransition()
             }
         }
-        .opacityTransition()
         .environmentObject(coordinator)
         .onChange(of: scenePhase) { newPhase in
             switch newPhase {

@@ -65,11 +65,11 @@ extension Coordinator {
 
     @ViewBuilder
     func rootView() -> some View {
-        root.viewCoordinator(factory)
+        root.viewCoordinator(factory).style(root.style)
     }
 
     @ViewBuilder
     func build(screen: Screen) -> some View {
-        screen.viewCoordinator(factory)
+        screen.viewCoordinator(factory).style(screen.style)
     }
 }
