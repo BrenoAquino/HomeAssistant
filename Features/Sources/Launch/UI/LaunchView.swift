@@ -16,12 +16,7 @@ public struct LaunchView<ViewModel: LaunchViewModel>: View {
     }
 
     public var body: some View {
-        Image(packageResource: .whiteLogo)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 120)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.black)
+        StaticLaunchView()
             .task {
                 await viewModel.startConfiguration()
             }

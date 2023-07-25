@@ -80,6 +80,7 @@ extension EntityServiceImpl: EntityService {
     }
 
     public func trackEntities() async throws {
+        Logger.log("trackEntiti")
         try await entityRepository.fetchStates().forEach { [self] in insertEntity($0) }
         stateChangeSubscriptionID = try await subscriptionRepository.subscribeToEvents(eventType: .stateChanged)
 

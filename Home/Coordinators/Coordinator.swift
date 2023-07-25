@@ -13,7 +13,7 @@ class Coordinator: ObservableObject {
 
     // MARK: Handlers
 
-    private(set) lazy var lifeCycleHandler = factory.lifeCycleHandler()
+    private(set) lazy var lifeCycleHandler = factory.lifeCycleHandler(coordinator: self)
 
     // MARK: Publishers
 
@@ -26,6 +26,11 @@ class Coordinator: ObservableObject {
 // MARK: Present
 
 extension Coordinator {
+
+    func setRoot(_ screen: Screen) {
+        path.removeLast(path.count)
+        root = screen
+    }
 
     func push(_ screen: Screen) {
         path.append(screen)

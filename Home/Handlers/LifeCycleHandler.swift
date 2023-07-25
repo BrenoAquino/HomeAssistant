@@ -27,25 +27,62 @@ protocol LifeCycleHandler {
 
 class LifeCycleHandlerImpl<DashboardS: DashboardService, EntityS: EntityService>: LifeCycleHandler {
 
+    private weak var coordinator: Coordinator?
     private let dashboardsService: DashboardS
     private let entityService: EntityS
+    private let webSocket: WebSocketProvider
 
-    init(dashboardsService: DashboardS, entityService: EntityS) {
+    init(
+        coordinator: Coordinator,
+        dashboardsService: DashboardS,
+        entityService: EntityS,
+        webSocket: WebSocketProvider
+    ) {
+        self.coordinator = coordinator
         self.dashboardsService = dashboardsService
         self.entityService = entityService
+        self.webSocket = webSocket
     }
 }
 
+// MARK: Private Methods
+
 extension LifeCycleHandlerImpl {
 
-    func appStateDidChange(_ state: AppState) {
-        guard state == .background || state == .terminate else { return }
+    private func prepareToBackground() {
+        coordinator?.root = .staticLaunch
+        persist()
+    }
+
+    private func prepareToForeground() {
+        guard coordinator?.root != .launch else { return }
+        coordinator?.root = .launch
+    }
+
+    private func persist() {
         let semaphore = DispatchSemaphore(value: 0)
         Task {
             try? await dashboardsService.persist()
             try? await entityService.persistHiddenEntities()
+            await webSocket.disconnect()
             semaphore.signal()
         }
         semaphore.wait()
+    }
+}
+
+// MARK: Public Methods
+
+extension LifeCycleHandlerImpl {
+
+    func appStateDidChange(_ state: AppState) {
+        switch state {
+        case .foreground:
+            prepareToForeground()
+        case .background:
+            prepareToBackground()
+        case .terminate:
+            persist()
+        }
     }
 }

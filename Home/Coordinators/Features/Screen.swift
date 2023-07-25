@@ -10,6 +10,7 @@ import DashboardCreation
 
 enum Screen: Identifiable, Hashable {
     case launch
+    case staticLaunch
     case dashboard
     case dashboardCreation(mode: DashboardCreationMode)
     case config
@@ -26,7 +27,9 @@ extension Screen {
     @ViewBuilder func viewCoordinator(_ factory: Factory) -> some View {
         switch self {
         case .launch:
-            factory.getLaunchCoordinator()
+            factory.getLaunchCoordinator().transition(.opacity)
+        case .staticLaunch:
+            factory.getStaticLaunchCoordinator().transition(.opacity)
         case .dashboard:
             factory.getDashboardCoordinator()
         case .dashboardCreation(let mode):

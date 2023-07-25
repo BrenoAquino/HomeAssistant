@@ -156,6 +156,10 @@ extension Factory {
         LaunchCoordinator(viewModel: viewModel)
     }
 
+    @ViewBuilder func getStaticLaunchCoordinator() -> some View {
+        StaticLaunchCoordinator()
+    }
+
     @ViewBuilder func getDashboardCoordinator() -> some View {
         let viewModel = DashboardViewModelImpl(dashboardService: dashboardServiceInstance, entityService: entityServiceInstance)
         DashboardCoordinator(viewModel: viewModel)
@@ -180,10 +184,12 @@ extension Factory {
 
 extension Factory {
 
-    func lifeCycleHandler() -> LifeCycleHandler {
+    func lifeCycleHandler(coordinator: Coordinator) -> LifeCycleHandler {
         LifeCycleHandlerImpl(
+            coordinator: coordinator,
             dashboardsService: dashboardServiceInstance,
-            entityService: entityServiceInstance
+            entityService: entityServiceInstance,
+            webSocket: webSocketProviderInstance
         )
     }
 }

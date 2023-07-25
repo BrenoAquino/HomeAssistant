@@ -22,6 +22,7 @@
 		5558B6072A68C825008651CF /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5558B6062A68C825008651CF /* Factory.swift */; };
 		557C953E2A6E243200D980DB /* ConfigCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557C953D2A6E243200D980DB /* ConfigCoordinator.swift */; };
 		5598DB912A677C5B00614AC0 /* DashboardCreationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5598DB902A677C5B00614AC0 /* DashboardCreationCoordinator.swift */; };
+		55A0F2A62A6F0C7F00C29677 /* StaticLaunchCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55A0F2A52A6F0C7F00C29677 /* StaticLaunchCoordinator.swift */; };
 		55B85F352A68238500C8E667 /* InfrastructureFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B85F342A68238500C8E667 /* InfrastructureFactory.swift */; };
 		55C0FA332A66384B00758023 /* LocalDataSourceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C0FA322A66384B00758023 /* LocalDataSourceFactory.swift */; };
 		55C0FA352A6639A700758023 /* UserDefaultsDatabaseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C0FA342A6639A700758023 /* UserDefaultsDatabaseProvider.swift */; };
@@ -54,6 +55,7 @@
 		557C953D2A6E243200D980DB /* ConfigCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigCoordinator.swift; sourceTree = "<group>"; };
 		5594C06E2A6388750015AE11 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = text; path = Domain; sourceTree = SOURCE_ROOT; };
 		5598DB902A677C5B00614AC0 /* DashboardCreationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardCreationCoordinator.swift; sourceTree = "<group>"; };
+		55A0F2A52A6F0C7F00C29677 /* StaticLaunchCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticLaunchCoordinator.swift; sourceTree = "<group>"; };
 		55B85F342A68238500C8E667 /* InfrastructureFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfrastructureFactory.swift; sourceTree = "<group>"; };
 		55C0FA322A66384B00758023 /* LocalDataSourceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataSourceFactory.swift; sourceTree = "<group>"; };
 		55C0FA342A6639A700758023 /* UserDefaultsDatabaseProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsDatabaseProvider.swift; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 			children = (
 				5508ECA32A65E64F00100E18 /* Screen.swift */,
 				552783F42A65027E00603EBA /* LaunchCoordinator.swift */,
+				55A0F2A52A6F0C7F00C29677 /* StaticLaunchCoordinator.swift */,
 				5508EC892A65C67D00100E18 /* DashboardCoordinator.swift */,
 				5598DB902A677C5B00614AC0 /* DashboardCreationCoordinator.swift */,
 				557C953D2A6E243200D980DB /* ConfigCoordinator.swift */,
@@ -315,6 +318,7 @@
 				55CED2412A62F2C40070B851 /* PingMessage.swift in Sources */,
 				5558B6052A68C722008651CF /* LifeCycleHandler.swift in Sources */,
 				552783E52A64F5F200603EBA /* AppEnvironment.swift in Sources */,
+				55A0F2A62A6F0C7F00C29677 /* StaticLaunchCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

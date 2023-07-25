@@ -30,8 +30,8 @@ actor WebSocket: NSObject {
     private var isAuthenticated: Bool = false
 
     nonisolated private let topic: PassthroughSubject<WebSocketMessage, Never> = .init()
-    private lazy var session = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
-    private lazy var webSocket = session.webSocketTask(with: url)
+    private var session: URLSession?
+    private var webSocket: URLSessionWebSocketTask?
     private var responseCancellable: AnyCancellable?
 
     // MARK: Init
@@ -52,6 +52,7 @@ extension WebSocket {
     private func listenWebSocketMessages() {
         Task {
             do {
+                guard let webSocket else { return }
                 for try await message in webSocket.stream {
                     switch message {
                     case let .string(string):
@@ -81,17 +82,29 @@ extension WebSocket {
     }
 
     private func authenticateIfNeeded() async throws {
-        guard !isAuthenticated else { return }
+        Logger.log("1")
+        guard !isAuthenticated || webSocket?.state != .running else { return }
+        Logger.log("2")
 
-        listenWebSocketMessages()
-        webSocket.resume()
+        do {
+            session = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
+            webSocket = session?.webSocketTask(with: url)
 
-        try await withCheckedThrowingContinuation(waitAuthRequired)
+            webSocket?.resume()
+            listenWebSocketMessages()
 
-        let message = try AuthenticationMessage(accessToken: token).toJSON()
-        let wsMessage = URLSessionWebSocketTask.Message.string(message)
-        try await webSocket.send(wsMessage)
-        isAuthenticated = true
+            try await withCheckedThrowingContinuation(waitAuthRequired)
+
+            let message = try AuthenticationMessage(accessToken: token).toJSON()
+            let wsMessage = URLSessionWebSocketTask.Message.string(message)
+            try await webSocket?.send(wsMessage)
+            isAuthenticated = true
+            Logger.log("3")
+        } catch {
+            Logger.log("4")
+            await disconnect()
+            throw error
+        }
     }
 
     private func waitAuthRequired(
@@ -124,20 +137,19 @@ extension WebSocket {
 
 extension WebSocket: URLSessionWebSocketDelegate {
 
-    private func urlSession(
+    nonisolated func urlSession(
         _ session: URLSession,
         webSocketTask: URLSessionWebSocketTask,
         didOpenWithProtocol protocol: String?
-    ) async {
+    ) {
         Logger.log(level: .info, "Connected")
     }
 
-    private func urlSession(
+    nonisolated func urlSession(
         _ session: URLSession,
         webSocketTask: URLSessionWebSocketTask,
         didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?
-    ) async {
-        isAuthenticated = false
+    ) {
         Logger.log(level: .info, "Disconnected")
     }
 }
@@ -150,6 +162,12 @@ extension WebSocket: WebSocketProvider {
         topic.eraseToAnyPublisher()
     }
 
+    func disconnect() async {
+        isAuthenticated = false
+        webSocket?.cancel()
+        webSocket = nil
+    }
+
     @discardableResult func send<Message: Encodable>(message: Message) async throws -> Int {
         let (id, _): (Int, EmptyCodable) = try await send(message: message)
         return id
@@ -158,13 +176,15 @@ extension WebSocket: WebSocketProvider {
     func send<Message: Encodable, Response: Decodable>(
         message: Message
     ) async throws -> (id: Int, response: Response) {
+        Logger.log("0 \(self) \(try? message.toJSON())")
         try await authenticateIfNeeded()
+        Logger.log("0.1")
 
         let id = latestID
         let message = WebSocketSendMessageWrapper(id: id, messageData: message)
         latestID += 1
         let data = try message.toJSON()
-        try await webSocket.send(.string(data))
+        try await webSocket?.send(.string(data))
 
         let response: ResultWebSocketMessage<Response> = try await withCheckedThrowingContinuation { continuationHandler($0, id) }
         if let result = response.result {

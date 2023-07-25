@@ -21,14 +21,15 @@ struct CoordinatorView: View {
                 .fullScreenCover(item: $coordinator.fullScreenCover, content: { coordinator.build(fullScreenCover: $0) })
         }
         .environmentObject(coordinator)
-        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-            coordinator.lifeCycleHandler.appStateDidChange(.foreground)
-        }
-        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
-            coordinator.lifeCycleHandler.appStateDidChange(.terminate)
-        }
-        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-            coordinator.lifeCycleHandler.appStateDidChange(.background)
+        .onChange(of: scenePhase) { newPhase in
+            switch newPhase {
+            case .active:
+                coordinator.lifeCycleHandler.appStateDidChange(.foreground)
+            case .inactive, .background:
+                coordinator.lifeCycleHandler.appStateDidChange(.background)
+            @unknown default:
+                break
+            }
         }
     }
 }
