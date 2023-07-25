@@ -8,18 +8,18 @@
 import SwiftUI
 import DashboardCreation
 
+struct PresentationStyle {
+    
+    let transition: AnyTransition?
+}
+
 enum Screen: Identifiable, Hashable {
-    case launch
-    case staticLaunch
-    case dashboard
-    case dashboardCreation(mode: DashboardCreationMode)
-    case config
 
-    var id: String { String(describing: self) }
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
+    case launch(style: PresentationStyle)
+    case staticLaunch(style: PresentationStyle)
+    case dashboard(style: PresentationStyle)
+    case dashboardCreation(style: PresentationStyle, mode: DashboardCreationMode)
+    case config(style: PresentationStyle)
 }
 
 extension Screen {
@@ -32,7 +32,7 @@ extension Screen {
             factory.getStaticLaunchCoordinator().transition(.opacity)
         case .dashboard:
             factory.getDashboardCoordinator()
-        case .dashboardCreation(let mode):
+        case .dashboardCreation(_, let mode):
             factory.getDashboardCreationCoordinator(mode: mode)
         case .config:
             factory.getConfigCoordinator()

@@ -31,7 +31,6 @@ extension LaunchViewModelImpl {
 
     public func startConfiguration() async {
         do {
-            Logger.log("startConfiguration \(self)")
             try await entityService.trackEntities()
             try await dashboardService.trackDashboards()
 

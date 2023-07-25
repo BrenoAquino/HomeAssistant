@@ -82,9 +82,7 @@ extension WebSocket {
     }
 
     private func authenticateIfNeeded() async throws {
-        Logger.log("1")
         guard !isAuthenticated || webSocket?.state != .running else { return }
-        Logger.log("2")
 
         do {
             session = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
@@ -99,9 +97,7 @@ extension WebSocket {
             let wsMessage = URLSessionWebSocketTask.Message.string(message)
             try await webSocket?.send(wsMessage)
             isAuthenticated = true
-            Logger.log("3")
         } catch {
-            Logger.log("4")
             await disconnect()
             throw error
         }
@@ -176,9 +172,7 @@ extension WebSocket: WebSocketProvider {
     func send<Message: Encodable, Response: Decodable>(
         message: Message
     ) async throws -> (id: Int, response: Response) {
-        Logger.log("0 \(self) \(try? message.toJSON())")
         try await authenticateIfNeeded()
-        Logger.log("0.1")
 
         let id = latestID
         let message = WebSocketSendMessageWrapper(id: id, messageData: message)

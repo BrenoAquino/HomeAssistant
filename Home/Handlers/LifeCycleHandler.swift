@@ -50,13 +50,13 @@ class LifeCycleHandlerImpl<DashboardS: DashboardService, EntityS: EntityService>
 extension LifeCycleHandlerImpl {
 
     private func prepareToBackground() {
-        coordinator?.root = .staticLaunch
+        coordinator?.block = .staticLaunch(style: .default)
         persist()
     }
 
     private func prepareToForeground() {
-        guard coordinator?.root != .launch else { return }
-        coordinator?.root = .launch
+        guard coordinator?.root != .launch(style: .default) else { return }
+        coordinator?.block = .launch(style: .default)
     }
 
     private func persist() {

@@ -17,8 +17,9 @@ class Coordinator: ObservableObject {
 
     // MARK: Publishers
 
-    @Published var root = Screen.launch
+    @Published var block: Screen?
     @Published var path = NavigationPath()
+    @Published var root: Screen = Screen.launch(style: .default)
     @Published var sheet: Screen?
     @Published var fullScreenCover: Screen?
 }
@@ -26,11 +27,6 @@ class Coordinator: ObservableObject {
 // MARK: Present
 
 extension Coordinator {
-
-    func setRoot(_ screen: Screen) {
-        path.removeLast(path.count)
-        root = screen
-    }
 
     func push(_ screen: Screen) {
         path.append(screen)
@@ -75,15 +71,5 @@ extension Coordinator {
     @ViewBuilder
     func build(screen: Screen) -> some View {
         screen.viewCoordinator(factory)
-    }
-
-    @ViewBuilder
-    func build(sheet: Screen) -> some View {
-        sheet.viewCoordinator(factory)
-    }
-
-    @ViewBuilder
-    func build(fullScreenCover: Screen) -> some View {
-        fullScreenCover.viewCoordinator(factory)
     }
 }
