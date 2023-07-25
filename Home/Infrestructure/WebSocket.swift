@@ -24,6 +24,7 @@ actor WebSocket: NSObject {
 
     private let url: URL
     private let token: String
+    nonisolated private let didDisconnect: (() -> Void)?
 
     private var latestID: Int = 1
     private let dispatchQueue: DispatchQueue = .init(label: "WebSocket")
@@ -36,12 +37,17 @@ actor WebSocket: NSObject {
 
     // MARK: Init
 
-    init(url: String, token: String) throws {
+    init(
+        url: String,
+        token: String,
+        didDisconnect: (() -> Void)? = nil
+    ) throws {
         guard let url = URL(string: url) else {
             throw WebSocketError.invalidURL
         }
         self.url = url
         self.token = token
+        self.didDisconnect = didDisconnect
     }
 }
 
@@ -147,6 +153,7 @@ extension WebSocket: URLSessionWebSocketDelegate {
         didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?
     ) {
         Logger.log(level: .info, "Disconnected")
+        didDisconnect?()
     }
 }
 

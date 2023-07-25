@@ -22,17 +22,18 @@ enum Screen: Identifiable, Hashable {
 extension Screen {
 
     @ViewBuilder func viewCoordinator(_ factory: Factory) -> some View {
+        
         switch self {
         case .launch:
-            factory.getLaunchCoordinator().transition(.opacity)
+            factory.launchCoordinator()
         case .staticLaunch:
-            factory.getStaticLaunchCoordinator().transition(.opacity)
+            factory.staticLaunchCoordinator()
         case .dashboard:
-            factory.getDashboardCoordinator()
+            factory.dashboardCoordinator()
         case .dashboardCreation(_, let mode):
-            factory.getDashboardCreationCoordinator(mode: mode)
+            factory.dashboardCreationCoordinator(mode: mode)
         case .config:
-            factory.getConfigCoordinator()
+            factory.configCoordinator()
         }
     }
 }

@@ -17,7 +17,9 @@ struct CoordinatorView: View {
             NavigationStack(path: $coordinator.path) {
                 coordinator.rootView()
                     .opacityTransition()
-                    .navigationDestination(for: Screen.self, destination: { coordinator.build(screen: $0) })
+                    .navigationDestination(for: Screen.self) { screen in
+                        viewWithBlockIfNeeded { coordinator.build(screen: screen) }
+                    }
                     .sheet(item: $coordinator.sheet) { screen in
                         viewWithBlockIfNeeded { coordinator.build(screen: screen) }
                     }
@@ -47,6 +49,7 @@ struct CoordinatorView: View {
             if let block = coordinator.block {
                 coordinator.build(screen: block)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .opacityTransition()
             }
         }
     }

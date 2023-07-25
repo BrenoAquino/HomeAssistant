@@ -9,11 +9,14 @@ import SwiftUI
 
 class Coordinator: ObservableObject {
 
-    private let factory: Factory = .init()
+    private lazy var factory: Factory = .init(webSocketDidDisconnect: { [weak self] in
+        self?.webSocketHandler.webSocketDidDisconnect()
+    })
 
     // MARK: Handlers
 
     private(set) lazy var lifeCycleHandler = factory.lifeCycleHandler(coordinator: self)
+    private(set) lazy var webSocketHandler = factory.webSocketHandler(coordinator: self)
 
     // MARK: Publishers
 

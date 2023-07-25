@@ -10,21 +10,6 @@ import Domain
 import Foundation
 import SwiftUI
 
-// MARK: - Interface
-
-enum AppState {
-    case foreground
-    case background
-    case terminate
-}
-
-protocol LifeCycleHandler {
-
-    func appStateDidChange(_ state: AppState)
-}
-
-// MARK: - Implementation
-
 class LifeCycleHandlerImpl<DashboardS: DashboardService, EntityS: EntityService>: LifeCycleHandler {
 
     private weak var coordinator: Coordinator?
@@ -81,8 +66,6 @@ extension LifeCycleHandlerImpl {
             prepareToForeground()
         case .background:
             prepareToBackground()
-        case .terminate:
-            persist()
         }
     }
 }

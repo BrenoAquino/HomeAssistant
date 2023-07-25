@@ -5,6 +5,7 @@
 //  Created by Breno Aquino on 17/07/23.
 //
 
+import DesignSystem
 import SwiftUI
 
 public struct StaticLaunchView: View {
@@ -13,10 +14,12 @@ public struct StaticLaunchView: View {
 
     public var body: some View {
         Image(packageResource: .whiteLogo)
+            .renderingMode(.template)
             .resizable()
             .aspectRatio(contentMode: .fit)
             .frame(width: 120)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .foregroundColor(DSColor.label)
             .background(Color.black)
     }
 }

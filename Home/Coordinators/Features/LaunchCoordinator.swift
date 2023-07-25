@@ -29,7 +29,7 @@ extension LaunchCoordinator: LaunchExternalFlow {
         if coordinator.block == nil {
             coordinator.root = .dashboard(style: .default)
         } else {
-            coordinator.block = nil
+//            coordinator.block = nil
         }
     }
 }
