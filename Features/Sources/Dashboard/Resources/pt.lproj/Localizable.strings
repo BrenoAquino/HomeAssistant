@@ -16,3 +16,4 @@
 "delete_description" = "Essa ação não pode ser desfeita. Você tem certeza que deseja apagar esse painel?";
 "ok" = "Sim";
 "delete_success" = "Painel Apagado";
+"light_error" = "Não foi possivel se comunicar com a luz";

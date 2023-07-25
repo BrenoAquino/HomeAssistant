@@ -42,6 +42,7 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
                 .padding(.vertical, space: .normal)
         }
         .scrollDismissesKeyboard(.immediately)
+        .toast(data: $viewModel.toastData)
     }
 
     private var title: some View {

@@ -112,6 +112,7 @@ extension DashboardViewModelImpl {
             do {
                 try await entityService.execute(service: service, entityID: lightEntity.id)
             } catch {
+                toastData = .init(type: .error, title: Localizable.lightError.value)
                 Logger.log(level: .error, "Could not execute \(String(describing: service))")
             }
         }

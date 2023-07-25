@@ -20,6 +20,7 @@ enum Localizable: String, CommonLocalizable {
     case deleteDescription = "delete_description"
     case ok
     case deleteSuccess = "delete_success"
+    case lightError = "light_error"
 }
 
 extension Localizable {

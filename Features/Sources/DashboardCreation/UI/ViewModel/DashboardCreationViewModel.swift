@@ -5,13 +5,12 @@
 //  Created by Breno Aquino on 18/07/23.
 //
 
+import DesignSystem
 import Combine
 import Common
 import Domain
 import Foundation
 import SwiftUI
-
-// MARK: - Interface
 
 public enum DashboardCreationMode: Equatable {
 
@@ -37,6 +36,7 @@ public protocol DashboardCreationViewModel: ObservableObject {
 
     var delegate: DashboardCreationExternalFlow? { get set }
     var mode: DashboardCreationMode { get }
+    var toastData: DefaultToastDataContent? { get set }
 
     var dashboardName: String { get set }
 

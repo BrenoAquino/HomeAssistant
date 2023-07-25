@@ -17,3 +17,8 @@
 "entities_hint" = "Você pode pesquisar por um nome";
 "create" = "Criar Painel";
 "update" = "Atualizar Dashboard";
+"missing_name_error" = "É necessário preencher o nome";
+"name_already_exists_error" = "Esse nome já está em uso";
+"missing_icon_error" = "É necessário escolher um ícone";
+"missing_entities_error" = "O painel precisa possuir pelo menos 1 dispositivo";
+"unknown_error" = "Não foi possível criar o painel";

@@ -17,3 +17,8 @@
 "entities_hint" = "You can search for a name";
 "create" = "Create Dashboard";
 "update" = "Update Dashboard";
+"missing_name_error" = "It is necessary to fill in the name";
+"name_already_exists_error" = "This name is already in use";
+"missing_icon_error" = "It is necessary to choose an icon";
+"missing_entities_error" = "The dashboard must have at least one device";
+"unknown_error" = "Could not create the dashboard";

@@ -16,3 +16,4 @@
 "delete_description" = "This action cannot be undone. Are you sure you want to delete this dashboard?";
 "ok" = "Yes";
 "delete_success" = "Dashboard Removed";
+"light_error" = "It was not possible to communicate with the light";
