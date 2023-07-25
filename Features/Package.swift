@@ -10,7 +10,7 @@ let package = Package(
     products: [
         .library(
             name: "Features",
-            targets: ["Launch", "Dashboard", "DashboardCreation", "Config"]),
+            targets: ["Launch", "Dashboard", "DashboardCreation", "Config", "DesignSystem"]),
     ],
     dependencies: [
         .package(name: "Common", path: "../Common"),
