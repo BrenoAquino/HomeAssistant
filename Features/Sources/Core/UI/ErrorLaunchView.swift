@@ -17,19 +17,16 @@ public struct ErrorLaunchView<ViewModel: LaunchViewModel>: View {
     }
 
     public var body: some View {
-        VStack(spacing: .bigL) {
-            Image(packageResource: .whiteLogo)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 120)
-                .frame(maxWidth: .infinity)
-
-            Button("Try to connect again") {
-                Task { await viewModel.startConfiguration() }
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.black)
+        StaticLaunchView()
+            .overlay(
+                GeometryReader { proxy in
+                    Button("Try to connect again") {
+                        Task { await viewModel.startConfiguration() } 
+                    }
+                    .frame(maxWidth: .infinity)
+                    .offset(y: proxy.size.height * 3 / 4)
+                }
+            )
     }
 }
 

@@ -1,14 +1,14 @@
 //
-//  LaunchCoordinator.swift
+//  ErrorLaunchCoordinator.swift
 //  Home
 //
-//  Created by Breno Aquino on 17/07/23.
+//  Created by Breno Aquino on 25/07/23.
 //
 
 import SwiftUI
 import Core
 
-struct LaunchCoordinator<ViewModel: LaunchViewModel>: View {
+struct ErrorLaunchCoordinator<ViewModel: LaunchViewModel>: View {
 
     @EnvironmentObject private var coordinator: Coordinator
     @State private var viewModel: ViewModel
@@ -23,7 +23,7 @@ struct LaunchCoordinator<ViewModel: LaunchViewModel>: View {
     }
 }
 
-extension LaunchCoordinator: LaunchExternalFlow {
+extension ErrorLaunchCoordinator: LaunchExternalFlow {
 
     func launchFinished() {
         if coordinator.block == nil {

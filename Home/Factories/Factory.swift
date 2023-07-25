@@ -8,7 +8,7 @@
 import Domain
 import Data
 import Dashboard
-import Launch
+import Core
 import DashboardCreation
 import Foundation
 import SwiftUI

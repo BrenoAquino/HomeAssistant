@@ -17,6 +17,15 @@ public struct LaunchView<ViewModel: LaunchViewModel>: View {
 
     public var body: some View {
         StaticLaunchView()
+            .overlay(
+                GeometryReader { proxy in
+                    Button("Try to connect again") {
+
+                    }
+                    .frame(maxWidth: .infinity)
+                    .offset(y: proxy.size.height * 3 / 4)
+                }
+            )
             .task {
                 await viewModel.startConfiguration()
             }

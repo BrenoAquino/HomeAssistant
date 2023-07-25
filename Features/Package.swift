@@ -10,7 +10,7 @@ let package = Package(
     products: [
         .library(
             name: "Features",
-            targets: ["Launch", "Dashboard", "DashboardCreation", "Config", "DesignSystem"]),
+            targets: ["Core", "Dashboard", "DashboardCreation", "Config"]),
     ],
     dependencies: [
         .package(name: "Common", path: "../Common"),
@@ -21,7 +21,7 @@ let package = Package(
             name: "DesignSystem",
             dependencies: ["Common", "Domain"]),
         .target(
-            name: "Launch",
+            name: "Core",
             dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
             resources: [.process("Resources")]),
         .target(
@@ -39,8 +39,5 @@ let package = Package(
         .target(
             name: "Preview",
             dependencies: ["Common", "Domain"]),
-        .testTarget(
-            name: "LaunchTests",
-            dependencies: ["Launch"]),
     ]
 )
