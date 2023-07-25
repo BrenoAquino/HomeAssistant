@@ -17,9 +17,10 @@ class Coordinator: ObservableObject {
 
     // MARK: Publishers
 
-    @Published var block: Screen?
-    @Published var path = NavigationPath()
     @Published var root: Screen = Screen.launch(style: .default)
+    @Published var block: Screen?
+
+    @Published var path = NavigationPath()
     @Published var sheet: Screen?
     @Published var fullScreenCover: Screen?
 }
