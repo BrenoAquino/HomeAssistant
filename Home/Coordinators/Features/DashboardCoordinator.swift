@@ -27,7 +27,7 @@ struct DashboardCoordinator<ViewModel: DashboardViewModel>: View {
 extension DashboardCoordinator: DashboardExternalFlow {
     
     func didSelectConfig() -> Void {
-        coordinator.preset(fullScreenCover: .config(style: .default))
+        coordinator.preset(sheet: .config(style: .default))
     }
 
     func didSelectAddDashboard() -> Void {
