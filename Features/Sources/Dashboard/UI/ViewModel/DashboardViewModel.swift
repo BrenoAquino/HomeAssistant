@@ -19,13 +19,18 @@ public protocol DashboardViewModel: ObservableObject {
 
     var delegate: DashboardExternalFlow? { get set }
 
+    var removeAlert: Bool { get set }
     var editModel: Bool { get set }
     var selectedDashboardIndex: Int? { get set }
     var dashboards: [Dashboard] { get set }
     var currentDashboard: Dashboard? { get }
     var entities: [any Entity] { get }
 
+    func deleteRequestedDashboard()
+    func cancelDashboardDeletion()
+
     func didClickAdd()
+    func didClickRemove(_ dashboard: Dashboard)
     func didClickEdit(_ dashboard: Dashboard)
     func didClickConfig()
     func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State)

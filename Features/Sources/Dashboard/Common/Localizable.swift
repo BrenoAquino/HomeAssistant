@@ -15,6 +15,10 @@ enum Localizable: String, CommonLocalizable {
     case done
     case devices
     case unsupported
+    case cancel
+    case delete
+    case deleteDescription = "delete_description"
+    case ok
 }
 
 extension Localizable {

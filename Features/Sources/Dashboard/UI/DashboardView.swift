@@ -32,6 +32,7 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                 editMode: $viewModel.editModel,
                 dashboards: $viewModel.dashboards,
                 selectedDashboardIndex: $viewModel.selectedDashboardIndex,
+                dashboardDidRemove: viewModel.didClickRemove,
                 dashboardDidEdit: viewModel.didClickEdit,
                 addDidSelect: viewModel.didClickAdd
             )
@@ -58,6 +59,12 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             }
             .foregroundColor(DSColor.label)
         }
+        .alert(Localizable.delete.value, isPresented: $viewModel.removeAlert, actions: {
+            Button(Localizable.cancel.value, role: .cancel, action: viewModel.cancelDashboardDeletion)
+            Button(Localizable.ok.value, role: .destructive, action: viewModel.deleteRequestedDashboard)
+        }, message: {
+            Localizable.deleteDescription.text
+        })
     }
     
     private var doneButton: some View {

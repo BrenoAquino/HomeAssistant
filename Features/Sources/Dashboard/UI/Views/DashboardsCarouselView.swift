@@ -26,6 +26,7 @@ struct DashboardsCarouselView: View {
     @Binding var dashboards: [Dashboard]
     @Binding var selectedDashboardIndex: Int?
 
+    let dashboardDidRemove: (_ dashboard: Dashboard) -> Void
     let dashboardDidEdit: (_ dashboard: Dashboard) -> Void
     let addDidSelect: () -> Void
 
@@ -100,7 +101,7 @@ struct DashboardsCarouselView: View {
                 .opacity(editMode ? 1 : 0)
                 .animation(.default, value: editMode)
                 .onTapGesture {
-                    dashboards.removeAll(where: { $0.name == dashboard.name })
+                    dashboardDidRemove(dashboard)
                 }
         }
     }
@@ -169,6 +170,7 @@ struct DashboardsCarouselView_Preview: PreviewProvider {
             editMode: .constant(true),
             dashboards: .constant(DashboardMock.all),
             selectedDashboardIndex: .constant(nil),
+            dashboardDidRemove: { _ in print("dashboardDidRemove") },
             dashboardDidEdit: { _ in print("dashboardDidEdit") },
             addDidSelect: { print("addDidSelect") }
         )
