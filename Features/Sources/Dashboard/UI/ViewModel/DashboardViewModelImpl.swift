@@ -5,6 +5,7 @@
 //  Created by Breno Aquino on 17/07/23.
 //
 
+import DesignSystem
 import Combine
 import Common
 import Domain
@@ -26,6 +27,7 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
     @Published public var removeAlert: Bool = false
     @Published public var editModel: Bool = false
     @Published public var selectedDashboardIndex: Int?
+    @Published public var toastData: DefaultToastDataContent?
 
     // MARK: Gets
 
@@ -91,6 +93,7 @@ extension DashboardViewModelImpl {
 
     public func didClickRemove(_ dashboard: Dashboard) {
         dashboardNameToDelete = dashboard.name
+        toastData = .init(type: .error, title: "Error", message: "We could not delete the dashboard")
         removeAlert = true
     }
 

@@ -59,13 +59,7 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             }
             .foregroundColor(DSColor.label)
         }
-        .toast(isPresented: $viewModel.removeAlert, config: .default, content: {
-            DefaultToastView(
-                type: .error,
-                title: "Error",
-                message: "We could not delete the dashboard"
-            )
-        })
+        .toast(data: $viewModel.toastData)
 //        .alert(Localizable.delete.value, isPresented: $viewModel.removeAlert, actions: {
 //            Button(Localizable.cancel.value, role: .cancel, action: viewModel.cancelDashboardDeletion)
 //            Button(Localizable.ok.value, role: .destructive, action: viewModel.deleteRequestedDashboard)

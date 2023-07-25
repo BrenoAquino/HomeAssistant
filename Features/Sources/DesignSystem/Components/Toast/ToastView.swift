@@ -171,11 +171,11 @@ struct Toast_Preview: PreviewProvider {
                 isPresented: .init(get: { showToast }, set: { _ in }),
                 config: config
             ) {
-                DefaultToastView(
+                DefaultToastView(contentData: .init(
                     type: .error,
                     title: "Deletion Error",
                     message: "We were not able to perform your request. Try again later"
-                )
+                ))
             }
     }
 }

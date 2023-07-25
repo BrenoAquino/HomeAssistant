@@ -5,6 +5,7 @@
 //  Created by Breno Aquino on 17/07/23.
 //
 
+import DesignSystem
 import Combine
 import Domain
 
@@ -25,6 +26,8 @@ public protocol DashboardViewModel: ObservableObject {
     var dashboards: [Dashboard] { get set }
     var currentDashboard: Dashboard? { get }
     var entities: [any Entity] { get }
+
+    var toastData: DefaultToastDataContent? { get set }
 
     func deleteRequestedDashboard()
     func cancelDashboardDeletion()

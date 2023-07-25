@@ -18,7 +18,7 @@ public extension View {
         modifier(Toast(showToast: isPresented, config: config, onDismiss: onDismiss, content: content))
     }
 
-    func toast<ToastContent: View>(
+    func toast(
         isPresented: Binding<Bool>,
         type: DefaultToastType,
         title: String? = nil,
@@ -29,7 +29,24 @@ public extension View {
             showToast: isPresented,
             config: .default,
             onDismiss: onDismiss,
-            content: { DefaultToastView(type: type, title: title, message: message) }
+            content: { DefaultToastView(contentData: .init(type: type, title: title, message: message)) }
+        ))
+    }
+
+    func toast(data: Binding<DefaultToastDataContent?>, onDismiss: (() -> Void)? = nil) -> some View {
+        let bindingProxy = Binding<Bool>(
+            get: { data.wrappedValue != nil },
+            set: { if !$0 { data.wrappedValue = nil } }
+        )
+        return modifier(Toast(
+            showToast: bindingProxy,
+            config: .default,
+            onDismiss: onDismiss,
+            content: {
+                if let data = data.wrappedValue {
+                    DefaultToastView(contentData: data)
+                }
+            }
         ))
     }
 }

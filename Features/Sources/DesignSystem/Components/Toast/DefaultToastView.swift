@@ -48,34 +48,30 @@ private enum Constants {
 
 public struct DefaultToastView: View {
 
-    let type: DefaultToastType
-    let title: String?
-    let message: String?
+    let contentData: DefaultToastDataContent
 
-    public init(type: DefaultToastType, title: String?, message: String?) {
-        self.type = type
-        self.title = title
-        self.message = message
+    public init(contentData: DefaultToastDataContent) {
+        self.contentData = contentData
     }
 
     public var body: some View {
         HStack(spacing: .smallL) {
-            if let icon = type.icon {
+            if let icon = contentData.type.icon {
                 Image(systemName: icon)
                     .resizable()
                     .scaledToFit()
                     .frame(width: Constants.iconSize)
-                    .foregroundColor(type.iconColor)
+                    .foregroundColor(contentData.type.iconColor)
             }
 
             VStack(alignment: .center, spacing: .smallS) {
-                if let title {
+                if let title = contentData.title {
                     Text(title)
                         .font(.headline)
                         .multilineTextAlignment(.center)
                         .foregroundColor(DSColor.label)
                 }
-                if let message {
+                if let message = contentData.message {
                     Text(message)
                         .font(.subheadline)
                         .lineLimit(.max)
@@ -93,7 +89,6 @@ struct DefaultToastView_Preview: PreviewProvider {
     static let showToast = true
     static let config = ToastConfig(
         hideAfter: nil,
-        backdrop: DSColor.gray6,
         dismissOnTap: false,
         alignment: .top,
         animation: .easeInOut,
@@ -108,11 +103,11 @@ struct DefaultToastView_Preview: PreviewProvider {
                 isPresented: .init(get: { showToast }, set: { _ in }),
                 config: config
             ) {
-                DefaultToastView(
+                DefaultToastView(contentData: .init(
                     type: .error,
                     title: "Deletion Error",
                     message: "We were not able to perform your request. Try again later"
-                )
+                ))
             }
 
         VStack { }
@@ -121,11 +116,11 @@ struct DefaultToastView_Preview: PreviewProvider {
                 isPresented: .init(get: { showToast }, set: { _ in }),
                 config: config
             ) {
-                DefaultToastView(
+                DefaultToastView(contentData: .init(
                     type: .info,
                     title: "Deletion Error",
                     message: "We were not able to perform your request. Try again later"
-                )
+                ))
             }
 
         VStack { }
@@ -134,11 +129,11 @@ struct DefaultToastView_Preview: PreviewProvider {
                 isPresented: .init(get: { showToast }, set: { _ in }),
                 config: config
             ) {
-                DefaultToastView(
+                DefaultToastView(contentData: .init(
                     type: .warning,
                     title: "Deletion Error",
                     message: "We were not able to perform your request. Try again later"
-                )
+                ))
             }
 
         VStack { }
@@ -147,11 +142,11 @@ struct DefaultToastView_Preview: PreviewProvider {
                 isPresented: .init(get: { showToast }, set: { _ in }),
                 config: config
             ) {
-                DefaultToastView(
+                DefaultToastView(contentData: .init(
                     type: .none,
                     title: "Deletion Error",
                     message: "We were not able to perform your request. Try again later"
-                )
+                ))
             }
     }
 }
