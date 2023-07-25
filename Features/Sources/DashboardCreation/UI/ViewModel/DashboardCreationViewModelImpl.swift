@@ -124,7 +124,7 @@ extension DashboardCreationViewModelImpl {
             let domainCheck = domainNames.contains(entity.domain.rawValue)
             return nameCheck && domainCheck
         }
-        
+
         entities = result.isEmpty ? allEntities : result
     }
 

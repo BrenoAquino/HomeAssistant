@@ -15,6 +15,7 @@ public enum WebSocketProviderError: Error {
 }
 
 public protocol WebSocketProvider {
+
     /// Publisher to post all new messages received
     var messageReceived: AnyPublisher<WebSocketMessage, Never> { get }
 
@@ -25,4 +26,7 @@ public protocol WebSocketProvider {
     func send<Message: Encodable, Response: Decodable>(
         message: Message
     ) async throws -> (id: Int, response: Response)
+
+    /// Force to disconnect
+    func disconnect() async
 }

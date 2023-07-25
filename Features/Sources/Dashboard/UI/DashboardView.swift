@@ -84,7 +84,7 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             let size = (proxy.size.width - totalSpace) / CGFloat(numberOfElementsInRow)
             let columns = [GridItem](repeating: .init(.fixed(size), spacing: space), count: numberOfElementsInRow)
             
-            LazyVGrid(columns: columns) {
+            LazyVGrid(columns: columns, spacing: space) {
                 ForEach(Array(viewModel.entities.enumerated()), id: \.element.id) { index, entity in
                     Group {
                         switch entity {

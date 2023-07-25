@@ -13,11 +13,13 @@ class Coordinator: ObservableObject {
 
     // MARK: Handlers
 
-    private(set) lazy var lifeCycleHandler = factory.lifeCycleHandler()
+    private(set) lazy var lifeCycleHandler = factory.lifeCycleHandler(coordinator: self)
 
     // MARK: Publishers
 
-    @Published var root = Screen.launch
+    @Published var root: Screen = Screen.launch(style: .default)
+    @Published var block: Screen?
+
     @Published var path = NavigationPath()
     @Published var sheet: Screen?
     @Published var fullScreenCover: Screen?
@@ -64,21 +66,11 @@ extension Coordinator {
 
     @ViewBuilder
     func rootView() -> some View {
-        root.viewCoordinator(factory)
+        root.viewCoordinator(factory).style(root.style)
     }
 
     @ViewBuilder
     func build(screen: Screen) -> some View {
-        screen.viewCoordinator(factory)
-    }
-
-    @ViewBuilder
-    func build(sheet: Screen) -> some View {
-        sheet.viewCoordinator(factory)
-    }
-
-    @ViewBuilder
-    func build(fullScreenCover: Screen) -> some View {
-        fullScreenCover.viewCoordinator(factory)
+        screen.viewCoordinator(factory).style(screen.style)
     }
 }

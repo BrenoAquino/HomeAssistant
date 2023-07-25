@@ -13,22 +13,32 @@ struct CoordinatorView: View {
     @ObservedObject private var coordinator = Coordinator()
 
     var body: some View {
-        NavigationStack(path: $coordinator.path) {
-            coordinator.rootView()
-                .opacityTransition()
-                .navigationDestination(for: Screen.self, destination: { coordinator.build(screen: $0) })
-                .sheet(item: $coordinator.sheet, content: { coordinator.build(sheet: $0) })
-                .fullScreenCover(item: $coordinator.fullScreenCover, content: { coordinator.build(fullScreenCover: $0) })
+        ZStack {
+            NavigationStack(path: $coordinator.path) {
+                coordinator.rootView()
+                    .opacityTransition()
+                    .navigationDestination(for: Screen.self, destination: { coordinator.build(screen: $0) })
+                    .sheet(item: $coordinator.sheet, content: { coordinator.build(screen: $0) })
+                    .fullScreenCover(item: $coordinator.fullScreenCover, content: { coordinator.build(screen: $0) })
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            if let block = coordinator.block {
+                coordinator.build(screen: block)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .opacityTransition()
+            }
         }
         .environmentObject(coordinator)
-        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-            coordinator.lifeCycleHandler.appStateDidChange(.foreground)
-        }
-        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
-            coordinator.lifeCycleHandler.appStateDidChange(.terminate)
-        }
-        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-            coordinator.lifeCycleHandler.appStateDidChange(.background)
+        .onChange(of: scenePhase) { newPhase in
+            switch newPhase {
+            case .active:
+                coordinator.lifeCycleHandler.appStateDidChange(.foreground)
+            case .inactive, .background:
+                coordinator.lifeCycleHandler.appStateDidChange(.background)
+            @unknown default:
+                break
+            }
         }
     }
 }
