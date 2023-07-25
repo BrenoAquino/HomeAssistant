@@ -75,7 +75,7 @@ struct Toast<ContentView: View>: ViewModifier {
             toastContent
                 .padding(.leading, space: .horizontal)
                 .padding(.trailing, space: .normal)
-                .padding(.vertical, space: .smallM)
+                .padding(.vertical, space: .smallL)
                 .background {
                     DSColor.gray6
                 }

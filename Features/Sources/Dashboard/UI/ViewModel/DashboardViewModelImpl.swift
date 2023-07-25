@@ -81,6 +81,7 @@ extension DashboardViewModelImpl {
 
     public func deleteRequestedDashboard() {
         dashboards.removeAll(where: { $0.name == dashboardNameToDelete })
+        toastData = .init(type: .success, title: Localizable.deleteSuccess.value)
     }
 
     public func cancelDashboardDeletion() {
@@ -93,7 +94,6 @@ extension DashboardViewModelImpl {
 
     public func didClickRemove(_ dashboard: Dashboard) {
         dashboardNameToDelete = dashboard.name
-        toastData = .init(type: .error, title: "Error", message: "We could not delete the dashboard")
         removeAlert = true
     }
 

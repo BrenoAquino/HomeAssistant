@@ -9,6 +9,7 @@ import SwiftUI
 
 public enum DefaultToastType {
 
+    case success
     case info
     case warning
     case error
@@ -18,6 +19,8 @@ public enum DefaultToastType {
         switch self {
         case .none:
             return nil
+        case .success:
+            return "checkmark.circle.fill"
         case .info:
             return "info.circle.fill"
         case .warning:
@@ -29,6 +32,8 @@ public enum DefaultToastType {
 
     var iconColor: Color {
         switch self {
+        case .success:
+            return DSColor.green
         case .info:
             return DSColor.label
         case .warning:

@@ -13,7 +13,7 @@ public struct DefaultToastDataContent {
     let title: String?
     let message: String?
 
-    public init(type: DefaultToastType, title: String?, message: String?) {
+    public init(type: DefaultToastType, title: String? = nil, message: String? = nil) {
         self.type = type
         self.title = title
         self.message = message

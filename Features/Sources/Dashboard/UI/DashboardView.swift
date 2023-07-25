@@ -60,12 +60,12 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             .foregroundColor(DSColor.label)
         }
         .toast(data: $viewModel.toastData)
-//        .alert(Localizable.delete.value, isPresented: $viewModel.removeAlert, actions: {
-//            Button(Localizable.cancel.value, role: .cancel, action: viewModel.cancelDashboardDeletion)
-//            Button(Localizable.ok.value, role: .destructive, action: viewModel.deleteRequestedDashboard)
-//        }, message: {
-//            Localizable.deleteDescription.text
-//        })
+        .alert(Localizable.delete.value, isPresented: $viewModel.removeAlert, actions: {
+            Button(Localizable.cancel.value, role: .cancel, action: viewModel.cancelDashboardDeletion)
+            Button(Localizable.ok.value, role: .destructive, action: viewModel.deleteRequestedDashboard)
+        }, message: {
+            Localizable.deleteDescription.text
+        })
     }
     
     private var doneButton: some View {
