@@ -11,3 +11,7 @@
 "done" = "Done";
 "devices" = "Devices";
 "unsupported" = "Unsupported";
+"cancel" = "Cancel";
+"delete" = "Remove";
+"delete_description" = "This action cannot be undone. Are you sure you want to delete this dashboard?";
+"ok" = "Yes";

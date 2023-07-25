@@ -11,3 +11,7 @@
 "done" = "Concluir";
 "devices" = "Dispositivos";
 "unsupported" = "Não Suportado";
+"cancel" = "Cancelar";
+"delete" = "Apagar";
+"delete_description" = "Essa ação não pode ser desfeita. Você tem certeza que deseja apagar esse painel?";
+"ok" = "Sim";

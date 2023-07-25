@@ -14,6 +14,7 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
 
     public var delegate: DashboardExternalFlow?
     private var cancellable: Set<AnyCancellable> = .init()
+    private var dashboardNameToDelete: String?
 
     // MARK: Services
 
@@ -22,6 +23,7 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
 
     // MARK: Publishers
 
+    @Published public var removeAlert: Bool = false
     @Published public var editModel: Bool = false
     @Published public var selectedDashboardIndex: Int?
 
@@ -75,8 +77,21 @@ extension DashboardViewModelImpl {
 
 extension DashboardViewModelImpl {
 
+    public func deleteRequestedDashboard() {
+        dashboards.removeAll(where: { $0.name == dashboardNameToDelete })
+    }
+
+    public func cancelDashboardDeletion() {
+        dashboardNameToDelete = nil
+    }
+
     public func didClickAdd() {
         delegate?.didSelectAddDashboard()
+    }
+
+    public func didClickRemove(_ dashboard: Dashboard) {
+        dashboardNameToDelete = dashboard.name
+        removeAlert = true
     }
 
     public func didClickEdit(_ dashboard: Dashboard) {
