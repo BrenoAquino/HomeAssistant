@@ -15,6 +15,6 @@ enum AppEnvironment {
 
     static let homeAssistantURL: String = {
         let host = Bundle.main.infoDictionary?["Home Assistant URL"] as? String ?? ""
-        return "ws://\(host)/api/websocket"
+        return "wss://\(host)/api/websocket"
     }()
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DesignSystem
 
 public struct LaunchView<ViewModel: LaunchViewModel>: View {
 
@@ -16,19 +17,38 @@ public struct LaunchView<ViewModel: LaunchViewModel>: View {
     }
 
     public var body: some View {
-        StaticLaunchView()
-            .overlay(
-                GeometryReader { proxy in
-                    Button("Try to connect again") {
+        VStack(spacing: .zero) {
+            Spacer()
 
-                    }
-                    .frame(maxWidth: .infinity)
-                    .offset(y: proxy.size.height * 3 / 4)
+            Image(packageResource: .whiteLogo)
+                .renderingMode(.template)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 120)
+                .foregroundColor(DSColor.label)
+
+            Spacer()
+
+            if viewModel.state == .loading {
+                LoadingView()
+                    .tint(DSColor.label)
+                    .opacityTransition()
+            } else {
+                Button(Localizable.tryAgain.value) {
+                    Task { await viewModel.startConfiguration() }
                 }
-            )
-            .task {
-                await viewModel.startConfiguration()
+                .foregroundColor(DSColor.link)
+                .opacityTransition()
             }
+
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(DSColor.background)
+        .toast(data: $viewModel.toastData)
+        .task {
+            await viewModel.startConfiguration()
+        }
     }
 }
 
@@ -37,7 +57,7 @@ struct LaunchView_Preview: PreviewProvider {
 
     static var previews: some View {
 
-        LaunchView(viewModel: LaunchViewModelPreview())
+        LaunchView(viewModel: LaunchViewModelPreview(state: .loading))
     }
 }
 #endif
