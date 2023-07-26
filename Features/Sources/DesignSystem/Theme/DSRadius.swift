@@ -30,11 +30,11 @@ public struct DSBlurRadius {
         self.rawValue = rawValue
     }
 
-    /// Hard - 16
+    /// Hard - 32
     public static let hard: DSBlurRadius = DSBlurRadius(rawValue: 32)
-    /// Normal - 8
+    /// Normal - 16
     public static let normal: DSBlurRadius = DSBlurRadius(rawValue: 16)
-    /// Easy - 4
+    /// Easy - 8
     public static let easy: DSBlurRadius = DSBlurRadius(rawValue: 8)
 }
 
@@ -45,12 +45,14 @@ public struct DSShadowRadius {
         self.rawValue = rawValue
     }
 
-    /// Hard - 16
+    /// Hard - 32
     public static let hard: DSShadowRadius = DSShadowRadius(rawValue: 32)
-    /// Normal - 8
+    /// Normal - 16
     public static let normal: DSShadowRadius = DSShadowRadius(rawValue: 16)
-    /// Easy - 4
+    /// Easy - 8
     public static let easy: DSShadowRadius = DSShadowRadius(rawValue: 8)
+    /// Very Easy - 4
+    public static let veryEasy: DSShadowRadius = DSShadowRadius(rawValue: 4)
 }
 
 // MARK: - SwiftUI
