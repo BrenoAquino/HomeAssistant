@@ -11,14 +11,18 @@ public enum DSColor {
 
     // MARK: State
 
-//    public static let selected = Color(UIColor(light: <#T##UIColor#>, dark: <#T##UIColor#>))
+    public static let selected = Color(UIColor(
+        light: UIColor(white: 80 / 255, alpha: 1),
+        dark: UIColor(white: 220 / 255, alpha: 1)
+    ))
+
     public static let activated = Color(UIColor(
         light: UIColor(white: 245 / 255, alpha: 1),
         dark: UIColor(white: 220 / 255, alpha: 1)
     ))
 
     public static let deactivated = Color(UIColor(
-        light: UIColor.init(white: 222 / 255, alpha: 1),
+        light: UIColor(white: 222 / 255, alpha: 1),
         dark: UIColor(white: 43 / 255, alpha: 1)
     ))
 

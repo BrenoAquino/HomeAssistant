@@ -115,13 +115,10 @@ struct DashboardsCarouselView: View {
             Image(systemName: icon)
                 .foregroundColor(isSelected ? DSColor.background : DSColor.label)
                 .frame(width: Constants.dashboardImageWidth, height: Constants.dashboardImageHeight)
-                .background(isSelected ? DSColor.label : DSColor.background)
+                .background(isSelected ? DSColor.selected : DSColor.background)
                 .overlay(
                     RoundedRectangle(cornerRadius: .hard)
-                        .stroke(
-                            isSelected ? DSColor.background : DSColor.gray3,
-                            lineWidth: Constants.dashboardStrokeWidth
-                        )
+                        .stroke(DSColor.gray3, lineWidth: Constants.dashboardStrokeWidth)
                 )
                 .clipShape(RoundedRectangle(cornerRadius: .hard))
 
@@ -129,6 +126,7 @@ struct DashboardsCarouselView: View {
                 .lineLimit(1)
                 .font(.subheadline)
         }
+        .shadow(radius: .veryEasy, color: .black.opacity(0.2))
     }
 
     private struct DashboardDropDelegate: DropDelegate {

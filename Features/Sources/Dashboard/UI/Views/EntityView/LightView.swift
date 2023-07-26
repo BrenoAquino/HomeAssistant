@@ -9,6 +9,11 @@ import Domain
 import DesignSystem
 import SwiftUI
 
+private enum Constants {
+    static let shadowOpacity: CGFloat = 0.2
+    static let strokeWidth: CGFloat = 1
+}
+
 struct LightView: View {
 
     let lightEntity: LightEntity
@@ -22,7 +27,11 @@ struct LightView: View {
             .background(backgroundEffect)
             .clipShape(RoundedRectangle(cornerRadius: .hard))
             .contentShape(Rectangle())
-            .shadow(radius: .veryEasy, color: .black.opacity(0.2))
+            .overlay(
+                RoundedRectangle(cornerRadius: .hard)
+                    .stroke(DSColor.gray3.opacity(0.5), lineWidth: Constants.strokeWidth)
+            )
+            .shadow(radius: .easy, color: .black.opacity(Constants.shadowOpacity))
             .onTapGesture {
                 updateState(lightEntity, lightEntity.invertedState)
             }
