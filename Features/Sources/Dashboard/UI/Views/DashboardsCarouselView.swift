@@ -12,6 +12,9 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 private enum Constants {
+
+    static let animationDuration: TimeInterval = 0.15
+    static let shadowOpacity: CGFloat = 0.2
     static let dashboardImageHeight: CGFloat = 80
     static let dashboardImageWidth: CGFloat = dashboardImageHeight
     static let dashboardStrokeWidth: CGFloat = 1
@@ -59,7 +62,7 @@ struct DashboardsCarouselView: View {
 
     private var carousel: some View {
         ForEach(Array(dashboards.enumerated()), id: \.element.name) { index, dashboard in
-            let shakeAnimation = Animation.easeInOut(duration: 0.15).repeatForever(autoreverses: true)
+            let shakeAnimation = Animation.easeInOut(duration: Constants.animationDuration).repeatForever(autoreverses: true)
             let isSelected = index == selectedDashboardIndex
             let squareElementView = squareElement(dashboard.name, dashboard.icon, isSelected)
             let isCurrentElementDragging = draggedItem?.name == dashboard.name
@@ -115,13 +118,10 @@ struct DashboardsCarouselView: View {
             Image(systemName: icon)
                 .foregroundColor(isSelected ? DSColor.background : DSColor.label)
                 .frame(width: Constants.dashboardImageWidth, height: Constants.dashboardImageHeight)
-                .background(isSelected ? DSColor.label : DSColor.background)
+                .background(isSelected ? DSColor.selected : DSColor.background)
                 .overlay(
                     RoundedRectangle(cornerRadius: .hard)
-                        .stroke(
-                            isSelected ? DSColor.background : DSColor.gray3,
-                            lineWidth: Constants.dashboardStrokeWidth
-                        )
+                        .stroke(DSColor.gray3, lineWidth: Constants.dashboardStrokeWidth)
                 )
                 .clipShape(RoundedRectangle(cornerRadius: .hard))
 
@@ -129,6 +129,7 @@ struct DashboardsCarouselView: View {
                 .lineLimit(1)
                 .font(.subheadline)
         }
+        .shadow(radius: .veryEasy, color: .black.opacity(Constants.shadowOpacity))
     }
 
     private struct DashboardDropDelegate: DropDelegate {

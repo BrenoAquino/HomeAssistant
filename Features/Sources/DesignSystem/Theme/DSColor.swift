@@ -9,6 +9,23 @@ import SwiftUI
 
 public enum DSColor {
 
+    // MARK: State
+
+    public static let selected = Color(UIColor(
+        light: UIColor(white: 80 / 255, alpha: 1),
+        dark: UIColor(white: 220 / 255, alpha: 1)
+    ))
+
+    public static let activated = Color(UIColor(
+        light: UIColor(white: 245 / 255, alpha: 1),
+        dark: UIColor(white: 220 / 255, alpha: 1)
+    ))
+
+    public static let deactivated = Color(UIColor(
+        light: UIColor(white: 222 / 255, alpha: 1),
+        dark: UIColor(white: 43 / 255, alpha: 1)
+    ))
+
     // MARK: Label Colors
 
     public static let label = Color(UIColor.label)
@@ -62,4 +79,27 @@ public enum DSColor {
     public static let teal = Color(UIColor.systemTeal)
     public static let indigo = Color(UIColor.systemIndigo)
 
+}
+
+// MARK: - UIColor+initLightDark
+
+private extension UIColor {
+
+    convenience init(
+        light lightModeColor: UIColor,
+        dark darkModeColor: UIColor
+     ) {
+        self.init { traitCollection in
+            switch traitCollection.userInterfaceStyle {
+            case .light:
+                return lightModeColor
+            case .dark:
+                return darkModeColor
+            case .unspecified:
+                return lightModeColor
+            @unknown default:
+                return lightModeColor
+            }
+        }
+    }
 }

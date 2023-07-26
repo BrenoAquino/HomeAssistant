@@ -9,6 +9,13 @@ import Domain
 import DesignSystem
 import SwiftUI
 
+private enum Constants {
+
+    static let shadowOpacity: CGFloat = 0.2
+    static let strokeWidth: CGFloat = 1
+    static let strokeOpacity: CGFloat = 0.5
+}
+
 struct LightView: View {
 
     let lightEntity: LightEntity
@@ -19,18 +26,14 @@ struct LightView: View {
             .padding(.vertical, space: .smallL)
             .padding(.horizontal, space: .smallL)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(
-                DSColor.orange
-                    .blur(radius: 50)
-                    .opacity(lightEntity.isOn ? 1 : 0)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: .hard)
-                    .stroke(DSColor.gray3, lineWidth: 1)
-                    .opacity(lightEntity.isOn ? 0 : 1)
-            )
+            .background(backgroundEffect)
             .clipShape(RoundedRectangle(cornerRadius: .hard))
             .contentShape(Rectangle())
+            .overlay(
+                RoundedRectangle(cornerRadius: .hard)
+                    .stroke(DSColor.gray3.opacity(Constants.strokeOpacity), lineWidth: Constants.strokeWidth)
+            )
+            .shadow(radius: .easy, color: .black.opacity(Constants.shadowOpacity))
             .onTapGesture {
                 updateState(lightEntity, lightEntity.invertedState)
             }
@@ -45,16 +48,19 @@ struct LightView: View {
         }
     }
 
+    private var backgroundEffect: some View {
+        Rectangle()
+            .foregroundColor(.clear)
+            .background(lightEntity.isOn ? DSColor.activated : DSColor.deactivated)
+    }
+
     private var lightState: some View {
         HStack(spacing: .smallS) {
-            Image(systemName: lightEntity.domain.icon)
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-            Text(lightEntity.state.rawValue)
-                .textCase(.uppercase)
-                .foregroundColor(DSColor.secondaryLabel)
-                .font(.subheadline)
-                .padding(.trailing, space: .smallM)
+            Image(systemName: lightEntity.icon)
+                .foregroundColor(.white)
+                .padding()
+                .background(lightEntity.isOn ? DSColor.orange : DSColor.gray)
+                .clipShape(Circle())
         }
     }
 
@@ -63,7 +69,7 @@ struct LightView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .font(.subheadline)
             .fontWeight(.semibold)
-            .foregroundColor(DSColor.label)
+            .foregroundColor(lightEntity.isOn ? .black : DSColor.label)
     }
 }
 
@@ -81,7 +87,7 @@ struct LightView_Preview: PreviewProvider {
         HStack(spacing: .bigL) {
             LightView(lightEntity: entityOn, updateState: { _, newState in entityOn.state = newState })
                 .frame(width: size, height: size)
-            
+
             LightView(lightEntity: entityOff, updateState: { _, newState in entityOn.state = newState })
                 .frame(width: size, height: size)
         }

@@ -45,9 +45,13 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                 .padding(.top, space: .smallS)
                 .padding(.horizontal, space: .horizontal)
             
-            entitiesGrid
-                .padding(.top, space: .smallS)
+            EntitiesView(
+                entities: viewModel.entities,
+                didClickUpdateLightState: viewModel.didClickUpdateLightState
+            )
+            .padding(.top, space: .smallS)
         }
+        .background(DSColor.background)
         .navigationTitle(Localizable.hiThere.value)
         .toolbar {
             Group {
@@ -81,36 +85,6 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             viewModel.didClickConfig()
         } label: {
             SystemImages.config
-        }
-    }
-    
-    private var entitiesGrid: some View {
-        GeometryReader { proxy in
-            let numberOfElementsInRow: Int = 3
-            let space = DSSpace.horizontal.rawValue
-            let totalSpace = space * (CGFloat(numberOfElementsInRow) + 1)
-            let size = (proxy.size.width - totalSpace) / CGFloat(numberOfElementsInRow)
-            let columns = [GridItem](repeating: .init(.fixed(size), spacing: space), count: numberOfElementsInRow)
-            
-            LazyVGrid(columns: columns, spacing: space) {
-                ForEach(Array(viewModel.entities.enumerated()), id: \.element.id) { index, entity in
-                    Group {
-                        switch entity {
-                        case let light as LightEntity:
-                            LightView(
-                                lightEntity: light,
-                                updateState: viewModel.didClickUpdateLightState
-                            )
-                        default:
-                            UnsupportedView(
-                                name: entity.name,
-                                domain: entity.domain.rawValue
-                            )
-                        }
-                    }
-                    .frame(height: size)
-                }
-            }
         }
     }
 }

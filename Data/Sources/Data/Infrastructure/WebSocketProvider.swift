@@ -20,6 +20,9 @@ public protocol WebSocketProvider {
     /// Publisher to post all new messages received
     var messageReceived: AnyPublisher<WebSocketMessage, Never> { get }
 
+    /// Is Connected
+    func isConnected() async -> Bool
+
     /// Force to disconnect
     func disconnect() async
 

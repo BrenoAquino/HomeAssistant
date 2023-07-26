@@ -30,6 +30,9 @@ extension DashboardServiceImpl: DashboardService {
 
     public func persist() async throws {
         try await dashboardRepository.save(dashboard: dashboards)
+
+        let saveLog = dashboards.map { "\($0.name) (\($0.entitiesIDs.count) devices)" }.joined(separator: ", ")
+        Logger.log(level: .info, "Saved \(saveLog)")
     }
 
     public func add(dashboard: Dashboard) throws {
