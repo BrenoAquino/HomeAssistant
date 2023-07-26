@@ -17,3 +17,4 @@
 "ok" = "Sim";
 "delete_success" = "Painel Apagado";
 "light_error" = "Não foi possivel se comunicar com a luz";
+"reorder_error" = "Não foi possível alterar a ordem dos painéis";

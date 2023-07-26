@@ -18,12 +18,11 @@ class DashboardViewModelPreview: DashboardViewModel {
 
     @Published var removeAlert: Bool = false
     @Published var editModel: Bool = false
-    @Published var selectedDashboardIndex: Int? = 0
+    @Published var selectedDashboardName: String? = "Bedroom"
     @Published var dashboards: [Dashboard] = DashboardMock.all
 
     var currentDashboard: Dashboard? {
-        guard let selectedDashboardIndex else { return nil }
-        return dashboards[selectedDashboardIndex]
+        return dashboards[0]
     }
 
     var entities: [any Entity] {

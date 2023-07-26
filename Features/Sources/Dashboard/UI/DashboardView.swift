@@ -31,7 +31,7 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             DashboardsCarouselView(
                 editMode: $viewModel.editModel,
                 dashboards: $viewModel.dashboards,
-                selectedDashboardIndex: $viewModel.selectedDashboardIndex,
+                selectedDashboardName: $viewModel.selectedDashboardName,
                 dashboardDidRemove: viewModel.didClickRemove,
                 dashboardDidEdit: viewModel.didClickEdit,
                 addDidSelect: viewModel.didClickAdd

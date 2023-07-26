@@ -22,7 +22,7 @@ public protocol DashboardViewModel: ObservableObject {
 
     var removeAlert: Bool { get set }
     var editModel: Bool { get set }
-    var selectedDashboardIndex: Int? { get set }
+    var selectedDashboardName: String? { get set }
     var dashboards: [Dashboard] { get set }
     var currentDashboard: Dashboard? { get }
     var entities: [any Entity] { get set }

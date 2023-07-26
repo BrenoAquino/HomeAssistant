@@ -17,3 +17,4 @@
 "ok" = "Yes";
 "delete_success" = "Dashboard Removed";
 "light_error" = "It was not possible to communicate with the light";
+"reorder_error" = "It was not possible reorder dashboards";

@@ -27,7 +27,7 @@ struct DashboardsCarouselView: View {
 
     @Binding var editMode: Bool
     @Binding var dashboards: [Dashboard]
-    @Binding var selectedDashboardIndex: Int?
+    @Binding var selectedDashboardName: String?
 
     let dashboardDidRemove: (_ dashboard: Dashboard) -> Void
     let dashboardDidEdit: (_ dashboard: Dashboard) -> Void
@@ -42,34 +42,38 @@ struct DashboardsCarouselView: View {
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: .smallL) {
+            HStack(spacing: .smallS) {
                 carousel
                 add
             }
             .padding(.vertical, space: .normal)
             .padding(.horizontal, space: .horizontal)
+            .padding(.horizontal, -Constants.removeIconHeight / 3)
         }
     }
 
     private var add: some View {
-        squareElement("", "plus.circle", false)
-            .onTapGesture {
-                if !editMode {
-                    addDidSelect()
-                }
+        squareContent(
+            "",
+            "plus.circle",
+            false
+        )
+        .onTapGesture {
+            if !editMode {
+                addDidSelect()
             }
+        }
     }
 
     private var carousel: some View {
-        ForEach(Array(dashboards.enumerated()), id: \.element.name) { index, dashboard in
+        ForEach(dashboards, id: \.name) { dashboard in
             let shakeAnimation = Animation.easeInOut(duration: Constants.animationDuration).repeatForever(autoreverses: true)
-            let isSelected = index == selectedDashboardIndex
-            let squareElementView = squareElement(dashboard.name, dashboard.icon, isSelected)
+            let isSelected = dashboard.name == selectedDashboardName
             let isCurrentElementDragging = draggedItem?.name == dashboard.name
             let shouldHide = isDragging && isCurrentElementDragging
+            let element = element(dashboard, isSelected)
 
-            squareElementView
-                .overlay(removeIcon(dashboard))
+            element
                 .rotationEffect(.degrees(editMode ? Constants.shakeAnimationAngle : .zero))
                 .animation(editMode ? shakeAnimation : .default, value: editMode)
                 .opacity(shouldHide ? .leastNonzeroMagnitude : 1)
@@ -77,7 +81,7 @@ struct DashboardsCarouselView: View {
                     if editMode {
                         dashboardDidEdit(dashboard)
                     } else if !isSelected {
-                        selectedDashboardIndex = index
+                        selectedDashboardName = dashboard.name
                     }
                 }
                 .onDrop(of: [.text], delegate: DashboardDropDelegate(
@@ -91,16 +95,24 @@ struct DashboardsCarouselView: View {
                     editMode = true
                     draggedItem = dashboard
                     return NSItemProvider(item: nil, typeIdentifier: dashboard.name)
-                } preview: { squareElementView }
+                }
         }
     }
 
-    private func removeIcon(_ dashboard: Dashboard) -> some View {
-        GeometryReader { _ in
+    private func element(
+        _ dashboard: Dashboard,
+        _ isSelected: Bool
+    ) -> some View {
+        ZStack(alignment: .topLeading) {
+            squareContent(
+                dashboard.name,
+                dashboard.icon,
+                isSelected
+            )
+
             SystemImages.remove
                 .imageScale(.large)
                 .frame(width: Constants.removeIconWidth, height: Constants.removeIconHeight)
-                .offset(x: -Constants.removeIconWidth / 3, y: -Constants.removeIconHeight / 3)
                 .opacity(editMode ? 1 : 0)
                 .animation(.default, value: editMode)
                 .onTapGesture {
@@ -109,7 +121,7 @@ struct DashboardsCarouselView: View {
         }
     }
 
-    func squareElement(
+    private func squareContent(
         _ title: String,
         _ icon: String,
         _ isSelected: Bool
@@ -130,6 +142,8 @@ struct DashboardsCarouselView: View {
                 .font(.subheadline)
         }
         .shadow(radius: .veryEasy, color: .black.opacity(Constants.shadowOpacity))
+        .padding(.leading, Constants.removeIconWidth / 3)
+        .padding(.top, Constants.removeIconHeight / 3)
     }
 
     private struct DashboardDropDelegate: DropDelegate {
@@ -168,9 +182,9 @@ struct DashboardsCarouselView_Preview: PreviewProvider {
 
     static var previews: some View {
         DashboardsCarouselView(
-            editMode: .constant(true),
+            editMode: .constant(false),
             dashboards: .constant(DashboardMock.all),
-            selectedDashboardIndex: .constant(nil),
+            selectedDashboardName: .constant("Bedroom"),
             dashboardDidRemove: { _ in print("dashboardDidRemove") },
             dashboardDidEdit: { _ in print("dashboardDidEdit") },
             addDidSelect: { print("addDidSelect") }

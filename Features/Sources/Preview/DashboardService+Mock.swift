@@ -28,39 +28,23 @@ public enum DashboardMock {
     ])
 
     public static let all = [bedroom, living, kitchen, garden, security]
+    public static var allDict: [String : Dashboard] = all.reduce(into: [:], { $0[$1.name] = $1 })
 }
 
 public class DashboardServiceMock: Domain.DashboardService {
 
-    private var cachedDashboards: [Domain.Dashboard] = []
-    public var dashboards: CurrentValueSubject<[Domain.Dashboard], Never> = .init(DashboardMock.all)
+    public var dashboardOrder: CurrentValueSubject<[String], Never> = .init(DashboardMock.all.map { $0.name })
+    public var dashboards: CurrentValueSubject<[String : Domain.Dashboard], Never> = .init(DashboardMock.allDict)
 
     public init() {}
 
     public func load() async throws {}
-
     public func persist() async throws {}
-
-    public func add(dashboard: Dashboard) throws {
-        cachedDashboards.append(dashboard)
-        dashboards.send(cachedDashboards)
-    }
-
-    public func update(dashboardName: String, dashboard: Dashboard) throws {
-        cachedDashboards.removeAll(where: { $0.name == dashboardName })
-        cachedDashboards.append(dashboard)
-        dashboards.send(cachedDashboards)
-    }
-
-    public func delete(dashboardName: String) {
-        cachedDashboards.removeAll(where: { $0.name == dashboardName })
-        dashboards.send(cachedDashboards)
-    }
-
-    public func updateAll(dashboards: [Domain.Dashboard]) {
-        self.cachedDashboards = dashboards
-        self.dashboards.send(cachedDashboards)
-    }
+    public func add(dashboard: Dashboard) throws {}
+    public func update(dashboardName: String, dashboard: Dashboard) throws {}
+    public func delete(dashboardName: String) {}
+    public func updateAll(dashboards: [Domain.Dashboard]) {}
+    public func update(order: [String]) throws {}
 }
 
 #endif

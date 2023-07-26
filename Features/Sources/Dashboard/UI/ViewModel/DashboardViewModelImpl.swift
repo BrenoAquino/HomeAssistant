@@ -27,21 +27,15 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
     @Published public var removeAlert: Bool = false
     @Published public var editModel: Bool = false
     @Published public var toastData: DefaultToastDataContent?
-    @Published public var selectedDashboardIndex: Int?
+    @Published public var selectedDashboardName: String?
     @Published public var entities: [any Entity] = []
+    @Published public var dashboards: [Dashboard] = []
 
     // MARK: Gets
 
-    public var dashboards: [Dashboard] {
-        get { dashboardService.dashboards.value }
-        set { dashboardService.updateAll(dashboards: newValue) }
-    }
-
     public var currentDashboard: Dashboard? {
-        guard let selectedDashboardIndex, selectedDashboardIndex < dashboards.count, selectedDashboardIndex >= 0 else {
-            return nil
-        }
-        return dashboards[selectedDashboardIndex]
+        guard let selectedDashboardName else { return nil }
+        return dashboardService.dashboards.value[selectedDashboardName]
     }
 
     // MARK: Init
@@ -61,7 +55,10 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
 extension DashboardViewModelImpl {
 
     private func setupData() {
-        selectedDashboardIndex = dashboards.count > 0 ? .zero : nil
+        dashboards = dashboardService.dashboardOrder.value.compactMap {
+            dashboardService.dashboards.value[$0]
+        }
+        selectedDashboardName = dashboards.first?.name
     }
 
     private func setupServiceObservers() {
@@ -70,11 +67,12 @@ extension DashboardViewModelImpl {
             .entities
             .receive(on: RunLoop.main)
             .sink { [weak self] entities in
-                guard let self, let currentDashboard else {
-                    self?.entities = []
-                    return
-                }
-                self.entities = currentDashboard.entitiesIDs.compactMap { entities[$0] }
+                guard let self else { return }
+                self.setEntities(
+                    entities,
+                    self.dashboardService.dashboards.value,
+                    self.selectedDashboardName
+                )
             }
             .store(in: &cancellable)
 
@@ -95,28 +93,66 @@ extension DashboardViewModelImpl {
             .dashboards
             .receive(on: RunLoop.main)
             .sink { [weak self] dashboards in
-                guard let self, let selectedDashboardIndex else {
-                    return
+                guard let self else { return }
+                self.dashboards = self.dashboardService.dashboardOrder.value.compactMap { dashboards[$0] }
+                if self.selectedDashboardName == nil {
+                    self.selectedDashboardName = self.dashboards.first?.name
                 }
-                self.entities = dashboards[selectedDashboardIndex].entitiesIDs.compactMap {
-                    self.entityService.entities.value[$0]
-                }
+                self.setEntities(
+                    self.entityService.entities.value,
+                    dashboards,
+                    selectedDashboardName
+                )
             }
             .store(in: &cancellable)
     }
 
     private func setupUIObservers() {
         // Update current dashboard when change it
-        $selectedDashboardIndex
+        $selectedDashboardName
             .compactMap { $0 }
             .receive(on: RunLoop.main)
-            .sink { [weak self] newIndex in
+            .sink { [weak self] name in
                 guard let self else { return }
-                self.entities = self.dashboards[newIndex].entitiesIDs.compactMap {
-                    self.entityService.entities.value[$0]
+                self.setEntities(
+                    self.entityService.entities.value,
+                    self.dashboardService.dashboards.value,
+                    name
+                )
+            }
+            .store(in: &cancellable)
+
+        // Update to use the new order
+        $dashboards
+            .sink { [weak self] dashboards in
+                guard let self else { return }
+                do {
+                    try self.dashboardService.update(order: dashboards.map { $0.name })
+                } catch {
+                    self.toastData = .init(type: .error, title: Localizable.reorderError.value)
+                    Logger.log(level: .error, "Could not reorder")
                 }
             }
             .store(in: &cancellable)
+    }
+}
+
+// MARK: - Private Methods
+
+extension DashboardViewModelImpl {
+
+    private func setEntities(
+        _ entities: [String : any Entity],
+        _ dashboards: [String : Dashboard],
+        _ dashboardName: String?
+    ) {
+        guard let dashboardName else {
+            self.entities = []
+            return
+        }
+        self.entities = dashboards[dashboardName]?.entitiesIDs.compactMap {
+            entities[$0]
+        } ?? []
     }
 }
 

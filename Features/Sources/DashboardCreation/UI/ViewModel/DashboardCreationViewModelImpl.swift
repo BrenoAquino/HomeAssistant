@@ -167,7 +167,7 @@ extension DashboardCreationViewModelImpl {
         }
 
         if name != originalName {
-            guard !dashboardService.dashboards.value.contains(where: { $0.name == name }) else {
+            guard dashboardService.dashboards.value[name] == nil else {
                 throw DashboardCreationViewModelError.nameAlreadyExists
             }
         }
