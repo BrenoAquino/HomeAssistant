@@ -47,6 +47,11 @@ extension LifeCycleHandlerImpl {
     private func persist() {
         let semaphore = DispatchSemaphore(value: 0)
         Task {
+            guard await webSocket.isConnected() else {
+                semaphore.signal()
+                return
+            }
+            
             try? await dashboardsService.persist()
             try? await entityService.persistHiddenEntities()
             await webSocket.disconnect()

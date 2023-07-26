@@ -161,6 +161,10 @@ extension WebSocket: URLSessionWebSocketDelegate {
 
 extension WebSocket: WebSocketProvider {
 
+    func isConnected() async -> Bool {
+        return isAuthenticated && webSocket?.state == .running
+    }
+
     nonisolated var messageReceived: AnyPublisher<WebSocketMessage, Never> {
         topic.eraseToAnyPublisher()
     }
