@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Launch
+import Core
 
 struct StaticLaunchCoordinator: View {
 

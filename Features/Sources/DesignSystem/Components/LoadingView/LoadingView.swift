@@ -13,7 +13,6 @@ public struct LoadingView: View {
 
     public var body: some View {
         ProgressView()
-            .tint(Color.white)
             .progressViewStyle(CircularProgressViewStyle())
             .scaleEffect(2)
     }

@@ -9,8 +9,20 @@ import SwiftUI
 
 // MARK: PresentationStyle
 
+struct EmptyModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+    }
+}
+
 extension PresentationStyle {
-    static let `default`: PresentationStyle = .init()
+    static let `default`: PresentationStyle = .init(
+        transition: .opacity.animation(.linear(duration: 0.3))
+    )
+
+    static let none: PresentationStyle = .init(
+        transition: .none
+    )
 }
 
 // MARK: Screen
@@ -47,7 +59,17 @@ extension Screen {
 extension View {
 
     @ViewBuilder
+    private func transitionIfExist(_ style: PresentationStyle?) -> some View {
+        if let styleTransition = style?.transition {
+            self.transition(styleTransition)
+        } else {
+            self
+        }
+    }
+
+    @ViewBuilder
     func style(_ style: PresentationStyle?) -> some View {
         self
+            .transitionIfExist(style)
     }
 }

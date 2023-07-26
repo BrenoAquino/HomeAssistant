@@ -21,6 +21,11 @@ enum Localizable: String, CommonLocalizable {
     case entitiesHint = "entities_hint"
     case create
     case update
+    case missingNameError = "missing_name_error"
+    case nameAlreadyExistsError = "name_already_exists_error"
+    case missingIconError = "missing_icon_error"
+    case missingEntitiesError = "missing_entities_error"
+    case unknownError = "unknown_error"
 }
 
 extension Localizable {

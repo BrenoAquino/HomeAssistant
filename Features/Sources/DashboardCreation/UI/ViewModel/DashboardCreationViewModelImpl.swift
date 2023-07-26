@@ -5,6 +5,7 @@
 //  Created by Breno Aquino on 18/07/23.
 //
 
+import DesignSystem
 import Combine
 import Common
 import Domain
@@ -22,6 +23,8 @@ public class DashboardCreationViewModelImpl<DashboardS: DashboardService, Entity
     private var originalName: String = ""
 
     // MARK: Publishers
+
+    @Published public var toastData: DefaultToastDataContent?
 
     @Published public var dashboardName: String = ""
 
@@ -165,7 +168,11 @@ extension DashboardCreationViewModelImpl {
                 try dashboardService.update(dashboardName: originalName, dashboard: dashboard)
             }
             delegate?.didFinish()
+        } catch let error as DashboardCreationViewModelError {
+            toastData = .init(type: .error, title: error.message)
+            Logger.log(level: .error, error.localizedDescription)
         } catch {
+            toastData = .init(type: .error, title: Localizable.unknownError.value)
             Logger.log(level: .error, error.localizedDescription)
         }
     }

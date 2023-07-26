@@ -6,11 +6,13 @@
 //
 
 #if DEBUG
+import DesignSystem
 import Preview
 import Domain
 
 class DashboardCreationViewModelPreview: DashboardCreationViewModel {
 
+    var toastData: DefaultToastDataContent?
     var delegate: DashboardCreationExternalFlow?
     var mode: DashboardCreationMode = .creation
     var dashboardName: String = ""

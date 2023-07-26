@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Breno Aquino on 17/07/23.
+  
+*/
+
+"try_again" = "Try to connect again";
+"connection_error" = "Something went wrong";

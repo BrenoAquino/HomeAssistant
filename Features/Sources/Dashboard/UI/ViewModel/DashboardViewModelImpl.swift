@@ -5,6 +5,7 @@
 //  Created by Breno Aquino on 17/07/23.
 //
 
+import DesignSystem
 import Combine
 import Common
 import Domain
@@ -26,6 +27,7 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
     @Published public var removeAlert: Bool = false
     @Published public var editModel: Bool = false
     @Published public var selectedDashboardIndex: Int?
+    @Published public var toastData: DefaultToastDataContent?
 
     // MARK: Gets
 
@@ -79,6 +81,7 @@ extension DashboardViewModelImpl {
 
     public func deleteRequestedDashboard() {
         dashboards.removeAll(where: { $0.name == dashboardNameToDelete })
+        toastData = .init(type: .success, title: Localizable.deleteSuccess.value)
     }
 
     public func cancelDashboardDeletion() {
@@ -109,6 +112,7 @@ extension DashboardViewModelImpl {
             do {
                 try await entityService.execute(service: service, entityID: lightEntity.id)
             } catch {
+                toastData = .init(type: .error, title: Localizable.lightError.value)
                 Logger.log(level: .error, "Could not execute \(String(describing: service))")
             }
         }

@@ -19,6 +19,8 @@ public struct DSAspectRatio {
     public static let portrait: DSAspectRatio = DSAspectRatio(rawValue: CGSize(width: 2, height: 3))
     /// Landscape - Width (2) x Height (3)
     public static let landscape: DSAspectRatio = DSAspectRatio(rawValue: CGSize(width: 16, height: 9))
+    /// Square - Width (1) x Height (1)
+    public static let square: DSAspectRatio = DSAspectRatio(rawValue: CGSize(width: 1, height: 1))
 }
 
 // MARK: - Utils

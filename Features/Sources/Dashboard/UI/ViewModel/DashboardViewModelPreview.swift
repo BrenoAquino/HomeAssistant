@@ -6,6 +6,7 @@
 //
 
 #if DEBUG
+import DesignSystem
 import Combine
 import Domain
 import Preview
@@ -13,6 +14,7 @@ import Preview
 class DashboardViewModelPreview: DashboardViewModel {
 
     var delegate: DashboardExternalFlow?
+    var toastData: DefaultToastDataContent?
 
     @Published var removeAlert: Bool = false
     @Published var editModel: Bool = false
