@@ -58,7 +58,11 @@ extension WebSocket {
     private func listenWebSocketMessages() {
         Task {
             do {
-                guard let webSocket else { return }
+                guard let webSocket else {
+                    await disconnect()
+                    return
+                }
+
                 for try await message in webSocket.stream {
                     switch message {
                     case let .string(string):
@@ -69,7 +73,9 @@ extension WebSocket {
                         fatalError("unknown message received")
                     }
                 }
+
             } catch {
+                await disconnect()
                 Logger.log(level: .error, "Error getting messages from the WebSocket: \(error.localizedDescription)")
             }
         }
@@ -173,6 +179,7 @@ extension WebSocket: WebSocketProvider {
         isAuthenticated = false
         webSocket?.cancel()
         webSocket = nil
+        didDisconnect?()
     }
 
     @discardableResult func send<Message: Encodable>(message: Message) async throws -> Int {

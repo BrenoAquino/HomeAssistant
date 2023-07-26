@@ -32,16 +32,34 @@ class Coordinator: ObservableObject {
 
 extension Coordinator {
 
+    func setRoot(_ screen: Screen) {
+        DispatchQueue.main.async { [self] in
+            self.root = screen
+        }
+    }
+
+    func block(_ screen: Screen) {
+        DispatchQueue.main.async { [self] in
+            self.block = screen
+        }
+    }
+
     func push(_ screen: Screen) {
-        path.append(screen)
+        DispatchQueue.main.async { [self] in
+            self.path.append(screen)
+        }
     }
 
     func preset(sheet: Screen) {
-        self.sheet = sheet
+        DispatchQueue.main.async { [self] in
+            self.sheet = sheet
+        }
     }
 
     func preset(fullScreenCover: Screen) {
-        self.fullScreenCover = fullScreenCover
+        DispatchQueue.main.async { [self] in
+            self.fullScreenCover = fullScreenCover
+        }
     }
 }
 
@@ -50,16 +68,28 @@ extension Coordinator {
 extension Coordinator {
 
     func pop() {
-        path.removeLast()
+        DispatchQueue.main.async { [self] in
+            self.path.removeLast()
+        }
     }
 
     func popToRoot() {
-        path.removeLast(path.count)
+        DispatchQueue.main.async { [self] in
+            self.path.removeLast(path.count)
+        }
     }
 
     func dismiss() {
-        sheet = nil
-        fullScreenCover = nil
+        DispatchQueue.main.async { [self] in
+            self.sheet = nil
+            self.fullScreenCover = nil
+        }
+    }
+
+    func dismissBlock() {
+        DispatchQueue.main.async { [self] in
+            self.block = nil
+        }
     }
 }
 

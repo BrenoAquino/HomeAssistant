@@ -77,6 +77,7 @@ extension EntityServiceImpl: EntityService {
 
     public func persistHiddenEntities() async throws {
         try await entityRepository.save(hiddenEntityIDs: hiddenEntities)
+        Logger.log(level: .info, "Saved \(hiddenEntities.count) hidden entity IDs")
     }
 
     public func trackEntities() async throws {

@@ -34,16 +34,6 @@ class LifeCycleHandlerImpl<DashboardS: DashboardService, EntityS: EntityService>
 
 extension LifeCycleHandlerImpl {
 
-    private func prepareToBackground() {
-        coordinator?.block = .staticLaunch(style: .default)
-        persist()
-    }
-
-    private func prepareToForeground() {
-        guard coordinator?.root != .launch(style: .default) else { return }
-        coordinator?.block = .launch(style: .none)
-    }
-
     private func persist() {
         let semaphore = DispatchSemaphore(value: 0)
         Task {
@@ -51,10 +41,9 @@ extension LifeCycleHandlerImpl {
                 semaphore.signal()
                 return
             }
-            
+
             try? await dashboardsService.persist()
             try? await entityService.persistHiddenEntities()
-            await webSocket.disconnect()
             semaphore.signal()
         }
         semaphore.wait()
@@ -68,9 +57,9 @@ extension LifeCycleHandlerImpl {
     func appStateDidChange(_ state: AppState) {
         switch state {
         case .foreground:
-            prepareToForeground()
+            break
         case .background:
-            prepareToBackground()
+            persist()
         }
     }
 }

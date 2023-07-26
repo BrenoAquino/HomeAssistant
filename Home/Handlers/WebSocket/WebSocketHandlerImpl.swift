@@ -26,6 +26,6 @@ class WebSocketHandlerImpl: WebSocketHandler {
 extension WebSocketHandlerImpl {
 
     func webSocketDidDisconnect() {
-        self.coordinator?.block = .launch(style: .default)
+        self.coordinator?.block(.launch(style: .default))
     }
 }

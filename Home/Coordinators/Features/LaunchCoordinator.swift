@@ -26,10 +26,10 @@ struct LaunchCoordinator<ViewModel: LaunchViewModel>: View {
 extension LaunchCoordinator: LaunchExternalFlow {
 
     func launchFinished() {
-        if coordinator.block == nil {
-            coordinator.root = .dashboard(style: .default)
+        if coordinator.block != nil {
+            coordinator.dismissBlock()
         } else {
-            coordinator.block = nil
+            coordinator.setRoot(.dashboard(style: .default))
         }
     }
 }
