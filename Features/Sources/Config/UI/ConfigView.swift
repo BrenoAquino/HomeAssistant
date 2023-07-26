@@ -23,12 +23,14 @@ public struct ConfigView<ViewModel: ConfigViewModel>: View {
                 .padding(.horizontal, space: .horizontal)
                 .listRowInsets(EdgeInsets())
                 .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
 
             searchField
                 .padding(.top, space: .normal)
                 .padding(.horizontal, space: .horizontal)
                 .listRowInsets(EdgeInsets())
                 .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
 
             ForEach(viewModel.entities, id: \.id) { entity in
                 entityCell(entity)
@@ -37,9 +39,11 @@ public struct ConfigView<ViewModel: ConfigViewModel>: View {
                     .listRowSeparator(.hidden)
             }
             .padding(.top, space: .smallS)
+            .listRowBackground(Color.clear)
         }
         .scrollIndicators(.hidden)
         .listStyle(.plain)
+        .background(DSColor.background)
     }
 
     private var title: some View {

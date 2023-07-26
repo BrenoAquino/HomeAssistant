@@ -51,6 +51,7 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             )
             .padding(.top, space: .smallS)
         }
+        .background(DSColor.background)
         .navigationTitle(Localizable.hiThere.value)
         .toolbar {
             Group {

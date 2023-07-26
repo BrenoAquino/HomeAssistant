@@ -41,6 +41,7 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
             createButton
                 .padding(.vertical, space: .normal)
         }
+        .background(DSColor.background)
         .scrollDismissesKeyboard(.immediately)
         .toast(data: $viewModel.toastData)
     }
