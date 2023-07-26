@@ -8,7 +8,10 @@
 import SwiftUI
 import DashboardCreation
 
-struct PresentationStyle {}
+struct PresentationStyle {
+
+    let transition: AnyTransition?
+}
 
 enum Screen: Identifiable, Hashable {
 

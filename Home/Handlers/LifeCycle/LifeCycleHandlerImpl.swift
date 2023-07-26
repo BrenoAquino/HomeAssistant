@@ -41,7 +41,7 @@ extension LifeCycleHandlerImpl {
 
     private func prepareToForeground() {
         guard coordinator?.root != .launch(style: .default) else { return }
-        coordinator?.block = .launch(style: .default)
+        coordinator?.block = .launch(style: .none)
     }
 
     private func persist() {

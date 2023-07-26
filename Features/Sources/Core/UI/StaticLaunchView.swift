@@ -13,14 +13,20 @@ public struct StaticLaunchView: View {
     public init() {}
 
     public var body: some View {
-        Image(packageResource: .whiteLogo)
-            .renderingMode(.template)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 120)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .foregroundColor(DSColor.label)
-            .background(Color.black)
+        VStack(spacing: .zero) {
+            Spacer()
+            Image(packageResource: .whiteLogo)
+                .renderingMode(.template)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 120)
+                .foregroundColor(DSColor.label)
+            Spacer()
+            LoadingView().opacity(0)
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(DSColor.background)
     }
 }
 

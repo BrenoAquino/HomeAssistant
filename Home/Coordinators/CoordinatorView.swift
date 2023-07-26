@@ -49,7 +49,6 @@ struct CoordinatorView: View {
             if let block = coordinator.block {
                 coordinator.build(screen: block)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .opacityTransition()
             }
         }
     }
