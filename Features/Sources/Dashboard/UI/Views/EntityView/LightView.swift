@@ -10,8 +10,10 @@ import DesignSystem
 import SwiftUI
 
 private enum Constants {
+
     static let shadowOpacity: CGFloat = 0.2
     static let strokeWidth: CGFloat = 1
+    static let strokeOpacity: CGFloat = 0.5
 }
 
 struct LightView: View {
@@ -29,7 +31,7 @@ struct LightView: View {
             .contentShape(Rectangle())
             .overlay(
                 RoundedRectangle(cornerRadius: .hard)
-                    .stroke(DSColor.gray3.opacity(0.5), lineWidth: Constants.strokeWidth)
+                    .stroke(DSColor.gray3.opacity(Constants.strokeOpacity), lineWidth: Constants.strokeWidth)
             )
             .shadow(radius: .easy, color: .black.opacity(Constants.shadowOpacity))
             .onTapGesture {
