@@ -9,6 +9,12 @@ import DesignSystem
 import Domain
 import SwiftUI
 
+private enum Constants {
+
+    static let animationDuration: TimeInterval = 0.15
+    static let shakeAnimationAngle: CGFloat = 5
+}
+
 struct EntitiesView: View {
 
     @Binding var editMode: Bool
@@ -31,12 +37,15 @@ struct EntitiesView: View {
 
             LazyVGrid(columns: columns, spacing: space) {
                 ForEach(Array(entities.enumerated()), id: \.element.id) { index, entity in
-                    let shakeAnimation = Animation.easeInOut(duration: 0.15).repeatForever(autoreverses: true)
+                    let shakeAnimation = Animation.easeInOut(duration: Constants.animationDuration).repeatForever(autoreverses: true)
                     let isCurrentElementDragging = draggedEntity?.id == entity.id
                     let shouldHide = isDragging && isCurrentElementDragging
 
                     entityView(entity)
                         .frame(height: size)
+                        .rotationEffect(.degrees(editMode ? Constants.shakeAnimationAngle : .zero))
+                        .animation(editMode ? shakeAnimation : .default, value: editMode)
+                        .opacity(shouldHide ? .leastNonzeroMagnitude : 1)
                         .onDrop(of: [.text], delegate: EntityDropDelegate(
                             entity: entity,
                             entities: $entities,
