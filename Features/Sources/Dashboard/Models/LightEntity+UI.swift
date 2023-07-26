@@ -11,4 +11,7 @@ import Domain
 extension LightEntity {
     var isOn: Bool { state == .on }
     var invertedState: LightEntity.State { state == .on ? .off : .on }
+    var onIcon: String { "lightbulb.fill" }
+    var offIcon: String { "lightbulb.slash.fill" }
+    var icon: String { isOn ? onIcon : offIcon }
 }
