@@ -11,7 +11,7 @@ import Common
 import Domain
 import SwiftUI
 
-public class DashboardViewModelImpl<DashboardS: DashboardService_v2, EntityS: EntityService_v2>: DashboardViewModel {
+public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: DashboardViewModel {
 
     public var delegate: DashboardExternalFlow?
     private var cancellable: Set<AnyCancellable> = .init()
@@ -51,11 +51,12 @@ public class DashboardViewModelImpl<DashboardS: DashboardService_v2, EntityS: En
         self.entityService = entityService
 
         setupData()
-        setupObservers()
+        setupServiceObservers()
+        setupUIObservers()
     }
 }
 
-// MARK: - Private Methods
+// MARK: - Setups Methods
 
 extension DashboardViewModelImpl {
 
@@ -63,7 +64,7 @@ extension DashboardViewModelImpl {
         selectedDashboardIndex = dashboards.count > 0 ? .zero : nil
     }
 
-    private func setupObservers() {
+    private func setupServiceObservers() {
         // Update the entity list when it changes
         entityService
             .entities

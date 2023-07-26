@@ -77,17 +77,7 @@ class Factory {
         dashboardRepository: dashboardRepositoryInstance
     )
 
-    private lazy var dashboardServiceInstance_v2 = DashboardServiceImpl_v2(
-        dashboardRepository: dashboardRepositoryInstance
-    )
-
     private lazy var entityServiceInstance = EntityServiceImpl(
-        entityRepository: entityRepositoryInstance,
-        commandRepository: commandRepositoryInstance,
-        subscriptionRepository: subscriptionRepositoryInstance
-    )
-
-    private lazy var entityServiceInstance_v2 = EntityServiceImpl_v2(
         entityRepository: entityRepositoryInstance,
         commandRepository: commandRepositoryInstance,
         subscriptionRepository: subscriptionRepositoryInstance
@@ -112,9 +102,7 @@ extension Factory {
     func launchCoordinator() -> some View {
         let viewModel = LaunchViewModelImpl(
             entityService: entityServiceInstance,
-            entityService_v2: entityServiceInstance_v2,
-            dashboardService: dashboardServiceInstance,
-            dashboardService_v2: dashboardServiceInstance_v2
+            dashboardService: dashboardServiceInstance
         )
         LaunchCoordinator(viewModel: viewModel)
     }
@@ -127,8 +115,8 @@ extension Factory {
     @ViewBuilder
     func dashboardCoordinator() -> some View {
         let viewModel = DashboardViewModelImpl(
-            dashboardService: dashboardServiceInstance_v2,
-            entityService: entityServiceInstance_v2
+            dashboardService: dashboardServiceInstance,
+            entityService: entityServiceInstance
         )
         DashboardCoordinator(viewModel: viewModel)
     }
@@ -136,8 +124,8 @@ extension Factory {
     @ViewBuilder
     func dashboardCreationCoordinator(mode: DashboardCreationMode) -> some View {
         let viewModel = DashboardCreationViewModelImpl(
-            dashboardService: dashboardServiceInstance_v2,
-            entitiesService: entityServiceInstance_v2,
+            dashboardService: dashboardServiceInstance,
+            entitiesService: entityServiceInstance,
             mode: mode
         )
         DashboardCreationCoordinator(viewModel: viewModel)

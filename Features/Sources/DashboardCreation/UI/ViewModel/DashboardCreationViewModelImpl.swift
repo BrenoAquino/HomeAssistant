@@ -12,7 +12,7 @@ import Domain
 import Foundation
 import SwiftUI
 
-public class DashboardCreationViewModelImpl<DashboardS: DashboardService_v2, EntityS: EntityService_v2>: DashboardCreationViewModel {
+public class DashboardCreationViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: DashboardCreationViewModel {
 
     public let mode: DashboardCreationMode
     public var delegate: DashboardCreationExternalFlow?
@@ -56,7 +56,7 @@ public class DashboardCreationViewModelImpl<DashboardS: DashboardService_v2, Ent
     }
 }
 
-// MARK: - Setups
+// MARK: - Setups Methods
 
 extension DashboardCreationViewModelImpl {
 

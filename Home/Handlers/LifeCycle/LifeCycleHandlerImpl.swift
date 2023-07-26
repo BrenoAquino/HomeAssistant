@@ -43,7 +43,7 @@ extension LifeCycleHandlerImpl {
             }
 
             try? await dashboardsService.persist()
-            try? await entityService.persistHiddenEntities()
+            try? await entityService.persist()
             semaphore.signal()
         }
         semaphore.wait()

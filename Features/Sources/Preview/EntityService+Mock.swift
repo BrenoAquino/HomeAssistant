@@ -24,28 +24,22 @@ public enum EntityMock {
 
 public class EntityServiceMock: Domain.EntityService {
 
-    @Published public var hiddenEntities: Set<String> = []
-    @Published public private(set) var domains = Domain.EntityDomain.allCases
-    @Published public var entities = EntityMock.allDict
+    public var entityStateChanged: PassthroughSubject<any Domain.Entity, Never> = .init()
+    public var hiddenEntityIDs: CurrentValueSubject<Set<String>, Never> = .init(["light_led_desk"])
+    public var entities: CurrentValueSubject<[String : any Domain.Entity], Never> = .init(EntityMock.allDict)
+    public var domains: CurrentValueSubject<[Domain.EntityDomain], Never> = .init(Domain.EntityDomain.allCases)
 
     public init() {}
 
-    public func trackEntities() async throws {
+    public func startTracking() async throws {
         if #available(iOS 16.0, *) {
             try await Task.sleep(for: .seconds(2))
         }
     }
 
-    public func persistHiddenEntities() async throws {
-
-    }
-
-    public func update(entityID: String, entity: any Entity) async throws {
-        entities[entityID] = entity
-    }
-
-    public func execute(service: EntityActionService, entityID: String) async throws {
-
-    }
+    public func persist() async throws {}
+    public func update(entityID: String, entity: any Entity) async throws {}
+    public func update(hiddenEntityIDs: Set<String>) {}
+    public func execute(service: EntityActionService, entityID: String) async throws {}
 }
 #endif

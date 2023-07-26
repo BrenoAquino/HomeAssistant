@@ -9,19 +9,21 @@ import Combine
 import Foundation
 
 enum DashboardServiceError: Error {
+    
     case dashboardAlreadyExists
     case dashboardDoesNotExist
 }
 
-public protocol DashboardService: ObservableObject {
+public protocol DashboardService {
 
-    var dashboards: [Dashboard] { get set }
+    var dashboards: CurrentValueSubject<[Dashboard], Never> { get }
 
-    func trackDashboards() async throws
+    func load() async throws
     func persist() async throws
 
     func add(dashboard: Dashboard) throws
+    func delete(dashboardName: String) throws
+
     func update(dashboardName: String, dashboard: Dashboard) throws
-    func delete(dashboardName: String)
     func updateAll(dashboards: [Dashboard])
 }
