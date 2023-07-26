@@ -27,8 +27,13 @@ class DashboardViewModelPreview: DashboardViewModel {
     }
 
     var entities: [any Entity] {
-        guard let currentDashboard else { return [] }
-        return currentDashboard.entitiesIDs.compactMap { EntityMock.allDict[$0] }
+        get {
+            guard let currentDashboard else { return [] }
+            return currentDashboard.entitiesIDs.compactMap { EntityMock.allDict[$0] }
+        }
+        set {
+            
+        }
     }
 
     public func deleteRequestedDashboard() {

@@ -25,7 +25,7 @@ public protocol DashboardViewModel: ObservableObject {
     var selectedDashboardIndex: Int? { get set }
     var dashboards: [Dashboard] { get set }
     var currentDashboard: Dashboard? { get }
-    var entities: [any Entity] { get }
+    var entities: [any Entity] { get set }
 
     var toastData: DefaultToastDataContent? { get set }
 

@@ -12,41 +12,35 @@ import Domain
 import Foundation
 import SwiftUI
 
-public class DashboardCreationViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: DashboardCreationViewModel {
+public class DashboardCreationViewModelImpl<DashboardS: DashboardService_v2, EntityS: EntityService_v2>: DashboardCreationViewModel {
 
     public let mode: DashboardCreationMode
     public var delegate: DashboardCreationExternalFlow?
 
-    // MARK: Private Variables
-
     private var cancellable: Set<AnyCancellable> = []
     private var originalName: String = ""
-
-    // MARK: Publishers
-
-    @Published public var toastData: DefaultToastDataContent?
-
-    @Published public var dashboardName: String = ""
-
-    @Published public private(set) var icons: [Icon] = Icon.list
-    @Published public var selectedIconName: String?
-    @Published public var iconFilterText: String = ""
-
-    @Published public var entities: [any Entity] = []
-    @Published public var selectedEntitiesIDs: Set<String> = []
-    @Published public var entityFilterText: String = ""
-
-    @Published public var selectedDomainsNames: Set<String> = []
 
     // MARK: Services
 
     private var dashboardService: DashboardS
-    @ObservedObject private var entitiesService: EntityS
+    private var entitiesService: EntityS
+
+    // MARK: Publishers
+
+    @Published public var toastData: DefaultToastDataContent?
+    @Published public var dashboardName: String = ""
+    @Published public private(set) var icons: [Icon] = Icon.list
+    @Published public var selectedIconName: String?
+    @Published public var iconFilterText: String = ""
+    @Published public var entities: [any Entity] = []
+    @Published public var selectedEntitiesIDs: Set<String> = []
+    @Published public var entityFilterText: String = ""
+    @Published public var selectedDomainsNames: Set<String> = []
 
     // MARK: Gets
 
     public var domains: [EntityDomain] {
-        entitiesService.domains
+        entitiesService.domains.value
     }
 
     // MARK: Init
@@ -57,7 +51,8 @@ public class DashboardCreationViewModelImpl<DashboardS: DashboardService, Entity
         self.mode = mode
 
         setupData(mode)
-        setupObservers()
+        setupServiceObservers()
+        setupUIObservers()
     }
 }
 
@@ -66,7 +61,7 @@ public class DashboardCreationViewModelImpl<DashboardS: DashboardService, Entity
 extension DashboardCreationViewModelImpl {
 
     private func setupData(_ mode: DashboardCreationMode) {
-        selectedDomainsNames = Set(entitiesService.domains.map { $0.rawValue })
+        selectedDomainsNames = Set(entitiesService.domains.value.map { $0.rawValue })
 
         guard case .edit(let dashboard) = mode else { return }
         originalName = dashboard.name
@@ -75,24 +70,54 @@ extension DashboardCreationViewModelImpl {
         selectedEntitiesIDs = Set(dashboard.entitiesIDs)
     }
 
-    private func setupObservers() {
-        serviceObservers()
-        uiObservers()
+    private func setupServiceObservers() {
+        // Update the entities list if changed
+        entitiesService
+            .entities
+            .sink { [weak self] entities in
+                guard let self else { return }
+                self.filterEntity(
+                    self.entityFilterText,
+                    self.selectedDomainsNames,
+                    entities,
+                    self.entitiesService.hiddenEntityIDs.value
+                )
+            }
+            .store(in: &cancellable)
+
+        // Update the entities list if the value of hidden entities has changed
+        entitiesService
+            .hiddenEntityIDs
+            .sink { [weak self] hiddenEntityIDs in
+                guard let self else { return }
+                self.filterEntity(
+                    self.entityFilterText,
+                    self.selectedDomainsNames,
+                    self.entitiesService.entities.value,
+                    hiddenEntityIDs
+                )
+            }
+            .store(in: &cancellable)
     }
 
-    private func serviceObservers() {
-        entitiesService.forward(objectWillChange, on: RunLoop.main).store(in: &cancellable)
-        dashboardService.forward(objectWillChange, on: RunLoop.main).store(in: &cancellable)
-    }
-
-    private func uiObservers() {
+    private func setupUIObservers() {
+        // Update icon's list when the type a name
         $iconFilterText
             .sink { [weak self] in self?.filterIcon($0) }
             .store(in: &cancellable)
 
+        // Update entities' list when the user filter for a name or for a domain
         Publishers
             .CombineLatest($entityFilterText, $selectedDomainsNames)
-            .sink { [weak self] in self?.filterEntity($0, domainNames: $1) }
+            .sink { [weak self] text, selectedDomains in
+                guard let self else { return }
+                self.filterEntity(
+                    text,
+                    selectedDomains,
+                    self.entitiesService.entities.value,
+                    self.entitiesService.hiddenEntityIDs.value
+                )
+            }
             .store(in: &cancellable)
     }
 }
@@ -112,13 +137,18 @@ extension DashboardCreationViewModelImpl {
         icons = result.isEmpty ? Icon.list : result
     }
 
-    private func filterEntity(_ text: String, domainNames: Set<String>) {
-        let allEntities = Array(entitiesService.entities.values)
-            .filter { !self.entitiesService.hiddenEntities.contains($0.id) }
+    private func filterEntity(
+        _ text: String,
+        _ domainNames: Set<String>,
+        _ entities: [String : any Entity],
+        _ hiddenEntityIDs: Set<String>
+    ) {
+        let allEntities = Array(entities.values)
+            .filter { !hiddenEntityIDs.contains($0.id) }
             .sorted(by: { $0.name < $1.name })
 
         guard !text.isEmpty || !domainNames.isEmpty else {
-            entities = allEntities
+            self.entities = allEntities
             return
         }
 
@@ -127,8 +157,7 @@ extension DashboardCreationViewModelImpl {
             let domainCheck = domainNames.contains(entity.domain.rawValue)
             return nameCheck && domainCheck
         }
-
-        entities = result.isEmpty ? allEntities : result
+        self.entities = result.isEmpty ? allEntities : result
     }
 
     private func createDashboard() throws -> Dashboard {
@@ -138,7 +167,7 @@ extension DashboardCreationViewModelImpl {
         }
 
         if name != originalName {
-            guard !dashboardService.dashboards.contains(where: { $0.name == name }) else {
+            guard !dashboardService.dashboards.value.contains(where: { $0.name == name }) else {
                 throw DashboardCreationViewModelError.nameAlreadyExists
             }
         }

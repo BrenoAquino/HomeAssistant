@@ -11,8 +11,12 @@ import SwiftUI
 
 struct EntitiesView: View {
 
-    let entities: [any Entity]
+    @Binding var editMode: Bool
+    @Binding var entities: [any Entity]
     let didClickUpdateLightState: (_ lightEntity: LightEntity, _ newState: LightEntity.State) -> Void
+
+    @State private var draggedEntity: (any Entity)?
+    @State private var isDragging: Bool = false
 
     var body: some View {
         GeometryReader { proxy in
@@ -27,23 +31,76 @@ struct EntitiesView: View {
 
             LazyVGrid(columns: columns, spacing: space) {
                 ForEach(Array(entities.enumerated()), id: \.element.id) { index, entity in
-                    Group {
-                        switch entity {
-                        case let light as LightEntity:
-                            LightView(lightEntity: light) {
-                                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                                didClickUpdateLightState($0, $1)
-                            }
-                        default:
-                            UnsupportedView(
-                                name: entity.name,
-                                domain: entity.domain.rawValue
-                            )
+                    let shakeAnimation = Animation.easeInOut(duration: 0.15).repeatForever(autoreverses: true)
+                    let isCurrentElementDragging = draggedEntity?.id == entity.id
+                    let shouldHide = isDragging && isCurrentElementDragging
+
+                    entityView(entity)
+                        .frame(height: size)
+                        .onDrop(of: [.text], delegate: EntityDropDelegate(
+                            entity: entity,
+                            entities: $entities,
+                            draggedEntity: $draggedEntity,
+                            isDragging: $isDragging
+                        ))
+                        .onDrag {
+                            draggedEntity = entity
+                            editMode = true
+                            return NSItemProvider(object: entity.id as NSString)
                         }
-                    }
-                    .frame(height: size)
                 }
             }
+        }
+    }
+
+    @ViewBuilder
+    private func entityView(
+        _ entity: any Entity
+    ) -> some View {
+        switch entity {
+        case let light as LightEntity:
+            LightView(lightEntity: light) {
+                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                didClickUpdateLightState($0, $1)
+            }
+        default:
+            UnsupportedView(
+                name: entity.name,
+                domain: entity.domain.rawValue
+            )
+        }
+    }
+
+    private struct EntityDropDelegate: DropDelegate {
+
+        let entity: any Entity
+        @Binding var entities: [any Entity]
+        @Binding var draggedEntity: (any Entity)?
+        @Binding var isDragging: Bool
+
+        func performDrop(info: DropInfo) -> Bool {
+            isDragging = false
+            draggedEntity = nil
+            return true
+        }
+
+        func dropEntered(info: DropInfo) {
+            isDragging = true
+            guard
+                let draggedEntity,
+                let fromIndex = entities.firstIndex(where: { $0.id == draggedEntity.id }),
+                let toIndex = entities.firstIndex(where: { $0.id == entity.id })
+            else { return }
+
+            withAnimation(.default) {
+                let aux = entities[fromIndex]
+                entities[fromIndex] = entities[toIndex]
+                entities[toIndex] = aux
+            }
+        }
+
+        func dropUpdated(info: DropInfo) -> DropProposal? {
+            return DropProposal(operation: .move)
         }
     }
 }
@@ -56,7 +113,8 @@ struct EntitiesView_Preview: PreviewProvider {
     static var previews: some View {
 
         EntitiesView(
-            entities: EntityMock.all,
+            editMode: .constant(false),
+            entities: .constant(EntityMock.all),
             didClickUpdateLightState: { _, _ in }
         )
     }

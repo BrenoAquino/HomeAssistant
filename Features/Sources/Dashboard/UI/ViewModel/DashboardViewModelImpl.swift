@@ -11,7 +11,7 @@ import Common
 import Domain
 import SwiftUI
 
-public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: DashboardViewModel {
+public class DashboardViewModelImpl<DashboardS: DashboardService_v2, EntityS: EntityService_v2>: DashboardViewModel {
 
     public var delegate: DashboardExternalFlow?
     private var cancellable: Set<AnyCancellable> = .init()
@@ -19,35 +19,29 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
 
     // MARK: Services
 
-    @ObservedObject private var entityService: EntityS
-    @ObservedObject var dashboardService: DashboardS
+    private var entityService: EntityS
+    private var dashboardService: DashboardS
 
     // MARK: Publishers
 
     @Published public var removeAlert: Bool = false
     @Published public var editModel: Bool = false
-    @Published public var selectedDashboardIndex: Int?
     @Published public var toastData: DefaultToastDataContent?
+    @Published public var selectedDashboardIndex: Int?
+    @Published public var entities: [any Entity] = []
 
     // MARK: Gets
 
     public var dashboards: [Dashboard] {
-        get { dashboardService.dashboards }
-        set { dashboardService.dashboards = newValue }
+        get { dashboardService.dashboards.value }
+        set { dashboardService.updateAll(dashboards: newValue) }
     }
 
     public var currentDashboard: Dashboard? {
-        guard
-            let selectedDashboardIndex,
-            selectedDashboardIndex < dashboards.count,
-            selectedDashboardIndex >= 0
-        else { return nil }
+        guard let selectedDashboardIndex, selectedDashboardIndex < dashboards.count, selectedDashboardIndex >= 0 else {
+            return nil
+        }
         return dashboards[selectedDashboardIndex]
-    }
-
-    public var entities: [any Entity] {
-        guard let currentDashboard else { return [] }
-        return currentDashboard.entitiesIDs.compactMap { self.entityService.entities[$0] }
     }
 
     // MARK: Init
@@ -57,7 +51,7 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
         self.entityService = entityService
 
         setupData()
-        setupForwards()
+        setupObservers()
     }
 }
 
@@ -69,9 +63,59 @@ extension DashboardViewModelImpl {
         selectedDashboardIndex = dashboards.count > 0 ? .zero : nil
     }
 
-    private func setupForwards() {
-        dashboardService.forward(objectWillChange, on: RunLoop.main).store(in: &cancellable)
-        entityService.forward(objectWillChange, on: RunLoop.main).store(in: &cancellable)
+    private func setupObservers() {
+        // Update the entity list when it changes
+        entityService
+            .entities
+            .receive(on: RunLoop.main)
+            .sink { [weak self] entities in
+                guard let self, let currentDashboard else {
+                    self?.entities = []
+                    return
+                }
+                self.entities = currentDashboard.entitiesIDs.compactMap { entities[$0] }
+            }
+            .store(in: &cancellable)
+
+        // Update the entity state if it one of the current ones has changed
+        entityService
+            .entityStateChanged
+            .receive(on: RunLoop.main)
+            .sink { [weak self] entity in
+                guard let entityIndex = self?.entities.firstIndex(where: { $0.id == entity.id }) else {
+                    return
+                }
+                self?.entities[entityIndex] = entity
+            }
+            .store(in: &cancellable)
+
+        // Update the dashboard when we get any change on it
+        dashboardService
+            .dashboards
+            .receive(on: RunLoop.main)
+            .sink { [weak self] dashboards in
+                guard let self, let selectedDashboardIndex else {
+                    return
+                }
+                self.entities = dashboards[selectedDashboardIndex].entitiesIDs.compactMap {
+                    self.entityService.entities.value[$0]
+                }
+            }
+            .store(in: &cancellable)
+    }
+
+    private func setupUIObservers() {
+        // Update current dashboard when change it
+        $selectedDashboardIndex
+            .compactMap { $0 }
+            .receive(on: RunLoop.main)
+            .sink { [weak self] newIndex in
+                guard let self else { return }
+                self.entities = self.dashboards[newIndex].entitiesIDs.compactMap {
+                    self.entityService.entities.value[$0]
+                }
+            }
+            .store(in: &cancellable)
     }
 }
 

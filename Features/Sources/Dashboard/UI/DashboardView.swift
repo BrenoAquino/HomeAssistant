@@ -46,7 +46,8 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                 .padding(.horizontal, space: .horizontal)
             
             EntitiesView(
-                entities: viewModel.entities,
+                editMode: $viewModel.editModel,
+                entities: $viewModel.entities,
                 didClickUpdateLightState: viewModel.didClickUpdateLightState
             )
             .padding(.top, space: .smallS)
