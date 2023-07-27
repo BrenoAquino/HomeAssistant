@@ -23,7 +23,7 @@ public enum DSColor {
 
     public static let deactivated = Color(UIColor(
         light: UIColor(white: 222 / 255, alpha: 1),
-        dark: UIColor(white: 43 / 255, alpha: 1)
+        dark: UIColor(white: 38 / 255, alpha: 1)
     ))
 
     // MARK: Label Colors

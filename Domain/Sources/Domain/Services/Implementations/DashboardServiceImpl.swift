@@ -1,5 +1,5 @@
 //
-//  DashboardService.swift
+//  DashboardServiceImpl.swift
 //  
 //
 //  Created by Breno Aquino on 17/07/23.
@@ -10,9 +10,21 @@ import Foundation
 
 public class DashboardServiceImpl {
 
-    @Published public var dashboards: [Dashboard] = []
+    // MARK: Variables
+
+    private var cachedOrder: [String] = []
+    private var cachedDashboards: [String : Dashboard] = [:]
+
+    // MARK: Subjects
+
+    public private(set) var dashboardOrder: CurrentValueSubject<[String], Never> = .init([])
+    public private(set) var dashboards: CurrentValueSubject<[String : Dashboard], Never> = .init([:])
+
+    // MARK: Repositories
 
     private let dashboardRepository: DashboardRepository
+
+    // MARK: Init
 
     public init(dashboardRepository: DashboardRepository) {
         self.dashboardRepository = dashboardRepository
@@ -23,41 +35,68 @@ public class DashboardServiceImpl {
 
 extension DashboardServiceImpl: DashboardService {
 
-    public func trackDashboards() async throws {
-        let fetchedDashboards = try? await dashboardRepository.fetchDashboards()
-        dashboards = fetchedDashboards ?? []
+    public func load() async throws {
+        let fetchedDashboards = (try? await dashboardRepository.fetchDashboards()) ?? []
+        cachedDashboards = fetchedDashboards.reduce(into: [:], { $0[$1.name] = $1 })
+        cachedOrder = fetchedDashboards.map { $0.name }
+
+        dashboards.send(cachedDashboards)
+        dashboardOrder.send(cachedOrder)
     }
 
     public func persist() async throws {
-        try await dashboardRepository.save(dashboard: dashboards)
-
-        let saveLog = dashboards.map { "\($0.name) (\($0.entitiesIDs.count) devices)" }.joined(separator: ", ")
+        let dashboardsSorted = cachedOrder.compactMap { cachedDashboards[$0] }
+        try await dashboardRepository.save(dashboard: dashboardsSorted)
+        let saveLog = dashboardsSorted.map { "\($0.name) (\($0.entitiesIDs.count) devices)" }.joined(separator: ", ")
         Logger.log(level: .info, "Saved \(saveLog)")
     }
 
     public func add(dashboard: Dashboard) throws {
-        guard dashboards.first(where: { $0.name == dashboard.name }) == nil else {
+        guard cachedDashboards[dashboard.name] == nil else {
             throw DashboardServiceError.dashboardAlreadyExists
         }
-        dashboards.append(dashboard)
-    }
+        cachedDashboards[dashboard.name] = dashboard
+        cachedOrder.append(dashboard.name)
 
-    public func update(dashboardName: String, dashboard: Dashboard) throws {
-        guard let index = dashboards.firstIndex(where: { $0.name == dashboardName }) else {
-            throw DashboardServiceError.dashboardDoesNotExist
-        }
-        delete(dashboardName: dashboardName)
-        guard dashboards.first(where: { $0.name == dashboard.name }) == nil else {
-            throw DashboardServiceError.dashboardAlreadyExists
-        }
-        dashboards.insert(dashboard, at: index)
+        dashboards.send(cachedDashboards)
+        dashboardOrder.send(cachedOrder)
     }
 
     public func delete(dashboardName: String) {
-        dashboards.removeAll(where: { $0.name == dashboardName })
+        cachedDashboards[dashboardName] = nil
+        cachedOrder.removeAll(where: { $0 == dashboardName })
+
+        dashboards.send(cachedDashboards)
+        dashboardOrder.send(cachedOrder)
     }
 
-    public func updateAll(dashboards: [Dashboard]) {
-        self.dashboards = dashboards
+    public func update(dashboardName: String, dashboard: Dashboard) throws {
+        guard cachedDashboards[dashboardName] != nil else {
+            throw DashboardServiceError.dashboardDoesNotExist
+        }
+        if dashboardName != dashboard.name, cachedDashboards[dashboard.name] != nil {
+            throw DashboardServiceError.dashboardAlreadyExists
+        }
+
+        cachedDashboards[dashboardName] = dashboard
+        dashboards.send(cachedDashboards)
+
+        if dashboardName != dashboard.name, let index = cachedOrder.firstIndex(of: dashboardName) {
+            cachedOrder[index] = dashboard.name
+            dashboardOrder.send(cachedOrder)
+        }
+    }
+
+    public func update(order: [String]) throws {
+        let dashboardNames = cachedDashboards.values.map { $0.name }
+        guard
+            order.count == dashboardNames.count,
+            Set(order) == Set(dashboardNames)
+        else {
+            throw DashboardServiceError.invalidDashboardOrder
+        }
+
+        cachedOrder = order
+        dashboardOrder.send(cachedOrder)
     }
 }

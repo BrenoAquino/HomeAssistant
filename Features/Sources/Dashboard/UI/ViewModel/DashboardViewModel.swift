@@ -19,22 +19,27 @@ public protocol DashboardExternalFlow {
 public protocol DashboardViewModel: ObservableObject {
 
     var delegate: DashboardExternalFlow? { get set }
-
-    var removeAlert: Bool { get set }
+    var removeDashboardAlert: Bool { get set }
+    var removeEntityAlert: Bool { get set }
     var editModel: Bool { get set }
-    var selectedDashboardIndex: Int? { get set }
+    var selectedDashboardName: String? { get set }
     var dashboards: [Dashboard] { get set }
     var currentDashboard: Dashboard? { get }
-    var entities: [any Entity] { get }
-
+    var entities: [any Entity] { get set }
     var toastData: DefaultToastDataContent? { get set }
 
     func deleteRequestedDashboard()
     func cancelDashboardDeletion()
+    func deleteRequestedEntity()
+    func cancelEntityDeletion()
 
-    func didClickAdd()
-    func didClickRemove(_ dashboard: Dashboard)
-    func didClickEdit(_ dashboard: Dashboard)
+    func didUpdateEntitiesOrder(_ entities: [any Entity])
+    func didUpdateDashboardsOrder(_ dashboards: [Dashboard])
+
+    func didClickAddDashboard()
+    func didClickRemove(dashboard: Dashboard)
+    func didClickEdit(dashboard: Dashboard)
+    func didClickRemove(entity: any Entity)
     func didClickConfig()
     func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State)
 }

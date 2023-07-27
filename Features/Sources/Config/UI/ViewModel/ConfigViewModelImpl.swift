@@ -20,7 +20,7 @@ public class ConfigViewModelImpl<EntityS: EntityService>: ConfigViewModel {
 
     // MARK: Services
 
-    @ObservedObject private var entityService: EntityS
+    private var entityService: EntityS
 
     // MARK: Publishers
 
@@ -30,8 +30,8 @@ public class ConfigViewModelImpl<EntityS: EntityService>: ConfigViewModel {
     // MARK: Gets
 
     public var hiddenEntityIDs: Set<String> {
-        get { entityService.hiddenEntities }
-        set { entityService.hiddenEntities = newValue }
+        get { entityService.hiddenEntityIDs.value }
+        set { entityService.update(hiddenEntityIDs: newValue) }
     }
 
     // MARK: Init
@@ -40,8 +40,44 @@ public class ConfigViewModelImpl<EntityS: EntityService>: ConfigViewModel {
         self.entityService = entityService
 
         setupData()
-        setupForwards()
+        setupServiceObservers()
         setupUIObservers()
+    }
+}
+
+// MARK: - Setups Methods
+
+extension ConfigViewModelImpl {
+
+    private func setupData() {
+        entities = Array(entityService.entities.value.values).sorted(by: { $0.name < $1.name })
+    }
+
+    private func setupServiceObservers() {
+        // Update the entity list if it changes
+        entityService
+            .entities
+            .sink { [weak self] entities in
+                guard let self else { return }
+                self.filterEntity(
+                    entities,
+                    self.entityFilterText
+                )
+            }
+            .store(in: &cancellable)
+    }
+
+    private func setupUIObservers() {
+        // Update the entity list if the user type a name
+        $entityFilterText
+            .sink { [weak self] text in
+                guard let self else { return }
+                self.filterEntity(
+                    self.entityService.entities.value,
+                    text
+                )
+            }
+            .store(in: &cancellable)
     }
 }
 
@@ -49,31 +85,18 @@ public class ConfigViewModelImpl<EntityS: EntityService>: ConfigViewModel {
 
 extension ConfigViewModelImpl {
 
-    private func setupData() {
-        entities = Array(entityService.entities.values).sorted(by: { $0.name < $1.name })
-    }
-
-    private func setupForwards() {
-        entityService.forward(objectWillChange, on: RunLoop.main).store(in: &cancellable)
-    }
-
-    private func setupUIObservers() {
-        $entityFilterText
-            .sink { [weak self] in self?.filterEntity($0) }
-            .store(in: &cancellable)
-    }
-
-    private func filterEntity(_ text: String) {
-        let allEntities = Array(entityService.entities.values).sorted(by: { $0.name < $1.name })
+    private func filterEntity(_ entities: [String : any Entity], _ text: String) {
+        let allEntities = Array(entities.values).sorted(by: { $0.name < $1.name })
         guard !text.isEmpty else {
-            entities = allEntities
+            self.entities = allEntities
             return
         }
+
         let result = allEntities.filter { entity in
             let nameCheck = [entity.name, entity.domain.rawValue].contains(text, options: [.caseInsensitive, .diacriticInsensitive])
             return nameCheck
         }
-        entities = result.isEmpty ? allEntities : result
+        self.entities = result.isEmpty ? allEntities : result
     }
 }
 

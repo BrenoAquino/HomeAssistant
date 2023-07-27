@@ -13,7 +13,10 @@
 "unsupported" = "Não Suportado";
 "cancel" = "Cancelar";
 "delete" = "Apagar";
-"delete_description" = "Essa ação não pode ser desfeita. Você tem certeza que deseja apagar esse painel?";
+"delete_dashboard_description" = "Essa ação não pode ser desfeita. Você tem certeza que deseja apagar esse painel?";
+"delete_entity_description" = "Essa ação não pode ser desfeita. Você tem certeza que deseja remove esse dispositivo desse painel?";
 "ok" = "Sim";
 "delete_success" = "Painel Apagado";
 "light_error" = "Não foi possivel se comunicar com a luz";
+"dashboard_reorder_error" = "Não foi possível alterar a ordem dos painéis";
+"entity_reorder_error" = "Não foi possível alterar a ordem dos dispositivos =";

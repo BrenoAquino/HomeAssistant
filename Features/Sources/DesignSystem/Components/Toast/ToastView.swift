@@ -76,9 +76,7 @@ struct Toast<ContentView: View>: ViewModifier {
                 .padding(.leading, space: .horizontal)
                 .padding(.trailing, space: .normal)
                 .padding(.vertical, space: .smallL)
-                .background {
-                    DSColor.gray6
-                }
+                .background { DSColor.gray6 }
                 .clipShape(Capsule())
                 .shadow(radius: .normal)
                 .modifier(ToastModifier(showToast: $showToast, config: config))

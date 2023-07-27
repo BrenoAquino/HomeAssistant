@@ -13,7 +13,10 @@
 "unsupported" = "Unsupported";
 "cancel" = "Cancel";
 "delete" = "Remove";
-"delete_description" = "This action cannot be undone. Are you sure you want to delete this dashboard?";
+"delete_dashboard_description" = "This action cannot be undone. Are you sure you want to delete this dashboard?";
+"delete_entity_description" = "This action cannot be undone. Are you sure you want to remove this device from this dashboard?";
 "ok" = "Yes";
 "delete_success" = "Dashboard Removed";
 "light_error" = "It was not possible to communicate with the light";
+"dashboard_reorder_error" = "It was not possible reorder dashboards";
+"entity_reorder_error" = "It was not possible reorder entities";

@@ -9,18 +9,21 @@ import Combine
 import Foundation
 
 public enum EntityServiceError: Error {
+    
     case missingElement
 }
 
-public protocol EntityService: ObservableObject {
+public protocol EntityService {
 
-    var hiddenEntities: Set<String> { get set }
-    var entities: [String : any Entity] { get set }
-    var domains: [EntityDomain] { get }
+    var hiddenEntityIDs: CurrentValueSubject<Set<String>, Never> { get }
+    var entities: CurrentValueSubject<[String : any Entity], Never> { get }
+    var domains: CurrentValueSubject<[EntityDomain], Never> { get }
 
-    func persistHiddenEntities() async throws
+    func persist() async throws
+    func startTracking() async throws
 
-    func trackEntities() async throws
     func update(entityID: String, entity: any Entity) async throws
+    func update(hiddenEntityIDs: Set<String>)
+
     func execute(service: EntityActionService, entityID: String) async throws
 }

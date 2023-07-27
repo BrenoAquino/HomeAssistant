@@ -41,8 +41,8 @@ extension LaunchViewModelImpl {
         }
 
         do {
-            try await entityService.trackEntities()
-            try await dashboardService.trackDashboards()
+            try await entityService.startTracking()
+            try await dashboardService.load()
 
             await MainActor.run { [self] in
                 delegate?.launchFinished()

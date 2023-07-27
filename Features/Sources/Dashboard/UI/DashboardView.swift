@@ -31,10 +31,11 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             DashboardsCarouselView(
                 editMode: $viewModel.editModel,
                 dashboards: $viewModel.dashboards,
-                selectedDashboardIndex: $viewModel.selectedDashboardIndex,
-                dashboardDidRemove: viewModel.didClickRemove,
-                dashboardDidEdit: viewModel.didClickEdit,
-                addDidSelect: viewModel.didClickAdd
+                selectedDashboardName: $viewModel.selectedDashboardName,
+                didUpdateOrder: viewModel.didUpdateDashboardsOrder,
+                didClickRemoveDashboard: viewModel.didClickRemove,
+                didClickEditDashboard: viewModel.didClickEdit,
+                didClickAdd: viewModel.didClickAddDashboard
             )
             .padding(.top, space: .smallS)
             
@@ -46,7 +47,10 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                 .padding(.horizontal, space: .horizontal)
             
             EntitiesView(
-                entities: viewModel.entities,
+                editMode: $viewModel.editModel,
+                entities: $viewModel.entities,
+                didUpdateOrder: viewModel.didUpdateEntitiesOrder,
+                didClickRemoveEntity: viewModel.didClickRemove,
                 didClickUpdateLightState: viewModel.didClickUpdateLightState
             )
             .padding(.top, space: .smallS)
@@ -64,11 +68,17 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             .foregroundColor(DSColor.label)
         }
         .toast(data: $viewModel.toastData)
-        .alert(Localizable.delete.value, isPresented: $viewModel.removeAlert, actions: {
+        .alert(Localizable.delete.value, isPresented: $viewModel.removeDashboardAlert, actions: {
             Button(Localizable.cancel.value, role: .cancel, action: viewModel.cancelDashboardDeletion)
             Button(Localizable.ok.value, role: .destructive, action: viewModel.deleteRequestedDashboard)
         }, message: {
-            Localizable.deleteDescription.text
+            Localizable.deleteDashboardDescription.text
+        })
+        .alert(Localizable.delete.value, isPresented: $viewModel.removeEntityAlert, actions: {
+            Button(Localizable.cancel.value, role: .cancel, action: viewModel.cancelEntityDeletion)
+            Button(Localizable.ok.value, role: .destructive, action: viewModel.deleteRequestedEntity)
+        }, message: {
+            Localizable.deleteEntityDescription.text
         })
     }
     

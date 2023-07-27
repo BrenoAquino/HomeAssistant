@@ -15,11 +15,14 @@ public class EntityServiceImpl {
     private var cancellable: Set<AnyCancellable> = []
     private var stateChangeSubscriptionID: Int?
 
-    // MARK: Publishers
+    private var cachedEntities: [String : any Entity] = [:]
+    private var cachedHiddenEntityIDs: Set<String> = []
 
-    @Published public var hiddenEntities: Set<String> = []
-    @Published public var entities: [String : any Entity] = [:]
-    @Published public private(set) var domains: [EntityDomain] = EntityDomain.allCases
+    // MARK: Subjects
+
+    public private(set) var hiddenEntityIDs: CurrentValueSubject<Set<String>, Never> = .init([])
+    public private(set) var entities: CurrentValueSubject<[String : any Entity], Never> = .init([:])
+    public private(set) var domains: CurrentValueSubject<[EntityDomain], Never> = .init(EntityDomain.allCases)
 
     // MARK: Repositories
 
@@ -48,24 +51,27 @@ extension EntityServiceImpl {
         let id = entity.id
         switch entity {
         case let light as LightEntity:
-            entities[id] = light
+            cachedEntities[id] = light
         case let climate as ClimateEntity:
-            entities[id] = climate
+            cachedEntities[id] = climate
         case let `switch` as SwitchEntity:
-            entities[id] = `switch`
+            cachedEntities[id] = `switch`
         case let fan as FanEntity:
-            entities[id] = fan
+            cachedEntities[id] = fan
         default:
             break
         }
+        entities.send(cachedEntities)
     }
 
     private func setupSubscription() {
         subscriptionRepository
             .stateChangedEvent
             .sink { _ in } receiveValue: { [weak self] stateChanged in
-                guard let entity = self?.entities[stateChanged.id] else { return }
-                self?.entities[stateChanged.id] = entity.stateUpdated(stateChanged.newState) as any Entity
+                guard let self else { return }
+                guard let entity = self.cachedEntities[stateChanged.id] else { return }
+                self.cachedEntities[stateChanged.id] = entity.stateUpdated(stateChanged.newState) as any Entity
+                self.entities.send(cachedEntities)
             }
             .store(in: &cancellable)
     }
@@ -75,24 +81,33 @@ extension EntityServiceImpl {
 
 extension EntityServiceImpl: EntityService {
 
-    public func persistHiddenEntities() async throws {
-        try await entityRepository.save(hiddenEntityIDs: hiddenEntities)
-        Logger.log(level: .info, "Saved \(hiddenEntities.count) hidden entity IDs")
+    public func persist() async throws {
+        try await entityRepository.save(hiddenEntityIDs: cachedHiddenEntityIDs)
+        Logger.log(level: .info, "Saved \(cachedHiddenEntityIDs.count) hidden entity IDs")
     }
 
-    public func trackEntities() async throws {
+    public func startTracking() async throws {
         try await entityRepository.fetchStates().forEach { [self] in insertEntity($0) }
         stateChangeSubscriptionID = try await subscriptionRepository.subscribeToEvents(eventType: .stateChanged)
 
         let fetchedHiddenEntities = try? await entityRepository.fetchHiddenEntityIDs()
-        hiddenEntities = fetchedHiddenEntities ?? []
-        
+        cachedHiddenEntityIDs = fetchedHiddenEntities ?? []
+        hiddenEntityIDs.send(cachedHiddenEntityIDs)
+
         setupSubscription()
     }
 
+    public func update(hiddenEntityIDs: Set<String>) {
+        cachedHiddenEntityIDs = hiddenEntityIDs
+        self.hiddenEntityIDs.send(cachedHiddenEntityIDs)
+    }
+
     public func update(entityID: String, entity: any Entity) async throws {
-        guard entities[entityID] != nil else { throw EntityServiceError.missingElement }
-        entities[entityID] = entity
+        guard cachedEntities[entityID] != nil else {
+            throw EntityServiceError.missingElement
+        }
+        cachedEntities[entityID] = entity
+        entities.send(cachedEntities)
     }
 
     public func execute(service: EntityActionService, entityID: String) async throws {

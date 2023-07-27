@@ -15,48 +15,38 @@ class DashboardViewModelPreview: DashboardViewModel {
 
     var delegate: DashboardExternalFlow?
     var toastData: DefaultToastDataContent?
+    var removeEntityAlert: Bool = false
+    var removeDashboardAlert: Bool = false
 
-    @Published var removeAlert: Bool = false
     @Published var editModel: Bool = false
-    @Published var selectedDashboardIndex: Int? = 0
+    @Published var selectedDashboardName: String? = "Bedroom"
     @Published var dashboards: [Dashboard] = DashboardMock.all
 
     var currentDashboard: Dashboard? {
-        guard let selectedDashboardIndex else { return nil }
-        return dashboards[selectedDashboardIndex]
+        return dashboards[0]
     }
 
     var entities: [any Entity] {
-        guard let currentDashboard else { return [] }
-        return currentDashboard.entitiesIDs.compactMap { EntityMock.allDict[$0] }
+        get {
+            guard let currentDashboard else { return [] }
+            return currentDashboard.entitiesIDs.compactMap { EntityMock.allDict[$0] }
+        }
+        set {
+            
+        }
     }
 
-    public func deleteRequestedDashboard() {
-        print("deleteRequestedDashboard")
-    }
-
-    public func cancelDashboardDeletion() {
-        print("cancelDashboardDeletion")
-    }
-
-    func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State) {
-        print("didUpdateLightState \(lightEntity.name) \(newState.rawValue)")
-    }
-
-    func didClickAdd() {
-        print("didSelectAdd")
-    }
-
-    func didClickRemove(_ dashboard: Dashboard) {
-        print("didClickRemove \(dashboard.name)")
-    }
-
-    func didClickEdit(_ dashboard: Dashboard) {
-        print("didSelectEdit \(dashboard.name)")
-    }
-
-    func didClickConfig() {
-        print("didClickConfig")
-    }
+    func deleteRequestedDashboard() {}
+    func cancelDashboardDeletion() {}
+    func deleteRequestedEntity() {}
+    func cancelEntityDeletion() {}
+    func didUpdateEntitiesOrder(_ entities: [any Entity]) {}
+    func didUpdateDashboardsOrder(_ dashboards: [Dashboard]) {}
+    func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State) {}
+    func didClickAddDashboard() {}
+    func didClickRemove(dashboard: Dashboard) {}
+    func didClickEdit(dashboard: Dashboard) {}
+    func didClickRemove(entity: any Entity) {}
+    func didClickConfig() {}
 }
 #endif

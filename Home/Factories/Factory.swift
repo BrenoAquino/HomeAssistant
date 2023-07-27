@@ -100,7 +100,10 @@ extension Factory {
 
     @ViewBuilder
     func launchCoordinator() -> some View {
-        let viewModel = LaunchViewModelImpl(entityService: entityServiceInstance, dashboardService: dashboardServiceInstance)
+        let viewModel = LaunchViewModelImpl(
+            entityService: entityServiceInstance,
+            dashboardService: dashboardServiceInstance
+        )
         LaunchCoordinator(viewModel: viewModel)
     }
 
@@ -111,7 +114,10 @@ extension Factory {
 
     @ViewBuilder
     func dashboardCoordinator() -> some View {
-        let viewModel = DashboardViewModelImpl(dashboardService: dashboardServiceInstance, entityService: entityServiceInstance)
+        let viewModel = DashboardViewModelImpl(
+            dashboardService: dashboardServiceInstance,
+            entityService: entityServiceInstance
+        )
         DashboardCoordinator(viewModel: viewModel)
     }
 
