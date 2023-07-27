@@ -44,15 +44,13 @@ struct EntitiesView: View {
                 ForEach(Array(entities.enumerated()), id: \.element.id) { index, entity in
                     let shakeAnimation = Animation.easeInOut(duration: Constants.animationDuration).repeatForever(autoreverses: true)
                     let isCurrentElementDragging = draggedEntity?.id == entity.id
-                    let shouldHide = isDragging && isCurrentElementDragging
 
                     element(entity)
                         .padding(.leading, -Constants.removeIconWidth / 3)
                         .padding(.top, -Constants.removeIconHeight / 3)
-                        .frame(height: size)
+                        .frame(height: size + Constants.removeIconHeight / 3)
                         .rotationEffect(.degrees(editMode ? Constants.shakeAnimationAngle : .zero))
                         .animation(editMode ? shakeAnimation : .default, value: editMode)
-                        .opacity(shouldHide ? .leastNonzeroMagnitude : 1)
                         .onDrop(of: [.text], delegate: EntityDropDelegate(
                             entity: entity,
                             entities: $entities,
@@ -64,7 +62,7 @@ struct EntitiesView: View {
                             draggedEntity = entity
                             editMode = true
                             return NSItemProvider(object: entity.id as NSString)
-                        }
+                        } preview: { EmptyView() }
                 }
             }
         }
@@ -131,9 +129,10 @@ struct EntitiesView: View {
             else { return }
 
             withAnimation(.default) {
-                let aux = entities[fromIndex]
-                entities[fromIndex] = entities[toIndex]
-                entities[toIndex] = aux
+                entities.move(
+                    fromOffsets: IndexSet(integer: fromIndex),
+                    toOffset: toIndex > fromIndex ? toIndex + 1 : toIndex
+                )
             }
         }
 
@@ -151,7 +150,7 @@ struct EntitiesView_Preview: PreviewProvider {
     static var previews: some View {
 
         EntitiesView(
-            editMode: .constant(false),
+            editMode: .constant(true),
             entities: .constant(EntityMock.all),
             didUpdateOrder: { _ in },
             didClickRemoveEntity: { _ in },

@@ -68,12 +68,10 @@ struct DashboardsCarouselView: View {
             let shakeAnimation = Animation.easeInOut(duration: Constants.animationDuration).repeatForever(autoreverses: true)
             let isSelected = dashboard.name == selectedDashboardName
             let isCurrentElementDragging = draggedItem?.name == dashboard.name
-            let shouldHide = isDragging && isCurrentElementDragging
 
             element(dashboard, isSelected)
                 .rotationEffect(.degrees(editMode ? Constants.shakeAnimationAngle : .zero))
                 .animation(editMode ? shakeAnimation : .default, value: editMode)
-                .opacity(shouldHide ? .leastNonzeroMagnitude : 1)
                 .onTapGesture {
                     if editMode {
                         didClickEditDashboard(dashboard)
@@ -93,7 +91,7 @@ struct DashboardsCarouselView: View {
                     editMode = true
                     draggedItem = dashboard
                     return NSItemProvider(item: nil, typeIdentifier: dashboard.name)
-                }
+                } preview: { EmptyView() }
         }
     }
 
