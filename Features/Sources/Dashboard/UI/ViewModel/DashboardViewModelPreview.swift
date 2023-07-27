@@ -35,32 +35,14 @@ class DashboardViewModelPreview: DashboardViewModel {
         }
     }
 
-    public func deleteRequestedDashboard() {
-        print("deleteRequestedDashboard")
-    }
-
-    public func cancelDashboardDeletion() {
-        print("cancelDashboardDeletion")
-    }
-
-    func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State) {
-        print("didUpdateLightState \(lightEntity.name) \(newState.rawValue)")
-    }
-
-    func didClickAdd() {
-        print("didSelectAdd")
-    }
-
-    func didClickRemove(_ dashboard: Dashboard) {
-        print("didClickRemove \(dashboard.name)")
-    }
-
-    func didClickEdit(_ dashboard: Dashboard) {
-        print("didSelectEdit \(dashboard.name)")
-    }
-
-    func didClickConfig() {
-        print("didClickConfig")
-    }
+    func deleteRequestedDashboard() {}
+    func cancelDashboardDeletion() {}
+    func didUpdateEntitiesOrder(_ entities: [any Entity]) {}
+    func didUpdateDashboardsOrder(_ dashboards: [Dashboard]) {}
+    func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State) {}
+    func didClickAdd() {}
+    func didClickRemove(_ dashboard: Dashboard) {}
+    func didClickEdit(_ dashboard: Dashboard) {}
+    func didClickConfig() {}
 }
 #endif

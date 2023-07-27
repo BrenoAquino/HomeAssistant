@@ -32,6 +32,7 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                 editMode: $viewModel.editModel,
                 dashboards: $viewModel.dashboards,
                 selectedDashboardName: $viewModel.selectedDashboardName,
+                didUpdateOrder: viewModel.didUpdateDashboardsOrder,
                 dashboardDidRemove: viewModel.didClickRemove,
                 dashboardDidEdit: viewModel.didClickEdit,
                 addDidSelect: viewModel.didClickAdd
@@ -48,7 +49,8 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             EntitiesView(
                 editMode: $viewModel.editModel,
                 entities: $viewModel.entities,
-                didClickUpdateLightState: viewModel.didClickUpdateLightState
+                didClickUpdateLightState: viewModel.didClickUpdateLightState,
+                didUpdateOrder: viewModel.didUpdateEntitiesOrder
             )
             .padding(.top, space: .smallS)
         }

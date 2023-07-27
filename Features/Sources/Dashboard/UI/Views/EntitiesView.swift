@@ -19,7 +19,9 @@ struct EntitiesView: View {
 
     @Binding var editMode: Bool
     @Binding var entities: [any Entity]
+
     let didClickUpdateLightState: (_ lightEntity: LightEntity, _ newState: LightEntity.State) -> Void
+    let didUpdateOrder: (_ entities: [any Entity]) -> Void
 
     @State private var draggedEntity: (any Entity)?
     @State private var isDragging: Bool = false
@@ -50,7 +52,8 @@ struct EntitiesView: View {
                             entity: entity,
                             entities: $entities,
                             draggedEntity: $draggedEntity,
-                            isDragging: $isDragging
+                            isDragging: $isDragging,
+                            didUpdateOrder: didUpdateOrder
                         ))
                         .onDrag {
                             draggedEntity = entity
@@ -86,10 +89,12 @@ struct EntitiesView: View {
         @Binding var entities: [any Entity]
         @Binding var draggedEntity: (any Entity)?
         @Binding var isDragging: Bool
+        let didUpdateOrder: (_ entities: [any Entity]) -> Void
 
         func performDrop(info: DropInfo) -> Bool {
             isDragging = false
             draggedEntity = nil
+            didUpdateOrder(entities)
             return true
         }
 
@@ -124,7 +129,8 @@ struct EntitiesView_Preview: PreviewProvider {
         EntitiesView(
             editMode: .constant(false),
             entities: .constant(EntityMock.all),
-            didClickUpdateLightState: { _, _ in }
+            didClickUpdateLightState: { _, _ in },
+            didUpdateOrder: { _ in }
         )
     }
 }

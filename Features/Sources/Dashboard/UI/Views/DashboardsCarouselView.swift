@@ -29,6 +29,7 @@ struct DashboardsCarouselView: View {
     @Binding var dashboards: [Dashboard]
     @Binding var selectedDashboardName: String?
 
+    let didUpdateOrder: (_ dashboards: [Dashboard]) -> Void
     let dashboardDidRemove: (_ dashboard: Dashboard) -> Void
     let dashboardDidEdit: (_ dashboard: Dashboard) -> Void
     let addDidSelect: () -> Void
@@ -88,7 +89,8 @@ struct DashboardsCarouselView: View {
                     dashboard: dashboard,
                     dashboards: $dashboards,
                     draggedItem: $draggedItem,
-                    isDragging: $isDragging
+                    isDragging: $isDragging,
+                    didUpdateOrder: didUpdateOrder
                 ))
                 .onDrag {
                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
@@ -152,10 +154,12 @@ struct DashboardsCarouselView: View {
         @Binding var dashboards: [Dashboard]
         @Binding var draggedItem: Dashboard?
         @Binding var isDragging: Bool
+        let didUpdateOrder: (_ entities: [Dashboard]) -> Void
 
         func performDrop(info: DropInfo) -> Bool {
             isDragging = false
             draggedItem = nil
+            didUpdateOrder(dashboards)
             return true
         }
 
@@ -185,6 +189,7 @@ struct DashboardsCarouselView_Preview: PreviewProvider {
             editMode: .constant(false),
             dashboards: .constant(DashboardMock.all),
             selectedDashboardName: .constant("Bedroom"),
+            didUpdateOrder: { _ in print ("didUpdateOrder") },
             dashboardDidRemove: { _ in print("dashboardDidRemove") },
             dashboardDidEdit: { _ in print("dashboardDidEdit") },
             addDidSelect: { print("addDidSelect") }

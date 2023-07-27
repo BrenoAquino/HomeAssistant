@@ -32,6 +32,9 @@ public protocol DashboardViewModel: ObservableObject {
     func deleteRequestedDashboard()
     func cancelDashboardDeletion()
 
+    func didUpdateEntitiesOrder(_ entities: [any Entity])
+    func didUpdateDashboardsOrder(_ dashboards: [Dashboard])
+
     func didClickAdd()
     func didClickRemove(_ dashboard: Dashboard)
     func didClickEdit(_ dashboard: Dashboard)

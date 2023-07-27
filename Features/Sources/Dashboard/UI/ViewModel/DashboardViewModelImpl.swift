@@ -79,6 +79,10 @@ extension DashboardViewModelImpl {
         // Update the dashboard when we get any change on it
         dashboardService
             .dashboards
+            .filter { [weak self] dashboards in
+                guard let self else { return false }
+                return isDifferent(dict: dashboards, array: self.dashboards)
+            }
             .receive(on: RunLoop.main)
             .sink { [weak self] dashboards in
                 guard let self else { return }
@@ -98,6 +102,7 @@ extension DashboardViewModelImpl {
     private func setupUIObservers() {
         // Update current dashboard when change it
         $selectedDashboardName
+            .dropFirst()
             .compactMap { $0 }
             .receive(on: RunLoop.main)
             .sink { [weak self] name in
@@ -109,24 +114,29 @@ extension DashboardViewModelImpl {
                 )
             }
             .store(in: &cancellable)
-
-        // Update to use the new order
-        $dashboards
-            .sink { [weak self] dashboards in
-                guard let self else { return }
-                do {
-                    try self.dashboardService.update(order: dashboards.map { $0.name })
-                } catch {
-                    self.setError(message: Localizable.dashboardReorderError.value)
-                }
-            }
-            .store(in: &cancellable)
     }
 }
 
 // MARK: - Private Methods
 
 extension DashboardViewModelImpl {
+
+    private func isDifferent(
+        dict: [String : Dashboard],
+        array: [Dashboard]
+    ) -> Bool {
+        if array.count != dict.count {
+            return true
+        }
+        for element in array {
+            if dict[element.name] == nil {
+                return true
+            } else if let entitiesIDs = dict[element.name]?.entitiesIDs, Set(entitiesIDs) != Set(element.entitiesIDs) {
+                return true
+            }
+        }
+        return false
+    }
 
     private func setError(
         message: String,
@@ -163,6 +173,27 @@ extension DashboardViewModelImpl {
     public func cancelDashboardDeletion() {
         dashboardNameToDelete = nil
     }
+}
+
+extension DashboardViewModelImpl {
+
+    public func didUpdateEntitiesOrder(_ entities: [any Entity]) {
+        let ids = entities.map { $0.id }
+        guard var currentDashboard = currentDashboard, currentDashboard.entitiesIDs != ids else { return }
+
+        currentDashboard.entitiesIDs = ids
+        try? dashboardService.update(
+            dashboardName: currentDashboard.name,
+            dashboard: currentDashboard
+        )
+    }
+
+    public func didUpdateDashboardsOrder(_ dashboards: [Dashboard]) {
+        try? self.dashboardService.update(order: dashboards.map { $0.name })
+    }
+}
+
+extension DashboardViewModelImpl {
 
     public func didClickAdd() {
         delegate?.didSelectAddDashboard()
