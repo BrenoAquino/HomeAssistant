@@ -13,6 +13,8 @@ private enum Constants {
 
     static let animationDuration: TimeInterval = 0.15
     static let shakeAnimationAngle: CGFloat = 5
+    static let removeIconHeight: CGFloat = 25
+    static let removeIconWidth: CGFloat = removeIconHeight
 }
 
 struct EntitiesView: View {
@@ -20,8 +22,9 @@ struct EntitiesView: View {
     @Binding var editMode: Bool
     @Binding var entities: [any Entity]
 
-    let didClickUpdateLightState: (_ lightEntity: LightEntity, _ newState: LightEntity.State) -> Void
     let didUpdateOrder: (_ entities: [any Entity]) -> Void
+    let didClickRemoveEntity: (_ entity: any Entity) -> Void
+    let didClickUpdateLightState: (_ lightEntity: LightEntity, _ newState: LightEntity.State) -> Void
 
     @State private var draggedEntity: (any Entity)?
     @State private var isDragging: Bool = false
@@ -43,7 +46,9 @@ struct EntitiesView: View {
                     let isCurrentElementDragging = draggedEntity?.id == entity.id
                     let shouldHide = isDragging && isCurrentElementDragging
 
-                    entityView(entity)
+                    element(entity)
+                        .padding(.leading, -Constants.removeIconWidth / 3)
+                        .padding(.top, -Constants.removeIconHeight / 3)
                         .frame(height: size)
                         .rotationEffect(.degrees(editMode ? Constants.shakeAnimationAngle : .zero))
                         .animation(editMode ? shakeAnimation : .default, value: editMode)
@@ -62,6 +67,25 @@ struct EntitiesView: View {
                         }
                 }
             }
+        }
+    }
+
+    private func element(
+        _ entity: any Entity
+    ) -> some View {
+        ZStack(alignment: .topLeading) {
+            entityView(entity)
+                .padding(.leading, Constants.removeIconWidth / 3)
+                .padding(.top, Constants.removeIconHeight / 3)
+
+            SystemImages.remove
+                .imageScale(.large)
+                .frame(width: Constants.removeIconWidth, height: Constants.removeIconHeight)
+                .opacity(editMode ? 1 : 0)
+                .animation(.default, value: editMode)
+                .onTapGesture {
+                    didClickRemoveEntity(entity)
+                }
         }
     }
 
@@ -129,8 +153,9 @@ struct EntitiesView_Preview: PreviewProvider {
         EntitiesView(
             editMode: .constant(false),
             entities: .constant(EntityMock.all),
-            didClickUpdateLightState: { _, _ in },
-            didUpdateOrder: { _ in }
+            didUpdateOrder: { _ in },
+            didClickRemoveEntity: { _ in },
+            didClickUpdateLightState: { _, _ in }
         )
     }
 }

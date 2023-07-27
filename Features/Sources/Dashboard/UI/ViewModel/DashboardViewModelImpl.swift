@@ -16,6 +16,7 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
     public var delegate: DashboardExternalFlow?
     private var cancellable: Set<AnyCancellable> = .init()
     private var dashboardNameToDelete: String?
+    private var entityIDToDelete: String?
 
     // MARK: Services
 
@@ -24,7 +25,8 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
 
     // MARK: Publishers
 
-    @Published public var removeAlert: Bool = false
+    @Published public var removeDashboardAlert: Bool = false
+    @Published public var removeEntityAlert: Bool = false
     @Published public var editModel: Bool = false
     @Published public var toastData: DefaultToastDataContent?
     @Published public var selectedDashboardName: String?
@@ -173,6 +175,19 @@ extension DashboardViewModelImpl {
     public func cancelDashboardDeletion() {
         dashboardNameToDelete = nil
     }
+
+    public func deleteRequestedEntity() {
+        guard var currentDashboard, let entityIDToDelete else { return }
+        currentDashboard.entitiesIDs.removeAll(where: { $0 == entityIDToDelete })
+        try? dashboardService.update(
+            dashboardName: currentDashboard.name,
+            dashboard: currentDashboard
+        )
+    }
+
+    public func cancelEntityDeletion() {
+        entityIDToDelete = nil
+    }
 }
 
 extension DashboardViewModelImpl {
@@ -195,18 +210,23 @@ extension DashboardViewModelImpl {
 
 extension DashboardViewModelImpl {
 
-    public func didClickAdd() {
+    public func didClickAddDashboard() {
         delegate?.didSelectAddDashboard()
     }
 
-    public func didClickRemove(_ dashboard: Dashboard) {
+    public func didClickRemove(dashboard: Dashboard) {
         dashboardNameToDelete = dashboard.name
-        removeAlert = true
+        removeDashboardAlert = true
     }
 
-    public func didClickEdit(_ dashboard: Dashboard) {
+    public func didClickEdit(dashboard: Dashboard) {
         delegate?.didSelectEditDashboard(dashboard)
         editModel = false
+    }
+
+    public func didClickRemove(entity: any Entity) {
+        entityIDToDelete = entity.id
+        removeEntityAlert = true
     }
 
     public func didClickConfig() {

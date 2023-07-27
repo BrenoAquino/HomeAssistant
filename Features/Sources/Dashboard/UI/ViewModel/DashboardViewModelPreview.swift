@@ -15,8 +15,9 @@ class DashboardViewModelPreview: DashboardViewModel {
 
     var delegate: DashboardExternalFlow?
     var toastData: DefaultToastDataContent?
+    var removeEntityAlert: Bool = false
+    var removeDashboardAlert: Bool = false
 
-    @Published var removeAlert: Bool = false
     @Published var editModel: Bool = false
     @Published var selectedDashboardName: String? = "Bedroom"
     @Published var dashboards: [Dashboard] = DashboardMock.all
@@ -37,12 +38,15 @@ class DashboardViewModelPreview: DashboardViewModel {
 
     func deleteRequestedDashboard() {}
     func cancelDashboardDeletion() {}
+    func deleteRequestedEntity() {}
+    func cancelEntityDeletion() {}
     func didUpdateEntitiesOrder(_ entities: [any Entity]) {}
     func didUpdateDashboardsOrder(_ dashboards: [Dashboard]) {}
     func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State) {}
-    func didClickAdd() {}
-    func didClickRemove(_ dashboard: Dashboard) {}
-    func didClickEdit(_ dashboard: Dashboard) {}
+    func didClickAddDashboard() {}
+    func didClickRemove(dashboard: Dashboard) {}
+    func didClickEdit(dashboard: Dashboard) {}
+    func didClickRemove(entity: any Entity) {}
     func didClickConfig() {}
 }
 #endif

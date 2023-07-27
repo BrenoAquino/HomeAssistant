@@ -30,9 +30,9 @@ struct DashboardsCarouselView: View {
     @Binding var selectedDashboardName: String?
 
     let didUpdateOrder: (_ dashboards: [Dashboard]) -> Void
-    let dashboardDidRemove: (_ dashboard: Dashboard) -> Void
-    let dashboardDidEdit: (_ dashboard: Dashboard) -> Void
-    let addDidSelect: () -> Void
+    let didClickRemoveDashboard: (_ dashboard: Dashboard) -> Void
+    let didClickEditDashboard: (_ dashboard: Dashboard) -> Void
+    let didClickAdd: () -> Void
 
     // MARK: Private States
 
@@ -49,21 +49,18 @@ struct DashboardsCarouselView: View {
             }
             .padding(.vertical, space: .normal)
             .padding(.horizontal, space: .horizontal)
-            .padding(.horizontal, -Constants.removeIconHeight / 3)
+            .padding(.top, -Constants.removeIconHeight / 3)
+            .padding(.leading, -Constants.removeIconWidth / 3)
         }
     }
 
     private var add: some View {
-        squareContent(
-            "",
-            "plus.circle",
-            false
-        )
-        .onTapGesture {
-            if !editMode {
-                addDidSelect()
+        squareContent("", "plus.circle", false)
+            .onTapGesture {
+                if !editMode {
+                    didClickAdd()
+                }
             }
-        }
     }
 
     private var carousel: some View {
@@ -72,15 +69,14 @@ struct DashboardsCarouselView: View {
             let isSelected = dashboard.name == selectedDashboardName
             let isCurrentElementDragging = draggedItem?.name == dashboard.name
             let shouldHide = isDragging && isCurrentElementDragging
-            let element = element(dashboard, isSelected)
 
-            element
+            element(dashboard, isSelected)
                 .rotationEffect(.degrees(editMode ? Constants.shakeAnimationAngle : .zero))
                 .animation(editMode ? shakeAnimation : .default, value: editMode)
                 .opacity(shouldHide ? .leastNonzeroMagnitude : 1)
                 .onTapGesture {
                     if editMode {
-                        dashboardDidEdit(dashboard)
+                        didClickEditDashboard(dashboard)
                     } else if !isSelected {
                         selectedDashboardName = dashboard.name
                     }
@@ -118,7 +114,7 @@ struct DashboardsCarouselView: View {
                 .opacity(editMode ? 1 : 0)
                 .animation(.default, value: editMode)
                 .onTapGesture {
-                    dashboardDidRemove(dashboard)
+                    didClickRemoveDashboard(dashboard)
                 }
         }
     }
@@ -190,9 +186,9 @@ struct DashboardsCarouselView_Preview: PreviewProvider {
             dashboards: .constant(DashboardMock.all),
             selectedDashboardName: .constant("Bedroom"),
             didUpdateOrder: { _ in print ("didUpdateOrder") },
-            dashboardDidRemove: { _ in print("dashboardDidRemove") },
-            dashboardDidEdit: { _ in print("dashboardDidEdit") },
-            addDidSelect: { print("addDidSelect") }
+            didClickRemoveDashboard: { _ in print("dashboardDidRemove") },
+            didClickEditDashboard: { _ in print("dashboardDidEdit") },
+            didClickAdd: { print("addDidSelect") }
         )
     }
 }
