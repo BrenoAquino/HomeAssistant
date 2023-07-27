@@ -15,7 +15,6 @@ public enum EntityServiceError: Error {
 
 public protocol EntityService {
 
-    var entityStateChanged: PassthroughSubject<any Entity, Never> { get }
     var hiddenEntityIDs: CurrentValueSubject<Set<String>, Never> { get }
     var entities: CurrentValueSubject<[String : any Entity], Never> { get }
     var domains: CurrentValueSubject<[EntityDomain], Never> { get }

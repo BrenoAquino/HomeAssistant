@@ -35,10 +35,6 @@ struct UnsupportedView: View {
         .padding(.horizontal, space: .smallL)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(DSColor.gray5)
-//        .overlay(
-//            RoundedRectangle(cornerRadius: .hard)
-//                .stroke(DSColor.gray4, lineWidth: 1)
-//        )
         .clipShape(RoundedRectangle(cornerRadius: .hard))
         .contentShape(Rectangle())
         .opacity(0.4)

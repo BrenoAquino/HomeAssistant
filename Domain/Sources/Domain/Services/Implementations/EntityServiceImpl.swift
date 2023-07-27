@@ -20,7 +20,6 @@ public class EntityServiceImpl {
 
     // MARK: Subjects
 
-    public private(set) var entityStateChanged: PassthroughSubject<any Entity, Never> = .init()
     public private(set) var hiddenEntityIDs: CurrentValueSubject<Set<String>, Never> = .init([])
     public private(set) var entities: CurrentValueSubject<[String : any Entity], Never> = .init([:])
     public private(set) var domains: CurrentValueSubject<[EntityDomain], Never> = .init(EntityDomain.allCases)
@@ -69,10 +68,10 @@ extension EntityServiceImpl {
         subscriptionRepository
             .stateChangedEvent
             .sink { _ in } receiveValue: { [weak self] stateChanged in
-                guard let entity = self?.cachedEntities[stateChanged.id] else { return }
-                self?.cachedEntities[stateChanged.id] = entity.stateUpdated(stateChanged.newState) as any Entity
-                guard let entityUpdated = self?.cachedEntities[stateChanged.id] else { return }
-                self?.entityStateChanged.send(entityUpdated)
+                guard let self else { return }
+                guard let entity = self.cachedEntities[stateChanged.id] else { return }
+                self.cachedEntities[stateChanged.id] = entity.stateUpdated(stateChanged.newState) as any Entity
+                self.entities.send(cachedEntities)
             }
             .store(in: &cancellable)
     }

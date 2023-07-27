@@ -76,18 +76,6 @@ extension DashboardViewModelImpl {
             }
             .store(in: &cancellable)
 
-        // Update the entity state if it one of the current ones has changed
-        entityService
-            .entityStateChanged
-            .receive(on: RunLoop.main)
-            .sink { [weak self] entity in
-                guard let entityIndex = self?.entities.firstIndex(where: { $0.id == entity.id }) else {
-                    return
-                }
-                self?.entities[entityIndex] = entity
-            }
-            .store(in: &cancellable)
-
         // Update the dashboard when we get any change on it
         dashboardService
             .dashboards
@@ -129,8 +117,7 @@ extension DashboardViewModelImpl {
                 do {
                     try self.dashboardService.update(order: dashboards.map { $0.name })
                 } catch {
-                    self.toastData = .init(type: .error, title: Localizable.reorderError.value)
-                    Logger.log(level: .error, "Could not reorder")
+                    self.setError(message: Localizable.dashboardReorderError.value)
                 }
             }
             .store(in: &cancellable)
@@ -140,6 +127,14 @@ extension DashboardViewModelImpl {
 // MARK: - Private Methods
 
 extension DashboardViewModelImpl {
+
+    private func setError(
+        message: String,
+        logMessage: String? = nil
+    ) {
+        toastData = .init(type: .error, title: message)
+        Logger.log(level: .error, logMessage ?? message)
+    }
 
     private func setEntities(
         _ entities: [String : any Entity],
@@ -193,8 +188,10 @@ extension DashboardViewModelImpl {
             do {
                 try await entityService.execute(service: service, entityID: lightEntity.id)
             } catch {
-                toastData = .init(type: .error, title: Localizable.lightError.value)
-                Logger.log(level: .error, "Could not execute \(String(describing: service))")
+                setError(
+                    message: Localizable.lightError.value,
+                    logMessage: "Could not execute \(String(describing: service))"
+                )
             }
         }
     }

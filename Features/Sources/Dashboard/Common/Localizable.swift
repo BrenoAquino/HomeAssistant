@@ -21,7 +21,8 @@ enum Localizable: String, CommonLocalizable {
     case ok
     case deleteSuccess = "delete_success"
     case lightError = "light_error"
-    case reorderError = "reorder_error"
+    case dashboardReorderError = "dashboard_reorder_error"
+    case entityReorderError = "entity_reorder_error"
 }
 
 extension Localizable {
