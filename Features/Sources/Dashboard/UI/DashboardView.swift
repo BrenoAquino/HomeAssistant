@@ -45,8 +45,8 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, space: .smallS)
                 .padding(.horizontal, space: .horizontal)
-            
-            EntitiesView(
+
+            EntitiesWidgetsView(
                 editMode: $viewModel.editModel,
                 entities: $viewModel.entities,
                 didUpdateOrder: viewModel.didUpdateEntitiesOrder,

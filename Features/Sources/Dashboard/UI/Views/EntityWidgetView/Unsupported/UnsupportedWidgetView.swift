@@ -5,21 +5,21 @@
 //  Created by Breno Aquino on 23/07/23.
 //
 
+import Domain
 import DesignSystem
 import SwiftUI
 
-struct UnsupportedView: EntityView {
+struct UnsupportedWidgetView: EntityWidgetView {
 
     let uniqueID: String = "unsupported"
     let xUnit: Int = 1
     let yUnit: Int = 1
 
-    let name: String
-    let domain: String
+    let entity: any Entity
 
     var body: some View {
         VStack {
-            Text(name)
+            Text(entity.name)
                 .textCase(.uppercase)
                 .multilineTextAlignment(.center)
                 .minimumScaleFactor(0.5)
@@ -45,12 +45,14 @@ struct UnsupportedView: EntityView {
 }
 
 #if DEBUG
-struct UnsupportedView_Preview: PreviewProvider {
+import Preview
+
+struct UnsupportedWidgetView_Preview: PreviewProvider {
 
     static var previews: some View {
         let size: CGFloat = 150
         
-        UnsupportedView(name: "Breno's Fan", domain: "fan")
+        UnsupportedWidgetView(entity: EntityMock.climate)
             .frame(width: size, height: size)
     }
 }

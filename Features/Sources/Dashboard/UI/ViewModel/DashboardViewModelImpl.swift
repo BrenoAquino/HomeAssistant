@@ -30,7 +30,7 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
     @Published public var editModel: Bool = false
     @Published public var toastData: DefaultToastDataContent?
     @Published public var selectedDashboardName: String?
-    @Published public var entities: [any Entity] = []
+    @Published public var widgets: [(widget: EntityWidget, entity: Entity)]
     @Published public var dashboards: [Dashboard] = []
 
     // MARK: Gets

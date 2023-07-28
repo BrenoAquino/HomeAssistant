@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-protocol EntityView: View {
+protocol EntityWidgetView: View {
 
+    var uniqueID: String { get }
     var xUnit: Int { get }
     var yUnit: Int { get }
-    var uniqueID: String { get }
 }
 

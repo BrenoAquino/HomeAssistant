@@ -16,11 +16,11 @@ private enum Constants {
     static let strokeOpacity: CGFloat = 0.5
 }
 
-struct FanSliderView: EntityView {
+struct FanSliderWidgetView: EntityWidgetView {
 
+    let uniqueID: String = "fan-slider"
     let xUnit: Int = 2
     let yUnit: Int = 1
-    let uniqueID: String = "fan-slider"
 
     let fanEntity: FanEntity
     let updateState: (_ fanEntity: FanEntity, _ newState: FanEntity.State) -> Void
@@ -100,7 +100,7 @@ struct FanSliderView: EntityView {
 #if DEBUG
 import Preview
 
-struct FanSliderView_Preview: PreviewProvider {
+struct FanSliderWidgetView_Preview: PreviewProvider {
 
     private static var entityOn = FanEntity(id: "1", name: "Breno's Fan", percentageStep: nil, percentage: nil, state: .on)
     private static var entityOn2 = FanEntity(id: "3", name: "Couple's Fan", percentageStep: 20, percentage: 0.2, state: .on)
@@ -110,14 +110,23 @@ struct FanSliderView_Preview: PreviewProvider {
         let size: CGFloat = 150
 
         VStack(spacing: .bigL) {
-            FanSliderView(fanEntity: entityOn, updateState: { _, _ in })
-                .frame(width: 2 * size, height: size)
+            FanSliderWidgetView(
+                fanEntity: entityOn,
+                updateState: { _, _ in }
+            )
+            .frame(width: 2 * size, height: size)
 
-            FanSliderView(fanEntity: entityOn2, updateState: { _, _ in })
-                .frame(width: 2 * size, height: size)
+            FanSliderWidgetView(
+                fanEntity: entityOn2,
+                updateState: { _, _ in }
+            )
+            .frame(width: 2 * size, height: size)
 
-            FanSliderView(fanEntity: entityOff, updateState: { _, _ in })
-                .frame(width: 2 * size, height: size)
+            FanSliderWidgetView(
+                fanEntity: entityOff,
+                updateState: { _, _ in }
+            )
+            .frame(width: 2 * size, height: size)
         }
     }
 }

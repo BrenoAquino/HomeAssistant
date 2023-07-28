@@ -17,7 +17,7 @@ private enum Constants {
     static let removeIconWidth: CGFloat = removeIconHeight
 }
 
-struct EntitiesView: View {
+struct EntitiesWidgetsView: View {
 
     @Binding var editMode: Bool
     @Binding var entities: [any Entity]
@@ -118,20 +118,17 @@ struct EntitiesView: View {
     ) -> (content: some View, columns: Int, rows: Int) {
         switch entity {
         case let light as LightEntity:
-            return (AnyView(LightView(lightEntity: light) {
+            return (AnyView(LightWidgetView(lightEntity: light) {
                 UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                 didClickUpdateLightState($0, $1)
             }), 1, 1)
         case let fan as FanEntity:
-            return (AnyView(FanSliderView(fanEntity: fan) {
+            return (AnyView(FanSliderWidgetView(fanEntity: fan) {
                 UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                 didClickUpdateFanState($0, $1)
             }), 2, 1)
         default:
-            return (AnyView(UnsupportedView(
-                name: entity.name,
-                domain: entity.domain.rawValue
-            )), 1, 1)
+            return (AnyView(UnsupportedWidgetView(entity: entity)), 1, 1)
         }
     }
 
@@ -188,7 +185,7 @@ struct EntitiesView_Preview: PreviewProvider {
 
     static var previews: some View {
 
-        EntitiesView(
+        EntitiesWidgetsView(
             editMode: .constant(false),
             entities: .constant(entities),
             didUpdateOrder: { _ in },

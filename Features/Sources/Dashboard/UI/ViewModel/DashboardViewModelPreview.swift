@@ -17,23 +17,17 @@ class DashboardViewModelPreview: DashboardViewModel {
     var toastData: DefaultToastDataContent?
     var removeEntityAlert: Bool = false
     var removeDashboardAlert: Bool = false
-
-    @Published var editModel: Bool = false
-    @Published var selectedDashboardName: String? = "Bedroom"
-    @Published var dashboards: [Dashboard] = DashboardMock.all
+    var editModel: Bool = false
+    var selectedDashboardName: String? = "Bedroom"
+    var dashboards: [Dashboard] = DashboardMock.all
+    var widgets: [(widget: EntityWidget, entity: any Entity)] = [
+        (EntityWidget(entityID: EntityMock.mainLight.id, uiType: "light"), EntityMock.mainLight),
+        (EntityWidget(entityID: EntityMock.ledDeskLight.id, uiType: "light"), EntityMock.ledDeskLight),
+        (EntityWidget(entityID: EntityMock.ledCeilingLight.id, uiType: "light"), EntityMock.ledCeilingLight),
+    ]
 
     var currentDashboard: Dashboard? {
         return dashboards[0]
-    }
-
-    var entities: [any Entity] {
-        get {
-            guard let currentDashboard else { return [] }
-            return currentDashboard.entitiesIDs.compactMap { EntityMock.allDict[$0] }
-        }
-        set {
-            
-        }
     }
 
     func deleteRequestedDashboard() {}
