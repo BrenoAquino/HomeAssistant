@@ -168,7 +168,8 @@ extension DashboardViewModelImpl {
 extension DashboardViewModelImpl {
 
     public func deleteRequestedDashboard() {
-        dashboards.removeAll(where: { $0.name == dashboardNameToDelete })
+        guard let dashboardNameToDelete else { return }
+        try? dashboardService.delete(dashboardName: dashboardNameToDelete)
         toastData = .init(type: .success, title: Localizable.deleteSuccess.value)
     }
 
@@ -197,7 +198,7 @@ extension DashboardViewModelImpl {
         guard var currentDashboard = currentDashboard, currentDashboard.entitiesIDs != ids else { return }
 
         currentDashboard.entitiesIDs = ids
-        try? dashboardService.update(
+        try! dashboardService.update(
             dashboardName: currentDashboard.name,
             dashboard: currentDashboard
         )
@@ -232,12 +233,29 @@ extension DashboardViewModelImpl {
     public func didClickConfig() {
         delegate?.didSelectConfig()
     }
+}
+
+extension DashboardViewModelImpl {
 
     public func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State) {
         Task {
             let service: EntityActionService = newState == .on ? .turnOn : .turnOff
             do {
                 try await entityService.execute(service: service, entityID: lightEntity.id)
+            } catch {
+                setError(
+                    message: Localizable.lightError.value,
+                    logMessage: "Could not execute \(String(describing: service))"
+                )
+            }
+        }
+    }
+
+    public func didClickUpdateFanState(_ fanEntity: FanEntity, newState: FanEntity.State) {
+        Task {
+            let service: EntityActionService = newState == .on ? .turnOn : .turnOff
+            do {
+                try await entityService.execute(service: service, entityID: fanEntity.id)
             } catch {
                 setError(
                     message: Localizable.lightError.value,

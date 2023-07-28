@@ -31,6 +31,18 @@ public class DashboardServiceImpl {
     }
 }
 
+// MARK: - Private Methods
+
+extension DashboardServiceImpl {
+
+    private func persist() async throws {
+        let dashboardsSorted = cachedOrder.compactMap { cachedDashboards[$0] }
+        try await dashboardRepository.save(dashboard: dashboardsSorted)
+        let saveLog = dashboardsSorted.map { "\($0.name) (\($0.entitiesIDs.count) devices)" }.joined(separator: ", ")
+        Logger.log(level: .info, "Saved \(saveLog)")
+    }
+}
+
 // MARK: - ConfigService
 
 extension DashboardServiceImpl: DashboardService {
@@ -44,13 +56,6 @@ extension DashboardServiceImpl: DashboardService {
         dashboardOrder.send(cachedOrder)
     }
 
-    public func persist() async throws {
-        let dashboardsSorted = cachedOrder.compactMap { cachedDashboards[$0] }
-        try await dashboardRepository.save(dashboard: dashboardsSorted)
-        let saveLog = dashboardsSorted.map { "\($0.name) (\($0.entitiesIDs.count) devices)" }.joined(separator: ", ")
-        Logger.log(level: .info, "Saved \(saveLog)")
-    }
-
     public func add(dashboard: Dashboard) throws {
         guard cachedDashboards[dashboard.name] == nil else {
             throw DashboardServiceError.dashboardAlreadyExists
@@ -60,6 +65,8 @@ extension DashboardServiceImpl: DashboardService {
 
         dashboards.send(cachedDashboards)
         dashboardOrder.send(cachedOrder)
+
+        Task { try? await persist() }
     }
 
     public func delete(dashboardName: String) {
@@ -68,6 +75,8 @@ extension DashboardServiceImpl: DashboardService {
 
         dashboards.send(cachedDashboards)
         dashboardOrder.send(cachedOrder)
+
+        Task { try? await persist() }
     }
 
     public func update(dashboardName: String, dashboard: Dashboard) throws {
@@ -85,6 +94,8 @@ extension DashboardServiceImpl: DashboardService {
             cachedOrder[index] = dashboard.name
             dashboardOrder.send(cachedOrder)
         }
+
+        Task { try? await persist() }
     }
 
     public func update(order: [String]) throws {
@@ -98,5 +109,7 @@ extension DashboardServiceImpl: DashboardService {
 
         cachedOrder = order
         dashboardOrder.send(cachedOrder)
+
+        Task { try? await persist() }
     }
 }

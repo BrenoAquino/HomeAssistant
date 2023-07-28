@@ -24,7 +24,9 @@ struct EntitiesView: View {
 
     let didUpdateOrder: (_ entities: [any Entity]) -> Void
     let didClickRemoveEntity: (_ entity: any Entity) -> Void
+
     let didClickUpdateLightState: (_ lightEntity: LightEntity, _ newState: LightEntity.State) -> Void
+    let didClickUpdateFanState: (_ fanEntity: FanEntity, _ newState: FanEntity.State) -> Void
 
     @State private var draggedEntity: (any Entity)?
     @State private var isDragging: Bool = false
@@ -43,7 +45,6 @@ struct EntitiesView: View {
             LazyVGrid(columns: columns, spacing: space) {
                 ForEach(Array(entities.enumerated()), id: \.element.id) { index, entity in
                     let shakeAnimation = Animation.easeInOut(duration: Constants.animationDuration).repeatForever(autoreverses: true)
-                    let isCurrentElementDragging = draggedEntity?.id == entity.id
 
                     element(entity)
                         .padding(.leading, -Constants.removeIconWidth / 3)
@@ -96,6 +97,11 @@ struct EntitiesView: View {
             LightView(lightEntity: light) {
                 UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                 didClickUpdateLightState($0, $1)
+            }
+        case let fan as FanEntity:
+            FanView(fanEntity: fan) {
+                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                didClickUpdateFanState($0, $1)
             }
         default:
             UnsupportedView(
@@ -154,7 +160,8 @@ struct EntitiesView_Preview: PreviewProvider {
             entities: .constant(EntityMock.all),
             didUpdateOrder: { _ in },
             didClickRemoveEntity: { _ in },
-            didClickUpdateLightState: { _, _ in }
+            didClickUpdateLightState: { _, _ in },
+            didClickUpdateFanState: { _, _ in }
         )
     }
 }

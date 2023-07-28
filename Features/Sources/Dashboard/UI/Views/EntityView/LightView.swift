@@ -26,13 +26,19 @@ struct LightView: View {
             .padding(.vertical, space: .smallL)
             .padding(.horizontal, space: .smallL)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(backgroundEffect)
-            .clipShape(RoundedRectangle(cornerRadius: .hard))
-            .contentShape(Rectangle())
+            .background(
+                Rectangle()
+                    .foregroundColor(.clear)
+                    .background(lightEntity.isOn ? DSColor.activated : DSColor.deactivated)
+            )
+            .clipShape(
+                RoundedRectangle(cornerRadius: .hard)
+            )
             .overlay(
                 RoundedRectangle(cornerRadius: .hard)
                     .stroke(DSColor.gray3.opacity(Constants.strokeOpacity), lineWidth: Constants.strokeWidth)
             )
+            .contentShape(Rectangle())
             .shadow(radius: .easy, color: .black.opacity(Constants.shadowOpacity))
             .onTapGesture {
                 updateState(lightEntity, lightEntity.invertedState)
@@ -41,35 +47,19 @@ struct LightView: View {
 
     private var content: some View {
         VStack(alignment: .leading, spacing: .zero) {
-            lightState
-                .frame(maxWidth: .infinity, alignment: .topLeading)
-            lightInfo
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-        }
-    }
-
-    private var backgroundEffect: some View {
-        Rectangle()
-            .foregroundColor(.clear)
-            .background(lightEntity.isOn ? DSColor.activated : DSColor.deactivated)
-    }
-
-    private var lightState: some View {
-        HStack(spacing: .smallS) {
             Image(systemName: lightEntity.icon)
                 .foregroundColor(.white)
                 .padding()
                 .background(lightEntity.isOn ? DSColor.orange : DSColor.gray)
                 .clipShape(Circle())
-        }
-    }
+                .frame(maxWidth: .infinity, alignment: .topLeading)
 
-    private var lightInfo: some View {
-        Text(lightEntity.name)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .font(.subheadline)
-            .fontWeight(.semibold)
-            .foregroundColor(lightEntity.isOn ? .black : DSColor.label)
+            Text(lightEntity.name)
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .foregroundColor(lightEntity.isOn ? .black : DSColor.label)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+        }
     }
 }
 

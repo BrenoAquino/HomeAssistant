@@ -42,11 +42,12 @@ class DashboardViewModelPreview: DashboardViewModel {
     func cancelEntityDeletion() {}
     func didUpdateEntitiesOrder(_ entities: [any Entity]) {}
     func didUpdateDashboardsOrder(_ dashboards: [Dashboard]) {}
-    func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State) {}
     func didClickAddDashboard() {}
     func didClickRemove(dashboard: Dashboard) {}
     func didClickEdit(dashboard: Dashboard) {}
     func didClickRemove(entity: any Entity) {}
     func didClickConfig() {}
+    func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State) {}
+    func didClickUpdateFanState(_ fanEntity: FanEntity, newState: FanEntity.State) {}
 }
 #endif
