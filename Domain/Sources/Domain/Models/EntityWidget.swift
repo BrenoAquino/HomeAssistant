@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Widget {
+public struct EntityWidget {
 
     public let entityID: String
     public let uiType: String

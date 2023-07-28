@@ -8,6 +8,7 @@
 import Foundation
 
 public struct WebSocketMessageHeader: Decodable {
+    
     public let id: Int?
     public let type: WebSocketMessageType
 }

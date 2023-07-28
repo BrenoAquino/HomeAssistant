@@ -38,7 +38,7 @@ extension DashboardServiceImpl {
     private func persist() async throws {
         let dashboardsSorted = cachedOrder.compactMap { cachedDashboards[$0] }
         try await dashboardRepository.save(dashboard: dashboardsSorted)
-        let saveLog = dashboardsSorted.map { "\($0.name) (\($0.entitiesIDs.count) devices)" }.joined(separator: ", ")
+        let saveLog = dashboardsSorted.map { "\($0.name) (\($0.widgets.count) devices)" }.joined(separator: ", ")
         Logger.log(level: .info, "Saved \(saveLog)")
     }
 }

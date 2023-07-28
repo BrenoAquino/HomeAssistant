@@ -11,5 +11,5 @@ public struct Dashboard: Codable {
 
     let name: String
     let icon: String
-    let entities: [String]
+    let widgets: [EntityWidget]
 }

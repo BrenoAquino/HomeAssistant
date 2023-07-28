@@ -133,7 +133,7 @@ extension DashboardViewModelImpl {
         for element in array {
             if dict[element.name] == nil {
                 return true
-            } else if let entitiesIDs = dict[element.name]?.entitiesIDs, Set(entitiesIDs) != Set(element.entitiesIDs) {
+            } else if let widgets = dict[element.name]?.widgets, Set(widgets) != Set(element.widgets) {
                 return true
             }
         }
@@ -157,8 +157,8 @@ extension DashboardViewModelImpl {
             self.entities = []
             return
         }
-        self.entities = dashboards[dashboardName]?.entitiesIDs.compactMap {
-            entities[$0]
+        self.entities = dashboards[dashboardName]?.widgets.compactMap {
+            entities[$0.entityID]
         } ?? []
     }
 }
@@ -179,7 +179,7 @@ extension DashboardViewModelImpl {
 
     public func deleteRequestedEntity() {
         guard var currentDashboard, let entityIDToDelete else { return }
-        currentDashboard.entitiesIDs.removeAll(where: { $0 == entityIDToDelete })
+        currentDashboard.widgets.removeAll(where: { $0.entityID == entityIDToDelete })
         try? dashboardService.update(
             dashboardName: currentDashboard.name,
             dashboard: currentDashboard

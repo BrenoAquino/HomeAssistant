@@ -11,6 +11,10 @@ import Foundation
 extension Dashboard {
 
     func toDomain() -> Domain.Dashboard {
-        return Domain.Dashboard(name: self.name, icon: self.icon, entities: self.entities)
+        Domain.Dashboard(
+            name: name,
+            icon: icon,
+            widgets: widgets.map { $0.toDomain() }
+        )
     }
 }

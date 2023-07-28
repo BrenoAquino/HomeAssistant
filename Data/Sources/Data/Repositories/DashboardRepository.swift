@@ -39,9 +39,10 @@ extension DashboardRepositoryImpl: Domain.DashboardRepository {
 
 // MARK: - Domain.Dashboard to Data.Dashboard
 
-extension Domain.Dashboard {
+private extension Domain.Dashboard {
 
     func toData() -> Dashboard {
-        Dashboard(name: name, icon: icon, entities: entitiesIDs)
+        let widgets = widgets.map { EntityWidget(uiType: $0.uiType, entityID: $0.entityID) }
+        return Dashboard(name: name, icon: icon, widgets: widgets)
     }
 }
