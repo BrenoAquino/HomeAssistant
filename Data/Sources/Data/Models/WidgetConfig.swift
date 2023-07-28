@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct EntityWidget: Codable {
+public struct WidgetConfig: Codable {
 
     public let uiType: String
     public let entityID: String

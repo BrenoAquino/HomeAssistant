@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  WidgetConfig.swift
 //  
 //
 //  Created by Breno Aquino on 28/07/23.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct EntityWidget {
+public struct WidgetConfig {
 
     public let entityID: String
     public let uiType: String

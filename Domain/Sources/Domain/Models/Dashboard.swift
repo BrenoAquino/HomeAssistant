@@ -11,12 +11,12 @@ public struct Dashboard {
 
     public var name: String
     public var icon: String
-    public var widgets: [EntityWidget]
+    public var widgetConfigs: [WidgetConfig]
 
-    public init(name: String, icon: String, widgets: [EntityWidget]) {
+    public init(name: String, icon: String, widgetConfigs: [WidgetConfig]) {
         self.name = name
         self.icon = icon
-        self.widgets = widgets
+        self.widgetConfigs = widgetConfigs
     }
 }
 
