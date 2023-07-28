@@ -35,18 +35,18 @@ class LifeCycleHandlerImpl<DashboardS: DashboardService, EntityS: EntityService>
 extension LifeCycleHandlerImpl {
 
     private func persist() {
-        let semaphore = DispatchSemaphore(value: 0)
-        Task {
-            guard await webSocket.isConnected() else {
-                semaphore.signal()
-                return
-            }
-
-            try? await dashboardsService.persist()
-            try? await entityService.persist()
-            semaphore.signal()
-        }
-        semaphore.wait()
+//        let semaphore = DispatchSemaphore(value: 0)
+//        Task {
+//            guard await webSocket.isConnected() else {
+//                semaphore.signal()
+//                return
+//            }
+//
+////            try? await dashboardsService.persist()
+////            try? await entityService.persist()
+//            semaphore.signal()
+//        }
+//        semaphore.wait()
     }
 }
 
@@ -55,11 +55,11 @@ extension LifeCycleHandlerImpl {
 extension LifeCycleHandlerImpl {
 
     func appStateDidChange(_ state: AppState) {
-        switch state {
-        case .foreground:
-            break
-        case .background:
-            persist()
-        }
+//        switch state {
+//        case .foreground:
+//            break
+//        case .background:
+//            persist()
+//        }
     }
 }

@@ -75,16 +75,16 @@ extension EntityServiceImpl {
             }
             .store(in: &cancellable)
     }
+    
+    private func persist() async throws {
+        try await entityRepository.save(hiddenEntityIDs: cachedHiddenEntityIDs)
+        Logger.log(level: .info, "Saved \(cachedHiddenEntityIDs.count) hidden entity IDs")
+    }
 }
 
 // MARK: - EntityService
 
 extension EntityServiceImpl: EntityService {
-
-    public func persist() async throws {
-        try await entityRepository.save(hiddenEntityIDs: cachedHiddenEntityIDs)
-        Logger.log(level: .info, "Saved \(cachedHiddenEntityIDs.count) hidden entity IDs")
-    }
 
     public func startTracking() async throws {
         try await entityRepository.fetchStates().forEach { [self] in insertEntity($0) }
@@ -100,6 +100,8 @@ extension EntityServiceImpl: EntityService {
     public func update(hiddenEntityIDs: Set<String>) {
         cachedHiddenEntityIDs = hiddenEntityIDs
         self.hiddenEntityIDs.send(cachedHiddenEntityIDs)
+
+        Task { try? await persist() }
     }
 
     public func update(entityID: String, entity: any Entity) async throws {

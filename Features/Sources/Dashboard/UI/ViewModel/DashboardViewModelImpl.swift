@@ -168,7 +168,8 @@ extension DashboardViewModelImpl {
 extension DashboardViewModelImpl {
 
     public func deleteRequestedDashboard() {
-        dashboards.removeAll(where: { $0.name == dashboardNameToDelete })
+        guard let dashboardNameToDelete else { return }
+        try? dashboardService.delete(dashboardName: dashboardNameToDelete)
         toastData = .init(type: .success, title: Localizable.deleteSuccess.value)
     }
 
@@ -197,7 +198,7 @@ extension DashboardViewModelImpl {
         guard var currentDashboard = currentDashboard, currentDashboard.entitiesIDs != ids else { return }
 
         currentDashboard.entitiesIDs = ids
-        try? dashboardService.update(
+        try! dashboardService.update(
             dashboardName: currentDashboard.name,
             dashboard: currentDashboard
         )
