@@ -30,16 +30,6 @@ struct CoordinatorView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .environmentObject(coordinator)
-        .onChange(of: scenePhase) { newPhase in
-            switch newPhase {
-            case .active:
-                coordinator.lifeCycleHandler.appStateDidChange(.foreground)
-            case .inactive, .background:
-                coordinator.lifeCycleHandler.appStateDidChange(.background)
-            @unknown default:
-                break
-            }
-        }
     }
 
     private func viewWithBlockIfNeeded(@ViewBuilder _ content: () -> some View) -> some View {

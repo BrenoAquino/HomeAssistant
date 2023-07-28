@@ -16,7 +16,7 @@ public enum EntityMock {
     public static let ledCeilingLight = Domain.LightEntity(id: "light.led_ceiling", name: "Led Ceiling", state: .on)
     public static let climate = Domain.ClimateEntity(id: "climate.air_conditioner", name: "Air Conditioner", state: .cool)
     public static let coffeeMachine = Domain.SwitchEntity(id: "switch.coffee_machine", name: "Coffee Machine", state: .off)
-    public static let fan = Domain.FanEntity(id: "fan.bedroom_fan", name: "Bedroom's Fan", percentageStep: 20, percentage: 20, state: .on)
+    public static let fan = Domain.FanEntity(id: "fan.bedroom_fan", name: "Bedroom's Fan", percentageStep: 0.2, percentage: 0.2, state: .on)
 
     public static var all: [any Entity] = [mainLight, ledDeskLight, ledCeilingLight, climate, coffeeMachine, fan]
     public static var allDict: [String : any Entity] = all.reduce(into: [String : any Entity](), { $0[$1.id] = $1 })

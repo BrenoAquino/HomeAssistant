@@ -16,7 +16,11 @@ private enum Constants {
     static let strokeOpacity: CGFloat = 0.5
 }
 
-struct LightView: View {
+struct LightView: EntityView {
+
+    let uniqueID: String = "light"
+    let xUnit: Int = 1
+    let yUnit: Int = 1
 
     let lightEntity: LightEntity
     let updateState: (_ lightEntity: LightEntity, _ newState: LightEntity.State) -> Void

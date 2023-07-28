@@ -31,83 +31,107 @@ struct EntitiesView: View {
     @State private var draggedEntity: (any Entity)?
     @State private var isDragging: Bool = false
 
+    typealias RowData = (id: UUID, content: [any Entity])
+
+    func calculateRows(
+        _ entities: [any Entity],
+        _ proxy: GeometryProxy
+    ) -> [RowData] {
+        var matrix: [RowData] = [(UUID(), [])]
+
+        var columnsCount = 0
+        var currentRow = 0
+
+        for entity in entities {
+            switch entity {
+            case is LightEntity:
+                columnsCount += 1
+            case is FanEntity:
+                columnsCount += 2
+            default:
+                columnsCount += 1
+            }
+
+            if columnsCount > 3 {
+                currentRow += 1
+                switch entity {
+                case is LightEntity:
+                    columnsCount = 1
+                case is FanEntity:
+                    columnsCount = 2
+                default:
+                    columnsCount = 1
+                }
+                matrix.append((UUID(), []))
+            }
+
+            let _ = print(columnsCount)
+            matrix[currentRow].content.append(entity)
+        }
+        return matrix
+    }
+
     var body: some View {
         GeometryReader { proxy in
-            let numberOfElementsInRow: Int = 3
-            let space = DSSpace.horizontal.rawValue
-            let totalSpace = space * (CGFloat(numberOfElementsInRow) + 1)
-            let size = (proxy.size.width - totalSpace) / CGFloat(numberOfElementsInRow)
-            let columns = [GridItem](
-                repeating: .init(.fixed(size), spacing: space),
-                count: numberOfElementsInRow
-            )
-
-            LazyVGrid(columns: columns, spacing: space) {
-                ForEach(Array(entities.enumerated()), id: \.element.id) { index, entity in
-                    let shakeAnimation = Animation.easeInOut(duration: Constants.animationDuration).repeatForever(autoreverses: true)
-
-                    element(entity)
-                        .padding(.leading, -Constants.removeIconWidth / 3)
-                        .padding(.top, -Constants.removeIconHeight / 3)
-                        .frame(height: size + Constants.removeIconHeight / 3)
-                        .rotationEffect(.degrees(editMode ? Constants.shakeAnimationAngle : .zero))
-                        .animation(editMode ? shakeAnimation : .default, value: editMode)
-                        .onDrop(of: [.text], delegate: EntityDropDelegate(
-                            entity: entity,
-                            entities: $entities,
-                            draggedEntity: $draggedEntity,
-                            isDragging: $isDragging,
-                            didUpdateOrder: didUpdateOrder
-                        ))
-                        .onDrag {
-                            draggedEntity = entity
-                            editMode = true
-                            return NSItemProvider(object: entity.id as NSString)
-                        } preview: { EmptyView() }
+            let rowHeight: CGFloat = 150
+            Grid(
+                horizontalSpacing: DSSpace.horizontal.rawValue,
+                verticalSpacing: DSSpace.horizontal.rawValue
+            ) {
+                let matrix = calculateRows(entities, proxy)
+                ForEach(matrix, id: \.id) { row in
+                    GridRow {
+                        ForEach(row.content, id: \.id) { entity in
+                            let elem = entityView(entity)
+                            elem.content
+                                .gridCellColumns(elem.columns)
+                        }
+                    }
+                    .frame(height: rowHeight)
                 }
             }
+            .padding(.horizontal, space: .horizontal)
         }
     }
 
-    private func element(
-        _ entity: any Entity
-    ) -> some View {
-        ZStack(alignment: .topLeading) {
-            entityView(entity)
-                .padding(.leading, Constants.removeIconWidth / 3)
-                .padding(.top, Constants.removeIconHeight / 3)
+    //    private func element(
+    //        _ entity: any Entity
+    //    ) -> some View {
+    //        ZStack(alignment: .topLeading) {
+    //            entityView(entity)
+    //                .padding(.leading, Constants.removeIconWidth / 3)
+    //                .padding(.top, Constants.removeIconHeight / 3)
+    //
+    //            SystemImages.remove
+    //                .imageScale(.large)
+    //                .frame(width: Constants.removeIconWidth, height: Constants.removeIconHeight)
+    //                .opacity(editMode ? 1 : 0)
+    //                .animation(.default, value: editMode)
+    //                .onTapGesture {
+    //                    didClickRemoveEntity(entity)
+    //                }
+    //        }
+    //    }
 
-            SystemImages.remove
-                .imageScale(.large)
-                .frame(width: Constants.removeIconWidth, height: Constants.removeIconHeight)
-                .opacity(editMode ? 1 : 0)
-                .animation(.default, value: editMode)
-                .onTapGesture {
-                    didClickRemoveEntity(entity)
-                }
-        }
-    }
-
-    @ViewBuilder
     private func entityView(
         _ entity: any Entity
-    ) -> some View {
+    ) -> (content: some View, columns: Int, rows: Int) {
         switch entity {
         case let light as LightEntity:
-            LightView(lightEntity: light) {
+            return (AnyView(LightView(lightEntity: light) {
                 UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                 didClickUpdateLightState($0, $1)
-            }
+            }), 1, 1)
         case let fan as FanEntity:
-            FanView(fanEntity: fan) {
+            return (AnyView(FanSliderView(fanEntity: fan) {
                 UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                 didClickUpdateFanState($0, $1)
-            }
+            }), 2, 1)
         default:
-            UnsupportedView(
+            return (AnyView(UnsupportedView(
                 name: entity.name,
                 domain: entity.domain.rawValue
-            )
+            )), 1, 1)
         }
     }
 
@@ -153,11 +177,20 @@ import Preview
 
 struct EntitiesView_Preview: PreviewProvider {
 
+    static let entities: [any Entity] = [
+        FanEntity(id: "1", name: "Fan 1", percentageStep: nil, percentage: nil, state: .on),
+        LightEntity(id: "2", name: "Light 2", state: .on),
+        LightEntity(id: "3", name: "Light 3", state: .on),
+        LightEntity(id: "4", name: "Light 4", state: .on),
+        FanEntity(id: "5", name: "Fan 5", percentageStep: nil, percentage: nil, state: .on),
+        LightEntity(id: "6", name: "Light 6", state: .on),
+    ]
+
     static var previews: some View {
 
         EntitiesView(
-            editMode: .constant(true),
-            entities: .constant(EntityMock.all),
+            editMode: .constant(false),
+            entities: .constant(entities),
             didUpdateOrder: { _ in },
             didClickRemoveEntity: { _ in },
             didClickUpdateLightState: { _, _ in },

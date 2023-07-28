@@ -15,7 +15,6 @@ class Coordinator: ObservableObject {
 
     // MARK: Handlers
 
-    private(set) lazy var lifeCycleHandler = factory.lifeCycleHandler(coordinator: self)
     private(set) lazy var webSocketHandler = factory.webSocketHandler(coordinator: self)
 
     // MARK: Publishers

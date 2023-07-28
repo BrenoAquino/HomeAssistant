@@ -15,10 +15,8 @@
 		552783EF2A6500DB00603EBA /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 552783EE2A6500DB00603EBA /* Domain */; };
 		552783F12A6500E000603EBA /* Features in Frameworks */ = {isa = PBXBuildFile; productRef = 552783F02A6500E000603EBA /* Features */; };
 		552783F52A65027E00603EBA /* LaunchCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552783F42A65027E00603EBA /* LaunchCoordinator.swift */; };
-		5558B6052A68C722008651CF /* LifeCycleHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5558B6042A68C722008651CF /* LifeCycleHandler.swift */; };
 		5558B6072A68C825008651CF /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5558B6062A68C825008651CF /* Factory.swift */; };
 		557C953E2A6E243200D980DB /* ConfigCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557C953D2A6E243200D980DB /* ConfigCoordinator.swift */; };
-		5585F5E72A708A5200005489 /* LifeCycleHandlerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5585F5E62A708A5200005489 /* LifeCycleHandlerImpl.swift */; };
 		5585F5EF2A708E1D00005489 /* WebSocketHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5585F5EE2A708E1D00005489 /* WebSocketHandler.swift */; };
 		5585F5F12A708E2100005489 /* WebSocketHandlerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5585F5F02A708E2100005489 /* WebSocketHandlerImpl.swift */; };
 		5598DB912A677C5B00614AC0 /* DashboardCreationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5598DB902A677C5B00614AC0 /* DashboardCreationCoordinator.swift */; };
@@ -46,10 +44,8 @@
 		552783E02A64ECCD00603EBA /* Features */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Features; sourceTree = "<group>"; };
 		552783E42A64F5F200603EBA /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		552783F42A65027E00603EBA /* LaunchCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchCoordinator.swift; sourceTree = "<group>"; };
-		5558B6042A68C722008651CF /* LifeCycleHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifeCycleHandler.swift; sourceTree = "<group>"; };
 		5558B6062A68C825008651CF /* Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
 		557C953D2A6E243200D980DB /* ConfigCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigCoordinator.swift; sourceTree = "<group>"; };
-		5585F5E62A708A5200005489 /* LifeCycleHandlerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifeCycleHandlerImpl.swift; sourceTree = "<group>"; };
 		5585F5EE2A708E1D00005489 /* WebSocketHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketHandler.swift; sourceTree = "<group>"; };
 		5585F5F02A708E2100005489 /* WebSocketHandlerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketHandlerImpl.swift; sourceTree = "<group>"; };
 		5594C06E2A6388750015AE11 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = text; path = Domain; sourceTree = SOURCE_ROOT; };
@@ -124,18 +120,8 @@
 			isa = PBXGroup;
 			children = (
 				5585F5ED2A708E1200005489 /* WebSocket */,
-				5585F5E82A708A5900005489 /* LifeCycle */,
 			);
 			path = Handlers;
-			sourceTree = "<group>";
-		};
-		5585F5E82A708A5900005489 /* LifeCycle */ = {
-			isa = PBXGroup;
-			children = (
-				5558B6042A68C722008651CF /* LifeCycleHandler.swift */,
-				5585F5E62A708A5200005489 /* LifeCycleHandlerImpl.swift */,
-			);
-			path = LifeCycle;
 			sourceTree = "<group>";
 		};
 		5585F5ED2A708E1200005489 /* WebSocket */ = {
@@ -331,12 +317,10 @@
 				55C25B952A60D8C700E52C5F /* HomeApp.swift in Sources */,
 				552783F52A65027E00603EBA /* LaunchCoordinator.swift in Sources */,
 				5508ECA42A65E64F00100E18 /* Screen.swift in Sources */,
-				5585F5E72A708A5200005489 /* LifeCycleHandlerImpl.swift in Sources */,
 				55E63B182A617164002068A5 /* URLSessionWebSocketTask+Stream.swift in Sources */,
 				5598DB912A677C5B00614AC0 /* DashboardCreationCoordinator.swift in Sources */,
 				55B602972A6F61100054EAA2 /* Screen+Utils.swift in Sources */,
 				55CED2412A62F2C40070B851 /* PingMessage.swift in Sources */,
-				5558B6052A68C722008651CF /* LifeCycleHandler.swift in Sources */,
 				552783E52A64F5F200603EBA /* AppEnvironment.swift in Sources */,
 				55A0F2A62A6F0C7F00C29677 /* StaticLaunchCoordinator.swift in Sources */,
 			);

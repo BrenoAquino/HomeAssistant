@@ -7,16 +7,18 @@
 
 import Foundation
 
+
+
 public struct Dashboard {
 
     public var name: String
     public var icon: String
-    public var entitiesIDs: [String]
+    public var widgets: [Widget]
 
-    public init(name: String, icon: String, entities: [String]) {
+    public init(name: String, icon: String, widgets: [Widget]) {
         self.name = name
         self.icon = icon
-        self.entitiesIDs = entities
+        self.widgets = widgets
     }
 }
 

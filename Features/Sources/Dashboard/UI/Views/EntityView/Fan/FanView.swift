@@ -16,7 +16,11 @@ private enum Constants {
     static let strokeOpacity: CGFloat = 0.5
 }
 
-struct FanView: View {
+struct FanView: EntityView {
+
+    let xUnit: Int = 1
+    let yUnit: Int = 1
+    let uniqueID: String = "fan"
 
     let fanEntity: FanEntity
     let updateState: (_ fanEntity: FanEntity, _ newState: FanEntity.State) -> Void

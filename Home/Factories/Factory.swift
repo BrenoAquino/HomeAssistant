@@ -142,15 +142,6 @@ extension Factory {
 
 extension Factory {
 
-    func lifeCycleHandler(coordinator: Coordinator) -> LifeCycleHandler {
-        LifeCycleHandlerImpl(
-            coordinator: coordinator,
-            dashboardsService: dashboardServiceInstance,
-            entityService: entityServiceInstance,
-            webSocket: webSocketProviderInstance
-        )
-    }
-
     func webSocketHandler(coordinator: Coordinator) -> WebSocketHandler {
         WebSocketHandlerImpl(coordinator: coordinator)
     }

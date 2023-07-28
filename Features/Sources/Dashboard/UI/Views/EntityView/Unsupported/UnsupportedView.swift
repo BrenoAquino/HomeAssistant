@@ -8,7 +8,11 @@
 import DesignSystem
 import SwiftUI
 
-struct UnsupportedView: View {
+struct UnsupportedView: EntityView {
+
+    let uniqueID: String = "unsupported"
+    let xUnit: Int = 1
+    let yUnit: Int = 1
 
     let name: String
     let domain: String
@@ -25,7 +29,6 @@ struct UnsupportedView: View {
 
             Localizable.unsupported.text
                 .textCase(.uppercase)
-                .scaledToFill()
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)
                 .foregroundColor(DSColor.secondaryLabel)
