@@ -17,6 +17,7 @@
 "delete_entity_description" = "Essa ação não pode ser desfeita. Você tem certeza que deseja remove esse dispositivo desse painel?";
 "ok" = "Sim";
 "delete_success" = "Painel Apagado";
-"light_error" = "Não foi possivel se comunicar com a luz";
 "dashboard_reorder_error" = "Não foi possível alterar a ordem dos painéis";
 "entity_reorder_error" = "Não foi possível alterar a ordem dos dispositivos =";
+"light_error" = "Não foi possivel se comunicar com a luz";
+"fan_error" = "Não foi possivel se comunicar com o ventilador";

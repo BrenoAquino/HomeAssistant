@@ -41,5 +41,7 @@ public protocol DashboardViewModel: ObservableObject {
     func didClickEdit(dashboard: Dashboard)
     func didClickRemove(entity: any Entity)
     func didClickConfig()
+
     func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State)
+    func didClickUpdateFanState(_ fanEntity: FanEntity, newState: FanEntity.State)
 }

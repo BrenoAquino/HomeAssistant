@@ -67,7 +67,6 @@ struct DashboardsCarouselView: View {
         ForEach(dashboards, id: \.name) { dashboard in
             let shakeAnimation = Animation.easeInOut(duration: Constants.animationDuration).repeatForever(autoreverses: true)
             let isSelected = dashboard.name == selectedDashboardName
-            let isCurrentElementDragging = draggedItem?.name == dashboard.name
 
             element(dashboard, isSelected)
                 .rotationEffect(.degrees(editMode ? Constants.shakeAnimationAngle : .zero))

@@ -232,12 +232,29 @@ extension DashboardViewModelImpl {
     public func didClickConfig() {
         delegate?.didSelectConfig()
     }
+}
+
+extension DashboardViewModelImpl {
 
     public func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State) {
         Task {
             let service: EntityActionService = newState == .on ? .turnOn : .turnOff
             do {
                 try await entityService.execute(service: service, entityID: lightEntity.id)
+            } catch {
+                setError(
+                    message: Localizable.lightError.value,
+                    logMessage: "Could not execute \(String(describing: service))"
+                )
+            }
+        }
+    }
+
+    public func didClickUpdateFanState(_ fanEntity: FanEntity, newState: FanEntity.State) {
+        Task {
+            let service: EntityActionService = newState == .on ? .turnOn : .turnOff
+            do {
+                try await entityService.execute(service: service, entityID: fanEntity.id)
             } catch {
                 setError(
                     message: Localizable.lightError.value,

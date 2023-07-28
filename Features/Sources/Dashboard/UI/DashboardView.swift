@@ -51,7 +51,8 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                 entities: $viewModel.entities,
                 didUpdateOrder: viewModel.didUpdateEntitiesOrder,
                 didClickRemoveEntity: viewModel.didClickRemove,
-                didClickUpdateLightState: viewModel.didClickUpdateLightState
+                didClickUpdateLightState: viewModel.didClickUpdateLightState,
+                didClickUpdateFanState: viewModel.didClickUpdateFanState
             )
             .padding(.top, space: .smallS)
         }
