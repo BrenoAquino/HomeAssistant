@@ -18,9 +18,7 @@ private enum Constants {
 
 struct LightWidgetView: WidgetView {
 
-    let uniqueID: String = "light"
-    let xUnit: Int = 1
-    let yUnit: Int = 1
+    static var uniqueID: String = "default"
 
     let lightEntity: LightEntity
     let updateState: (_ lightEntity: LightEntity, _ newState: LightEntity.State) -> Void

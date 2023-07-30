@@ -19,162 +19,182 @@ private enum Constants {
 
 struct WidgetsGridView: View {
 
-    @Binding var editMode: Bool
-    @Binding var entities: [any Entity]
+    private typealias WidgetViewData = (widget: WidgetData, columns: Int, rows: Int)
+    private typealias RowData = (id: UUID, data: [WidgetViewData])
 
-    let didUpdateOrder: (_ entities: [any Entity]) -> Void
-    let didClickRemoveEntity: (_ entity: any Entity) -> Void
+    @Binding var editMode: Bool
+    @Binding var widgets: [WidgetData]
+
+    let didUpdateWidgetsOrder: (_ widgets: [WidgetData]) -> Void
+    let didClickRemoveWidget: (_ widget: WidgetData) -> Void
 
     let didClickUpdateLightState: (_ lightEntity: LightEntity, _ newState: LightEntity.State) -> Void
     let didClickUpdateFanState: (_ fanEntity: FanEntity, _ newState: FanEntity.State) -> Void
 
-    @State private var draggedEntity: (any Entity)?
+    @State private var draggedItem: WidgetData?
     @State private var isDragging: Bool = false
-
-    typealias RowData = (id: UUID, content: [any Entity])
-
-    func calculateRows(
-        _ entities: [any Entity],
-        _ proxy: GeometryProxy
-    ) -> [RowData] {
-        var matrix: [RowData] = [(UUID(), [])]
-
-        var columnsCount = 0
-        var currentRow = 0
-
-        for entity in entities {
-            switch entity {
-            case is LightEntity:
-                columnsCount += 1
-            case is FanEntity:
-                columnsCount += 2
-            default:
-                columnsCount += 1
-            }
-
-            if columnsCount > 3 {
-                currentRow += 1
-                switch entity {
-                case is LightEntity:
-                    columnsCount = 1
-                case is FanEntity:
-                    columnsCount = 2
-                default:
-                    columnsCount = 1
-                }
-                matrix.append((UUID(), []))
-            }
-
-            let _ = print(columnsCount)
-            matrix[currentRow].content.append(entity)
-        }
-        return matrix
-    }
 
     var body: some View {
         GeometryReader { proxy in
             let rowHeight: CGFloat = 150
+            let space: DSSpace = .horizontal
+            let matrix = calculateRows(widgets, proxy)
+
             Grid(
-                horizontalSpacing: DSSpace.horizontal.rawValue,
-                verticalSpacing: DSSpace.horizontal.rawValue
+                horizontalSpacing: space.rawValue,
+                verticalSpacing: space.rawValue
             ) {
-                let matrix = calculateRows(entities, proxy)
                 ForEach(matrix, id: \.id) { row in
                     GridRow {
-                        ForEach(row.content, id: \.id) { entity in
-                            let elem = entityView(entity)
-                            elem.content
-                                .gridCellColumns(elem.columns)
+                        ForEach(row.data, id: \.widget.config.id) { widgetViewData in
+                            widgetElement(widgetViewData.widget)
+                                .gridCellColumns(widgetViewData.columns)
                         }
                     }
                     .frame(height: rowHeight)
                 }
             }
-            .padding(.horizontal, space: .horizontal)
+            .padding(.horizontal, space: space)
         }
     }
 
-    //    private func element(
-    //        _ entity: any Entity
-    //    ) -> some View {
-    //        ZStack(alignment: .topLeading) {
-    //            entityView(entity)
-    //                .padding(.leading, Constants.removeIconWidth / 3)
-    //                .padding(.top, Constants.removeIconHeight / 3)
-    //
-    //            SystemImages.remove
-    //                .imageScale(.large)
-    //                .frame(width: Constants.removeIconWidth, height: Constants.removeIconHeight)
-    //                .opacity(editMode ? 1 : 0)
-    //                .animation(.default, value: editMode)
-    //                .onTapGesture {
-    //                    didClickRemoveEntity(entity)
-    //                }
-    //        }
-    //    }
+    private func calculateRows(
+        _ widgets: [WidgetData],
+        _ proxy: GeometryProxy
+    ) -> [RowData] {
+        var matrix: [RowData] = [(UUID(), [])]
 
-    private func entityView(
-        _ entity: any Entity
-    ) -> (content: some View, columns: Int, rows: Int) {
-        switch entity {
+        let columnsLimit = 3
+        var columnsCount = 0
+        var currentRow = 0
+
+        for widget in widgets {
+            let (columns, rows) = WidgetSize.units(for: widget.config.uiType)
+            columnsCount += columns
+
+            if columnsCount > columnsLimit {
+                columnsCount = columns
+                currentRow += 1
+                matrix.append((UUID(), []))
+            }
+
+            matrix[currentRow].data.append((widget, columns, rows))
+        }
+        return matrix
+    }
+
+    @ViewBuilder
+    private func widgetElement(
+        _ widget: WidgetData
+    ) -> some View {
+        ZStack(alignment: .topLeading) {
+            widgetView(widget)
+                .padding(.leading, Constants.removeIconWidth / 3)
+                .padding(.top, Constants.removeIconHeight / 3)
+
+            SystemImages.remove
+                .imageScale(.large)
+                .frame(width: Constants.removeIconWidth, height: Constants.removeIconHeight)
+                .opacity(editMode ? 1 : 0)
+                .animation(.default, value: editMode)
+                .onTapGesture {
+                    didClickRemoveWidget(widget)
+                }
+        }
+    }
+
+    @ViewBuilder
+    private func widgetView(
+        _ widget: WidgetData
+    ) -> some View {
+        switch widget.entity {
         case let light as LightEntity:
-            return (AnyView(LightWidgetView(lightEntity: light) {
+            lightWidgetView(widget.config, light)
+        case let fan as FanEntity:
+            fanWidgetView(widget.config, fan)
+        default:
+            UnsupportedWidgetView(entity: widget.entity)
+        }
+    }
+
+    @ViewBuilder
+    private func lightWidgetView(
+        _ widgetConfig: WidgetConfig,
+        _ lightEntity: LightEntity
+    ) -> some View {
+        switch widgetConfig.uiType {
+        default:
+            LightWidgetView(lightEntity: lightEntity) {
                 UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                 didClickUpdateLightState($0, $1)
-            }), 1, 1)
-        case let fan as FanEntity:
-            return (AnyView(FanSliderWidgetView(fanEntity: fan) {
-                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                didClickUpdateFanState($0, $1)
-            }), 2, 1)
-        default:
-            return (AnyView(UnsupportedWidgetView(entity: entity)), 1, 1)
+            }
         }
     }
 
-    private struct EntityDropDelegate: DropDelegate {
-
-        let entity: any Entity
-        @Binding var entities: [any Entity]
-        @Binding var draggedEntity: (any Entity)?
-        @Binding var isDragging: Bool
-        let didUpdateOrder: (_ entities: [any Entity]) -> Void
-
-        func performDrop(info: DropInfo) -> Bool {
-            isDragging = false
-            draggedEntity = nil
-            didUpdateOrder(entities)
-            return true
-        }
-
-        func dropEntered(info: DropInfo) {
-            isDragging = true
-            guard
-                let draggedEntity,
-                let fromIndex = entities.firstIndex(where: { $0.id == draggedEntity.id }),
-                let toIndex = entities.firstIndex(where: { $0.id == entity.id })
-            else { return }
-
-            withAnimation(.default) {
-                entities.move(
-                    fromOffsets: IndexSet(integer: fromIndex),
-                    toOffset: toIndex > fromIndex ? toIndex + 1 : toIndex
-                )
+    @ViewBuilder
+    private func fanWidgetView(
+        _ widgetConfig: WidgetConfig,
+        _ fanEntity: FanEntity
+    ) -> some View {
+        switch widgetConfig.uiType {
+        case FanSliderWidgetView.uniqueID:
+            FanSliderWidgetView(fanEntity: fanEntity) {
+                didClickUpdateFanState($0, $1)
             }
-        }
-
-        func dropUpdated(info: DropInfo) -> DropProposal? {
-            return DropProposal(operation: .move)
+        default:
+            FanWidgetView(fanEntity: fanEntity) {
+                didClickUpdateFanState($0, $1)
+            }
         }
     }
 }
+
+// MARK: - DropDelegate
+
+private struct EntityDropDelegate: DropDelegate {
+
+    let widget: WidgetData
+    @Binding var widgets: [WidgetData]
+    @Binding var draggedItem: WidgetData?
+    @Binding var isDragging: Bool
+    let didUpdateOrder: (_ widgets: [WidgetData]) -> Void
+
+    func performDrop(info: DropInfo) -> Bool {
+        isDragging = false
+        draggedItem = nil
+        didUpdateOrder(widgets)
+        return true
+    }
+
+    func dropEntered(info: DropInfo) {
+        isDragging = true
+        guard
+            let draggedItem,
+            let fromIndex = widgets.firstIndex(where: { $0.config.id == draggedItem.config.id }),
+            let toIndex = widgets.firstIndex(where: { $0.config.id == widget.config.id })
+        else { return }
+
+        withAnimation(.default) {
+            widgets.move(
+                fromOffsets: IndexSet(integer: fromIndex),
+                toOffset: toIndex > fromIndex ? toIndex + 1 : toIndex
+            )
+        }
+    }
+
+    func dropUpdated(info: DropInfo) -> DropProposal? {
+        return DropProposal(operation: .move)
+    }
+}
+
+// MARK: - Preview
 
 #if DEBUG
 import Preview
 
 struct WidgetsGridView_Preview: PreviewProvider {
 
-    static let entities: [any Entity] = [
+    private static let entities: [any Entity] = [
         FanEntity(id: "1", name: "Fan 1", percentageStep: nil, percentage: nil, state: .on),
         LightEntity(id: "2", name: "Light 2", state: .on),
         LightEntity(id: "3", name: "Light 3", state: .on),
@@ -187,9 +207,9 @@ struct WidgetsGridView_Preview: PreviewProvider {
 
         WidgetsGridView(
             editMode: .constant(false),
-            entities: .constant(entities),
-            didUpdateOrder: { _ in },
-            didClickRemoveEntity: { _ in },
+            widgets: .constant([]),
+            didUpdateWidgetsOrder: { _ in },
+            didClickRemoveWidget: { _ in },
             didClickUpdateLightState: { _, _ in },
             didClickUpdateFanState: { _, _ in }
         )

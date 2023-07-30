@@ -9,8 +9,17 @@ import SwiftUI
 
 protocol WidgetView: View {
 
-    var uniqueID: String { get }
-    var xUnit: Int { get }
-    var yUnit: Int { get }
+    static var uniqueID: String { get }
 }
 
+enum WidgetSize {
+
+    static func units(for id: String) -> (columns: Int, rows: Int) {
+        switch id {
+        case FanSliderWidgetView.uniqueID:
+            return (2, 1)
+        default:
+            return (1, 1)
+        }
+    }
+}
