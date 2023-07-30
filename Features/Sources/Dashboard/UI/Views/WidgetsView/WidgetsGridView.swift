@@ -17,7 +17,7 @@ private enum Constants {
     static let removeIconWidth: CGFloat = removeIconHeight
 }
 
-struct EntitiesWidgetsView: View {
+struct WidgetsGridView: View {
 
     @Binding var editMode: Bool
     @Binding var entities: [any Entity]
@@ -172,7 +172,7 @@ struct EntitiesWidgetsView: View {
 #if DEBUG
 import Preview
 
-struct EntitiesView_Preview: PreviewProvider {
+struct WidgetsGridView_Preview: PreviewProvider {
 
     static let entities: [any Entity] = [
         FanEntity(id: "1", name: "Fan 1", percentageStep: nil, percentage: nil, state: .on),
@@ -185,7 +185,7 @@ struct EntitiesView_Preview: PreviewProvider {
 
     static var previews: some View {
 
-        EntitiesWidgetsView(
+        WidgetsGridView(
             editMode: .constant(false),
             entities: .constant(entities),
             didUpdateOrder: { _ in },

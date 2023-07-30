@@ -14,43 +14,43 @@ public enum DashboardMock {
     public static let bedroom = Domain.Dashboard(
         name: "Bedroom",
         icon: "bed.double",
-        widgets: [
-            .init(entityID: EntityMock.ledDeskLight.id, uiType: "light"),
-            .init(entityID: EntityMock.ledCeilingLight.id, uiType: "light"),
-            .init(entityID: EntityMock.fan.id, uiType: "fan"),
+        widgetConfigs: [
+            .init(id: "1", entityID: EntityMock.ledDeskLight.id, uiType: "light"),
+            .init(id: "2", entityID: EntityMock.ledCeilingLight.id, uiType: "light"),
+            .init(id: "3", entityID: EntityMock.fan.id, uiType: "fan"),
         ]
     )
 
     public static let living = Domain.Dashboard(
         name: "Living Room",
         icon: "sofa",
-        widgets: [
-            .init(entityID: EntityMock.climate.id, uiType: "climate"),
+        widgetConfigs: [
+            .init(id: "4", entityID: EntityMock.climate.id, uiType: "climate"),
         ]
     )
 
     public static let kitchen = Domain.Dashboard(
         name: "Kitchen",
         icon: "refrigerator",
-        widgets: [
-            .init(entityID: EntityMock.coffeeMachine.id, uiType: "switch"),
+        widgetConfigs: [
+            .init(id: "5", entityID: EntityMock.coffeeMachine.id, uiType: "switch"),
         ]
     )
 
     public static let garden = Domain.Dashboard(
         name: "Garden",
         icon: "tree",
-        widgets: [
-            .init(entityID: EntityMock.mainLight.id, uiType: "light"),
-            .init(entityID: EntityMock.fan.id, uiType: "fan"),
+        widgetConfigs: [
+            .init(id: "6", entityID: EntityMock.mainLight.id, uiType: "light"),
+            .init(id: "7", entityID: EntityMock.fan.id, uiType: "fan"),
         ]
     )
 
     public static let security = Domain.Dashboard(
         name: "Security",
         icon: "light.beacon.max",
-        widgets: [
-            .init(entityID: EntityMock.mainLight.id, uiType: "light"),
+        widgetConfigs: [
+            .init(id: "8", entityID: EntityMock.mainLight.id, uiType: "light"),
         ]
     )
 

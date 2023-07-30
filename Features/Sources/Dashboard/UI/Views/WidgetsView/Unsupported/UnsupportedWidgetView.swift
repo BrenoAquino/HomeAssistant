@@ -9,7 +9,7 @@ import Domain
 import DesignSystem
 import SwiftUI
 
-struct UnsupportedWidgetView: EntityWidgetView {
+struct UnsupportedWidgetView: WidgetView {
 
     let uniqueID: String = "unsupported"
     let xUnit: Int = 1

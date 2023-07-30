@@ -9,6 +9,7 @@ import Foundation
 
 public struct WidgetConfig: Codable {
 
+    public let id: String
     public let uiType: String
     public let entityID: String
 }

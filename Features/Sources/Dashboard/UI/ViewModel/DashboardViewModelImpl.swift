@@ -16,7 +16,7 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
     public var delegate: DashboardExternalFlow?
     private var cancellable: Set<AnyCancellable> = .init()
     private var dashboardNameToDelete: String?
-    private var entityIDToDelete: String?
+    private var widgetIDToDelete: String?
 
     // MARK: Services
 
@@ -25,17 +25,17 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
 
     // MARK: Publishers
 
-    @Published public var removeDashboardAlert: Bool = false
-    @Published public var removeEntityAlert: Bool = false
     @Published public var editModel: Bool = false
-    @Published public var toastData: DefaultToastDataContent?
-    @Published public var selectedDashboardName: String?
-    @Published public var widgets: [(widget: EntityWidget, entity: Entity)]
     @Published public var dashboards: [Dashboard] = []
+    @Published public var selectedDashboardName: String?
+    @Published public var widgets: [WidgetData] = []
+    @Published public var removeDashboardAlert: Bool = false
+    @Published public var removeWidgetAlert: Bool = false
+    @Published public var toastData: DefaultToastDataContent?
 
     // MARK: Gets
 
-    public var currentDashboard: Dashboard? {
+    private  var currentDashboard: Dashboard? {
         guard let selectedDashboardName else { return nil }
         return dashboardService.dashboards.value[selectedDashboardName]
     }
@@ -70,7 +70,7 @@ extension DashboardViewModelImpl {
             .receive(on: RunLoop.main)
             .sink { [weak self] entities in
                 guard let self else { return }
-                self.setEntities(
+                self.setWidgets(
                     entities,
                     self.dashboardService.dashboards.value,
                     self.selectedDashboardName
@@ -92,7 +92,7 @@ extension DashboardViewModelImpl {
                 if self.selectedDashboardName == nil {
                     self.selectedDashboardName = self.dashboards.first?.name
                 }
-                self.setEntities(
+                self.setWidgets(
                     self.entityService.entities.value,
                     dashboards,
                     selectedDashboardName
@@ -109,7 +109,7 @@ extension DashboardViewModelImpl {
             .receive(on: RunLoop.main)
             .sink { [weak self] name in
                 guard let self else { return }
-                self.setEntities(
+                self.setWidgets(
                     self.entityService.entities.value,
                     self.dashboardService.dashboards.value,
                     name
@@ -133,7 +133,7 @@ extension DashboardViewModelImpl {
         for element in array {
             if dict[element.name] == nil {
                 return true
-            } else if let widgets = dict[element.name]?.widgets, Set(widgets) != Set(element.widgets) {
+            } else if let widgets = dict[element.name]?.widgetConfigs, Set(widgets) != Set(element.widgetConfigs) {
                 return true
             }
         }
@@ -148,18 +148,22 @@ extension DashboardViewModelImpl {
         Logger.log(level: .error, logMessage ?? message)
     }
 
-    private func setEntities(
+    private func setWidgets(
         _ entities: [String : any Entity],
         _ dashboards: [String : Dashboard],
         _ dashboardName: String?
     ) {
-        guard let dashboardName else {
-            self.entities = []
+        guard let dashboardName, let selectedDashboard = dashboards[dashboardName] else {
+            widgets = []
             return
         }
-        self.entities = dashboards[dashboardName]?.widgets.compactMap {
-            entities[$0.entityID]
-        } ?? []
+
+        widgets = selectedDashboard.widgetConfigs.compactMap { config in
+            if let entity = entities[config.entityID] {
+                return (config, entity)
+            }
+            return nil
+        }
     }
 }
 
@@ -170,34 +174,38 @@ extension DashboardViewModelImpl {
     public func deleteRequestedDashboard() {
         guard let dashboardNameToDelete else { return }
         try? dashboardService.delete(dashboardName: dashboardNameToDelete)
-        toastData = .init(type: .success, title: Localizable.deleteSuccess.value)
     }
 
     public func cancelDashboardDeletion() {
         dashboardNameToDelete = nil
     }
 
-    public func deleteRequestedEntity() {
-        guard var currentDashboard, let entityIDToDelete else { return }
-        currentDashboard.widgets.removeAll(where: { $0.entityID == entityIDToDelete })
+    public func deleteRequestedWidget() {
+        guard var currentDashboard, let widgetIDToDelete else { return }
+        currentDashboard.widgetConfigs.removeAll(where: {
+            $0.id == widgetIDToDelete
+        })
+
         try? dashboardService.update(
             dashboardName: currentDashboard.name,
             dashboard: currentDashboard
         )
     }
 
-    public func cancelEntityDeletion() {
-        entityIDToDelete = nil
+    public func cancelWidgetDeletion() {
+        widgetIDToDelete = nil
     }
 }
 
 extension DashboardViewModelImpl {
 
-    public func didUpdateEntitiesOrder(_ entities: [any Entity]) {
-        let ids = entities.map { $0.id }
-        guard var currentDashboard = currentDashboard, currentDashboard.entitiesIDs != ids else { return }
+    public func didUpdateWidgetsOrder(_ widgets: [WidgetData]) {
+        guard
+            var currentDashboard = currentDashboard,
+            currentDashboard.widgetConfigs.map({ $0.id }) != widgets.map({ $0.config.id })
+        else { return }
 
-        currentDashboard.entitiesIDs = ids
+        currentDashboard.widgetConfigs = widgets.map { $0.config }
         try! dashboardService.update(
             dashboardName: currentDashboard.name,
             dashboard: currentDashboard
@@ -225,9 +233,9 @@ extension DashboardViewModelImpl {
         editModel = false
     }
 
-    public func didClickRemove(entity: any Entity) {
-        entityIDToDelete = entity.id
-        removeEntityAlert = true
+    public func didClickRemove(widget: WidgetData) {
+        widgetIDToDelete = widget.config.id
+        removeWidgetAlert = true
     }
 
     public func didClickConfig() {

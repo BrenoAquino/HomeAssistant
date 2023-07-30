@@ -16,7 +16,7 @@ private enum Constants {
     static let strokeOpacity: CGFloat = 0.5
 }
 
-struct FanSliderWidgetView: EntityWidgetView {
+struct FanSliderWidgetView: WidgetView {
 
     let uniqueID: String = "fan-slider"
     let xUnit: Int = 2

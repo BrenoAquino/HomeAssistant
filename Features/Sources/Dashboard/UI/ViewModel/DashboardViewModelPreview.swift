@@ -15,15 +15,15 @@ class DashboardViewModelPreview: DashboardViewModel {
 
     var delegate: DashboardExternalFlow?
     var toastData: DefaultToastDataContent?
-    var removeEntityAlert: Bool = false
+    var removeWidgetAlert: Bool = false
     var removeDashboardAlert: Bool = false
     var editModel: Bool = false
     var selectedDashboardName: String? = "Bedroom"
     var dashboards: [Dashboard] = DashboardMock.all
-    var widgets: [(widget: EntityWidget, entity: any Entity)] = [
-        (EntityWidget(entityID: EntityMock.mainLight.id, uiType: "light"), EntityMock.mainLight),
-        (EntityWidget(entityID: EntityMock.ledDeskLight.id, uiType: "light"), EntityMock.ledDeskLight),
-        (EntityWidget(entityID: EntityMock.ledCeilingLight.id, uiType: "light"), EntityMock.ledCeilingLight),
+    var widgets: [(config: WidgetConfig, entity: any Entity)] = [
+        (WidgetConfig(id: "1", entityID: EntityMock.mainLight.id, uiType: "light"), EntityMock.mainLight),
+        (WidgetConfig(id: "2", entityID: EntityMock.ledDeskLight.id, uiType: "light"), EntityMock.ledDeskLight),
+        (WidgetConfig(id: "3", entityID: EntityMock.ledCeilingLight.id, uiType: "light"), EntityMock.ledCeilingLight),
     ]
 
     var currentDashboard: Dashboard? {
@@ -32,8 +32,8 @@ class DashboardViewModelPreview: DashboardViewModel {
 
     func deleteRequestedDashboard() {}
     func cancelDashboardDeletion() {}
-    func deleteRequestedEntity() {}
-    func cancelEntityDeletion() {}
+    func deleteRequestedWidget() {}
+    func cancelWidgetDeletion() {}
     func didUpdateEntitiesOrder(_ entities: [any Entity]) {}
     func didUpdateDashboardsOrder(_ dashboards: [Dashboard]) {}
     func didClickAddDashboard() {}
@@ -43,5 +43,7 @@ class DashboardViewModelPreview: DashboardViewModel {
     func didClickConfig() {}
     func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State) {}
     func didClickUpdateFanState(_ fanEntity: FanEntity, newState: FanEntity.State) {}
+    func didUpdateWidgetsOrder(_ widgets: [WidgetData]) {}
+    func didClickRemove(widget: WidgetData) {}
 }
 #endif
