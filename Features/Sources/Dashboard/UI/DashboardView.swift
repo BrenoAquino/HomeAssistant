@@ -20,7 +20,6 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
     
     public var body: some View {
         ScrollView(.vertical) {
-
             Localizable.welcome.text
                 .foregroundColor(DSColor.secondaryLabel)
                 .frame(maxWidth: .infinity, alignment: .leading)

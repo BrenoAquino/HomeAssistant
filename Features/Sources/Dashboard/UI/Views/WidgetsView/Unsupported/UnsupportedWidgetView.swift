@@ -11,7 +11,8 @@ import SwiftUI
 
 struct UnsupportedWidgetView: WidgetView {
 
-    static var uniqueID: String = "default"
+    static let uniqueID: String = "default"
+    static let units: (columns: Int, rows: Int) = (1, 1)
 
     let entity: any Entity
 

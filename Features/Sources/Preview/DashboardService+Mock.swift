@@ -10,14 +10,44 @@ import Combine
 import Domain
 import Foundation
 
+public enum WidgetsMock {
+
+    public static func createLightWidget(
+        uiType: String,
+        name: String,
+        state: LightEntity.State
+    ) -> (WidgetConfig, any Entity) {
+        let entityID = UUID().uuidString
+        let entity = LightEntity(id: entityID, name: name, state: state)
+        let widgetConfig = WidgetConfig(id: UUID().uuidString, entityID: entityID, uiType: uiType)
+        return (widgetConfig, entity)
+    }
+
+    public static func createFanWidget(
+        uiType: String,
+        name: String,
+        state: FanEntity.State,
+        percentageStep: Double? = nil,
+        percentage: Double? = nil
+    ) -> (WidgetConfig, any Entity) {
+        let entityID = UUID().uuidString
+        let entity = FanEntity(id: entityID, name: name, percentageStep: percentageStep, percentage: percentage, state: state)
+        let widgetConfig = WidgetConfig(id: UUID().uuidString, entityID: entityID, uiType: uiType)
+        return (widgetConfig, entity)
+    }
+}
+
 public enum DashboardMock {
+    
     public static let bedroom = Domain.Dashboard(
         name: "Bedroom",
         icon: "bed.double",
         widgetConfigs: [
-            .init(id: "1", entityID: EntityMock.ledDeskLight.id, uiType: "light"),
-            .init(id: "2", entityID: EntityMock.ledCeilingLight.id, uiType: "light"),
-            .init(id: "3", entityID: EntityMock.fan.id, uiType: "fan"),
+            .init(id: "1", entityID: EntityMock.ledDeskLight.id),
+            .init(id: "2", entityID: EntityMock.ledCeilingLight.id),
+            .init(id: "3", entityID: EntityMock.fan.id, uiType: "slider"),
+            .init(id: "4", entityID: EntityMock.fan.id, uiType: "slider"),
+            .init(id: "5", entityID: EntityMock.mainLight.id),
         ]
     )
 
@@ -25,7 +55,7 @@ public enum DashboardMock {
         name: "Living Room",
         icon: "sofa",
         widgetConfigs: [
-            .init(id: "4", entityID: EntityMock.climate.id, uiType: "climate"),
+            .init(id: "4", entityID: EntityMock.climate.id),
         ]
     )
 
@@ -33,7 +63,7 @@ public enum DashboardMock {
         name: "Kitchen",
         icon: "refrigerator",
         widgetConfigs: [
-            .init(id: "5", entityID: EntityMock.coffeeMachine.id, uiType: "switch"),
+            .init(id: "5", entityID: EntityMock.coffeeMachine.id),
         ]
     )
 
@@ -41,8 +71,8 @@ public enum DashboardMock {
         name: "Garden",
         icon: "tree",
         widgetConfigs: [
-            .init(id: "6", entityID: EntityMock.mainLight.id, uiType: "light"),
-            .init(id: "7", entityID: EntityMock.fan.id, uiType: "fan"),
+            .init(id: "6", entityID: EntityMock.mainLight.id),
+            .init(id: "7", entityID: EntityMock.fan.id),
         ]
     )
 
@@ -50,7 +80,7 @@ public enum DashboardMock {
         name: "Security",
         icon: "light.beacon.max",
         widgetConfigs: [
-            .init(id: "8", entityID: EntityMock.mainLight.id, uiType: "light"),
+            .init(id: "8", entityID: EntityMock.mainLight.id),
         ]
     )
 

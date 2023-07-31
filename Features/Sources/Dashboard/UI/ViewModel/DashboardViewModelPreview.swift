@@ -21,9 +21,9 @@ class DashboardViewModelPreview: DashboardViewModel {
     var selectedDashboardName: String? = "Bedroom"
     var dashboards: [Dashboard] = DashboardMock.all
     var widgets: [(config: WidgetConfig, entity: any Entity)] = [
-        (WidgetConfig(id: "1", entityID: EntityMock.mainLight.id, uiType: "light"), EntityMock.mainLight),
-        (WidgetConfig(id: "2", entityID: EntityMock.ledDeskLight.id, uiType: "light"), EntityMock.ledDeskLight),
-        (WidgetConfig(id: "3", entityID: EntityMock.ledCeilingLight.id, uiType: "light"), EntityMock.ledCeilingLight),
+        (WidgetConfig(id: "1", entityID: EntityMock.mainLight.id), EntityMock.mainLight),
+        (WidgetConfig(id: "2", entityID: EntityMock.ledDeskLight.id), EntityMock.ledDeskLight),
+        (WidgetConfig(id: "3", entityID: EntityMock.ledCeilingLight.id), EntityMock.ledCeilingLight),
     ]
 
     var currentDashboard: Dashboard? {

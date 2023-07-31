@@ -18,7 +18,8 @@ private enum Constants {
 
 struct FanWidgetView: WidgetView {
 
-    static var uniqueID: String = "default"
+    static let uniqueID: String = "slider"
+    static let units: (columns: Int, rows: Int) = (1, 1)
 
     let fanEntity: FanEntity
     let updateState: (_ fanEntity: FanEntity, _ newState: FanEntity.State) -> Void

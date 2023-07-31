@@ -183,7 +183,7 @@ extension DashboardCreationViewModelImpl {
         return Dashboard(
             name: name,
             icon: selectedIconName,
-            widgetConfigs: selectedEntitiesIDs.map { WidgetConfig(id: UUID().uuidString, entityID: $0, uiType: "") }
+            widgetConfigs: selectedEntitiesIDs.map { WidgetConfig(id: UUID().uuidString, entityID: $0) }
         )
     }
 }

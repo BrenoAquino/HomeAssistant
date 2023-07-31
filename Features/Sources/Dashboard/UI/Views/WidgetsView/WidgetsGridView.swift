@@ -69,7 +69,7 @@ struct WidgetsGridView: View {
         var currentRow = 0
 
         for widget in widgets {
-            let (columns, rows) = WidgetSize.units(for: widget.config.uiType)
+            let (columns, rows) = WidgetSize.units(for: widget.config.uiType, entity: widget.entity)
             columnsCount += columns
 
             if columnsCount > columnsLimit {
@@ -194,20 +194,20 @@ import Preview
 
 struct WidgetsGridView_Preview: PreviewProvider {
 
-    private static let entities: [any Entity] = [
-        FanEntity(id: "1", name: "Fan 1", percentageStep: nil, percentage: nil, state: .on),
-        LightEntity(id: "2", name: "Light 2", state: .on),
-        LightEntity(id: "3", name: "Light 3", state: .on),
-        LightEntity(id: "4", name: "Light 4", state: .on),
-        FanEntity(id: "5", name: "Fan 5", percentageStep: nil, percentage: nil, state: .on),
-        LightEntity(id: "6", name: "Light 6", state: .on),
+    private static let widgets: [WidgetData] = [
+        WidgetsMock.createFanWidget(uiType: "default", name: "Fan 1", state: .on),
+        WidgetsMock.createLightWidget(uiType: "default", name: "Light 2", state: .on),
+        WidgetsMock.createLightWidget(uiType: "default", name: "Light 3", state: .on),
+        WidgetsMock.createLightWidget(uiType: "default", name: "Light 4", state: .on),
+        WidgetsMock.createFanWidget(uiType: "default", name: "Fan 5", state: .on),
+        WidgetsMock.createLightWidget(uiType: "default", name: "Light 6", state: .on),
     ]
 
     static var previews: some View {
 
         WidgetsGridView(
             editMode: .constant(false),
-            widgets: .constant([]),
+            widgets: .constant(widgets),
             didUpdateWidgetsOrder: { _ in },
             didClickRemoveWidget: { _ in },
             didClickUpdateLightState: { _, _ in },
