@@ -9,53 +9,50 @@ import SwiftUI
 
 class Coordinator: ObservableObject {
 
-    private lazy var factory: Factory = .init(webSocketDidDisconnect: { [weak self] in
-        self?.webSocketHandler.webSocketDidDisconnect()
-    })
-
-    // MARK: Handlers
-
-    private(set) lazy var webSocketHandler = factory.webSocketHandler(coordinator: self)
-
     // MARK: Publishers
 
-    @Published var root: Screen = Screen.launch(style: .default)
-    @Published var block: Screen?
-
+    @Published var root: Screen2
+    @Published var block: Screen2?
     @Published var path = NavigationPath()
-    @Published var sheet: Screen?
-    @Published var fullScreenCover: Screen?
+    @Published var sheet: Screen2?
+    @Published var fullScreenCover: Screen2?
+
+    // MARK: Cache
+
+    init(root: Screen2) {
+        self.root = root
+    }
 }
 
 // MARK: Present
 
 extension Coordinator {
 
-    func setRoot(_ screen: Screen) {
+    func setRoot(_ screen: Screen2) {
         DispatchQueue.main.async { [self] in
             self.root = screen
         }
     }
 
-    func block(_ screen: Screen) {
+    func block(_ screen: Screen2) {
         DispatchQueue.main.async { [self] in
             self.block = screen
         }
     }
 
-    func push(_ screen: Screen) {
+    func push(_ screen: Screen2) {
         DispatchQueue.main.async { [self] in
             self.path.append(screen)
         }
     }
 
-    func preset(sheet: Screen) {
+    func preset(sheet: Screen2) {
         DispatchQueue.main.async { [self] in
             self.sheet = sheet
         }
     }
 
-    func preset(fullScreenCover: Screen) {
+    func preset(fullScreenCover: Screen2) {
         DispatchQueue.main.async { [self] in
             self.fullScreenCover = fullScreenCover
         }
@@ -89,20 +86,5 @@ extension Coordinator {
         DispatchQueue.main.async { [self] in
             self.block = nil
         }
-    }
-}
-
-// MARK: Builds
-
-extension Coordinator {
-
-    @ViewBuilder
-    func rootView() -> some View {
-        root.viewCoordinator(factory).style(root.style)
-    }
-
-    @ViewBuilder
-    func build(screen: Screen) -> some View {
-        screen.viewCoordinator(factory).style(screen.style)
     }
 }

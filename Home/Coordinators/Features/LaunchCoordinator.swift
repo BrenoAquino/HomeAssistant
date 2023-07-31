@@ -29,7 +29,8 @@ extension LaunchCoordinator: LaunchExternalFlow {
         if coordinator.block != nil {
             coordinator.dismissBlock()
         } else {
-            coordinator.setRoot(.dashboard(style: .default))
+            let screen = Factory.shared.dashboardScreen()
+            coordinator.setRoot(screen)
         }
     }
 }

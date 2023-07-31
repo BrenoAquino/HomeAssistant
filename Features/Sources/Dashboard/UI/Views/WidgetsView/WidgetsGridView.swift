@@ -33,12 +33,14 @@ struct WidgetsGridView: View {
 
     @State private var draggedItem: WidgetData?
     @State private var isDragging: Bool = false
+    @State private var rotationAngle: CGFloat = 0
+    @State private var elementID: UUID = .init()
 
     var body: some View {
-        GeometryReader { proxy in
+//        GeometryReader { proxy in
             let rowHeight: CGFloat = 150
             let space: DSSpace = .horizontal
-            let matrix = calculateRows(widgets, proxy)
+            let matrix = calculateRows(widgets)
 
             Grid(
                 horizontalSpacing: space.rawValue,
@@ -47,26 +49,31 @@ struct WidgetsGridView: View {
                 ForEach(matrix, id: \.id) { row in
                     GridRow {
                         ForEach(row.data, id: \.widget.config.id) { widgetViewData in
+                            let shakeAnimation = Animation.easeInOut(duration: Constants.animationDuration).repeatForever(autoreverses: true)
+
                             widgetElement(widgetViewData.widget)
                                 .gridCellColumns(widgetViewData.columns)
+//                                .rotationEffect(editMode ? .degrees(5) : .zero)
+                                .rotationEffect(.degrees(5))
+//                                .background(editMode ? Color.red : Color.orange)
+                                .animation(shakeAnimation, value: editMode)
                         }
                     }
                     .frame(height: rowHeight)
                 }
             }
             .padding(.horizontal, space: space)
-        }
+//        }
     }
 
     private func calculateRows(
-        _ widgets: [WidgetData],
-        _ proxy: GeometryProxy
+        _ widgets: [WidgetData]
     ) -> [RowData] {
         var matrix: [RowData] = [(UUID(), [])]
 
         let columnsLimit = 3
-        var columnsCount = 0
-        var currentRow = 0
+        var columnsCount: Int = .zero
+        var currentRow: Int = .zero
 
         for widget in widgets {
             let (columns, rows) = WidgetSize.units(for: widget.config.uiType, entity: widget.entity)
@@ -82,6 +89,25 @@ struct WidgetsGridView: View {
         }
         return matrix
     }
+
+//    widgetElement(widgetViewData.widget)
+//        .gridCellColumns(widgetViewData.columns)
+//        .padding(.leading, -Constants.removeIconWidth / 3)
+//        .padding(.top, -Constants.removeIconHeight / 3)
+//        .rotationEffect(.degrees(editMode ? Constants.shakeAnimationAngle : .zero))
+//        .animation(editMode ? shakeAnimation : .default, value: editMode)
+//        .onDrop(of: [.text], delegate: WidgetDropDelegate(
+//            widget: widgetViewData.widget,
+//            widgets: $widgets,
+//            draggedItem: $draggedItem,
+//            isDragging: $isDragging,
+//            didUpdateOrder: didUpdateWidgetsOrder
+//        ))
+//        .onDrag {
+//            draggedItem = widgetViewData.widget
+//            editMode = true
+//            return NSItemProvider(object: widgetViewData.widget.config.id as NSString)
+//        } preview: { EmptyView() }
 
     @ViewBuilder
     private func widgetElement(
@@ -151,7 +177,7 @@ struct WidgetsGridView: View {
 
 // MARK: - DropDelegate
 
-private struct EntityDropDelegate: DropDelegate {
+private struct WidgetDropDelegate: DropDelegate {
 
     let widget: WidgetData
     @Binding var widgets: [WidgetData]
@@ -174,7 +200,7 @@ private struct EntityDropDelegate: DropDelegate {
             let toIndex = widgets.firstIndex(where: { $0.config.id == widget.config.id })
         else { return }
 
-        withAnimation(.default) {
+        withAnimation {
             widgets.move(
                 fromOffsets: IndexSet(integer: fromIndex),
                 toOffset: toIndex > fromIndex ? toIndex + 1 : toIndex

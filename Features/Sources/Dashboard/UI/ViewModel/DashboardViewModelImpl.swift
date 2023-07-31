@@ -70,6 +70,7 @@ extension DashboardViewModelImpl {
             .receive(on: RunLoop.main)
             .sink { [weak self] entities in
                 guard let self else { return }
+                print("entities sink \(Unmanaged.passUnretained(self).toOpaque()) \(selectedDashboardName)")
                 self.setWidgets(
                     entities,
                     self.dashboardService.dashboards.value,
@@ -109,6 +110,7 @@ extension DashboardViewModelImpl {
             .receive(on: RunLoop.main)
             .sink { [weak self] name in
                 guard let self else { return }
+                print("$selectedDashboardName sink \(Unmanaged.passUnretained(self).toOpaque()) \(name)")
                 self.setWidgets(
                     self.entityService.entities.value,
                     self.dashboardService.dashboards.value,

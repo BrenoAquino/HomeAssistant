@@ -16,9 +16,19 @@ import Config
 
 class Factory {
 
+    static let shared: Factory = .init()
+
+    private init() {}
+
+    // MARK: Infrastructure
+
     private lazy var databaseProviderInstance = UserDefaultsDatabaseProvider()
 
-    private var webSocketProviderInstance: WebSocketProvider
+    private lazy var webSocketProviderInstance = try! WebSocket(
+        url: AppEnvironment.homeAssistantURL,
+        token: AppEnvironment.authToken,
+        didDisconnect: nil
+    )
 
     // MARK: LocalDataSource
 
@@ -82,16 +92,6 @@ class Factory {
         commandRepository: commandRepositoryInstance,
         subscriptionRepository: subscriptionRepositoryInstance
     )
-
-    // MARK: Init
-
-    init(webSocketDidDisconnect: (() -> Void)? = nil) {
-        webSocketProviderInstance = try! WebSocket(
-            url: AppEnvironment.homeAssistantURL,
-            token: AppEnvironment.authToken,
-            didDisconnect: webSocketDidDisconnect
-        )
-    }
 }
 
 // MARK: Coordinator
@@ -144,5 +144,44 @@ extension Factory {
 
     func webSocketHandler(coordinator: Coordinator) -> WebSocketHandler {
         WebSocketHandlerImpl(coordinator: coordinator)
+    }
+}
+
+// MARK: Screens
+
+extension Factory {
+
+    func launchScreen() -> Screen2 {
+        let viewModel = LaunchViewModelImpl(
+            entityService: entityServiceInstance,
+            dashboardService: dashboardServiceInstance
+        )
+        return Screen2(view: LaunchCoordinator(viewModel: viewModel))
+    }
+
+    func staticLaunchScreen() -> Screen2 {
+        return Screen2(view: StaticLaunchCoordinator())
+    }
+
+    func dashboardScreen() -> Screen2 {
+        let viewModel = DashboardViewModelImpl(
+            dashboardService: dashboardServiceInstance,
+            entityService: entityServiceInstance
+        )
+        return Screen2(view: DashboardCoordinator(viewModel: viewModel))
+    }
+
+    func dashboardCreationScreen(mode: DashboardCreationMode) -> Screen2 {
+        let viewModel = DashboardCreationViewModelImpl(
+            dashboardService: dashboardServiceInstance,
+            entitiesService: entityServiceInstance,
+            mode: mode
+        )
+        return Screen2(view: DashboardCreationCoordinator(viewModel: viewModel))
+    }
+
+    func configScreen() -> Screen2 {
+        let viewModel = ConfigViewModelImpl(entityService: entityServiceInstance)
+        return Screen2(view: ConfigCoordinator(viewModel: viewModel))
     }
 }
