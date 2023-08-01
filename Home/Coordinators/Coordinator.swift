@@ -9,18 +9,20 @@ import SwiftUI
 
 class Coordinator: ObservableObject {
 
+    private let factory: Factory = .init()
+
     // MARK: Publishers
 
-    @Published var root: Screen2
-    @Published var block: Screen2?
+    @Published var root: Screen
+    @Published var block: Screen?
     @Published var path = NavigationPath()
-    @Published var sheet: Screen2?
-    @Published var fullScreenCover: Screen2?
+    @Published var sheet: Screen?
+    @Published var fullScreenCover: Screen?
 
     // MARK: Cache
 
-    init(root: Screen2) {
-        self.root = root
+    init(root: ScreenDestination) {
+        self.root = root.screen(factory: factory)
     }
 }
 
@@ -28,33 +30,33 @@ class Coordinator: ObservableObject {
 
 extension Coordinator {
 
-    func setRoot(_ screen: Screen2) {
+    func setRoot(_ destination: ScreenDestination) {
         DispatchQueue.main.async { [self] in
-            self.root = screen
+            self.root = destination.screen(factory: factory)
         }
     }
 
-    func block(_ screen: Screen2) {
+    func setBlock(_ destination: ScreenDestination) {
         DispatchQueue.main.async { [self] in
-            self.block = screen
+            self.block = destination.screen(factory: factory)
         }
     }
 
-    func push(_ screen: Screen2) {
+    func push(_ destination: ScreenDestination) {
         DispatchQueue.main.async { [self] in
-            self.path.append(screen)
+            self.path.append(destination.screen(factory: factory))
         }
     }
 
-    func preset(sheet: Screen2) {
+    func preset(sheet: ScreenDestination) {
         DispatchQueue.main.async { [self] in
-            self.sheet = sheet
+            self.sheet = sheet.screen(factory: factory)
         }
     }
 
-    func preset(fullScreenCover: Screen2) {
+    func preset(fullScreenCover: ScreenDestination) {
         DispatchQueue.main.async { [self] in
-            self.fullScreenCover = fullScreenCover
+            self.fullScreenCover = fullScreenCover.screen(factory: factory)
         }
     }
 }

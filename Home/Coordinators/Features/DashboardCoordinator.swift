@@ -27,17 +27,14 @@ struct DashboardCoordinator<ViewModel: DashboardViewModel>: View {
 extension DashboardCoordinator: DashboardExternalFlow {
     
     func didSelectConfig() -> Void {
-        let screen = Factory.shared.configScreen()
-        coordinator.preset(sheet: screen)
+        coordinator.preset(sheet: .config)
     }
 
     func didSelectAddDashboard() -> Void {
-        let screen = Factory.shared.dashboardCreationScreen(mode: .creation)
-        coordinator.preset(sheet: screen)
+        coordinator.preset(sheet: .dashboardCreation(mode: .creation))
     }
 
     func didSelectEditDashboard(_ dashboard: Dashboard) -> Void {
-        let screen = Factory.shared.dashboardCreationScreen(mode: .edit(dashboard))
-        coordinator.preset(sheet: screen)
+        coordinator.preset(sheet: .dashboardCreation(mode: .edit(dashboard)))
     }
 }

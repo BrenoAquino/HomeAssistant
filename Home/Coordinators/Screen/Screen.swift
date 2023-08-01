@@ -2,20 +2,19 @@
 //  Screen.swift
 //  Home
 //
-//  Created by Breno Aquino on 24/07/23.
+//  Created by Breno Aquino on 17/07/23.
 //
 
 import SwiftUI
+import DashboardCreation
 
-// MARK: PresentationStyle
+struct PresentationStyle {
 
-struct EmptyModifier: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-    }
+    let transition: AnyTransition?
 }
 
 extension PresentationStyle {
+
     static let `default`: PresentationStyle = .init(
         transition: .opacity.animation(.linear(duration: 0.3))
     )
@@ -25,25 +24,18 @@ extension PresentationStyle {
     )
 }
 
-// MARK: Screen
+class Screen: Identifiable {
 
-extension Screen {
+    let id: UUID
+    let view: AnyView
 
-    var id: String { String(describing: self) }
-    var style: PresentationStyle? {
-        guard let enumParamsReflection = Mirror(reflecting: self).children.first?.value else {
-            return nil
-        }
-        for value in Mirror(reflecting: enumParamsReflection).children {
-            if let style = value.value as? PresentationStyle {
-                return style
-            }
-        }
-        return nil
+    init(view: any View) {
+        self.id = .init()
+        self.view = AnyView(view)
     }
 }
 
-extension Screen {
+extension Screen: Hashable {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)

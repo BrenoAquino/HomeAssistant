@@ -10,15 +10,14 @@ import SwiftUI
 struct CoordinatorView: View {
 
     @Environment(\.scenePhase) var scenePhase
-    @ObservedObject private var coordinator = Coordinator(root: Factory.shared.launchScreen())
+    @ObservedObject private var coordinator: Coordinator = .init(root: .launch)
 
     var body: some View {
         viewWithBlockIfNeeded {
             NavigationStack(path: $coordinator.path) {
                 coordinator.root.view
                     .opacityTransition()
-                    .navigationDestination(for: Screen2.self) { screen in
-                        let _ = print(screen)
+                    .navigationDestination(for: Screen.self) { screen in
                         viewWithBlockIfNeeded { screen.view }
                     }
                     .sheet(item: $coordinator.sheet) { screen in
@@ -36,7 +35,6 @@ struct CoordinatorView: View {
     private func viewWithBlockIfNeeded(@ViewBuilder _ content: () -> some View) -> some View {
         ZStack {
             content()
-
             if let block = coordinator.block {
                 block.view
                     .frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -14,11 +14,7 @@ import Foundation
 import SwiftUI
 import Config
 
-class Factory {
-
-    static let shared: Factory = .init()
-
-    private init() {}
+class Factory: ObservableObject {
 
     // MARK: Infrastructure
 
@@ -94,94 +90,50 @@ class Factory {
     )
 }
 
-// MARK: Coordinator
+// MARK: Screens
 
-extension Factory {
+extension Factory: ScreenFactory {
 
-    @ViewBuilder
-    func launchCoordinator() -> some View {
+    func launchScreen() -> Screen {
         let viewModel = LaunchViewModelImpl(
             entityService: entityServiceInstance,
             dashboardService: dashboardServiceInstance
         )
-        LaunchCoordinator(viewModel: viewModel)
+        return Screen(view: LaunchCoordinator(viewModel: viewModel))
     }
 
-    @ViewBuilder
-    func staticLaunchCoordinator() -> some View {
-        StaticLaunchCoordinator()
+    func staticLaunchScreen() -> Screen {
+        return Screen(view: StaticLaunchCoordinator())
     }
 
-    @ViewBuilder
-    func dashboardCoordinator() -> some View {
+    func dashboardScreen() -> Screen {
         let viewModel = DashboardViewModelImpl(
             dashboardService: dashboardServiceInstance,
             entityService: entityServiceInstance
         )
-        DashboardCoordinator(viewModel: viewModel)
+        return Screen(view: DashboardCoordinator(viewModel: viewModel))
     }
 
-    @ViewBuilder
-    func dashboardCreationCoordinator(mode: DashboardCreationMode) -> some View {
+    func dashboardCreationScreen(mode: DashboardCreationMode) -> Screen {
         let viewModel = DashboardCreationViewModelImpl(
             dashboardService: dashboardServiceInstance,
             entitiesService: entityServiceInstance,
             mode: mode
         )
-        DashboardCreationCoordinator(viewModel: viewModel)
+        return Screen(view: DashboardCreationCoordinator(viewModel: viewModel))
     }
 
-    @ViewBuilder
-    func configCoordinator() -> some View {
+    func configScreen() -> Screen {
         let viewModel = ConfigViewModelImpl(entityService: entityServiceInstance)
-        ConfigCoordinator(viewModel: viewModel)
+        return Screen(view: ConfigCoordinator(viewModel: viewModel))
     }
 }
 
 // MARK: Handlers
 
-extension Factory {
+extension Factory: HandlerFactory {
 
     func webSocketHandler(coordinator: Coordinator) -> WebSocketHandler {
         WebSocketHandlerImpl(coordinator: coordinator)
-    }
-}
-
-// MARK: Screens
-
-extension Factory {
-
-    func launchScreen() -> Screen2 {
-        let viewModel = LaunchViewModelImpl(
-            entityService: entityServiceInstance,
-            dashboardService: dashboardServiceInstance
-        )
-        return Screen2(view: LaunchCoordinator(viewModel: viewModel))
-    }
-
-    func staticLaunchScreen() -> Screen2 {
-        return Screen2(view: StaticLaunchCoordinator())
-    }
-
-    func dashboardScreen() -> Screen2 {
-        let viewModel = DashboardViewModelImpl(
-            dashboardService: dashboardServiceInstance,
-            entityService: entityServiceInstance
-        )
-        return Screen2(view: DashboardCoordinator(viewModel: viewModel))
-    }
-
-    func dashboardCreationScreen(mode: DashboardCreationMode) -> Screen2 {
-        let viewModel = DashboardCreationViewModelImpl(
-            dashboardService: dashboardServiceInstance,
-            entitiesService: entityServiceInstance,
-            mode: mode
-        )
-        return Screen2(view: DashboardCreationCoordinator(viewModel: viewModel))
-    }
-
-    func configScreen() -> Screen2 {
-        let viewModel = ConfigViewModelImpl(entityService: entityServiceInstance)
-        return Screen2(view: ConfigCoordinator(viewModel: viewModel))
     }
 }
