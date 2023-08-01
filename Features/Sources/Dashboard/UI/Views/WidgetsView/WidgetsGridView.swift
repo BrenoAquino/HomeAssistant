@@ -53,9 +53,7 @@ struct WidgetsGridView: View {
 
                             widgetElement(widgetViewData.widget)
                                 .gridCellColumns(widgetViewData.columns)
-//                                .rotationEffect(editMode ? .degrees(5) : .zero)
-                                .rotationEffect(.degrees(5))
-//                                .background(editMode ? Color.red : Color.orange)
+                                .rotationEffect(editMode ? .degrees(5) : .zero)
                                 .animation(shakeAnimation, value: editMode)
                         }
                     }
