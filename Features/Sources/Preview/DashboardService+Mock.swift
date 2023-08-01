@@ -10,22 +10,79 @@ import Combine
 import Domain
 import Foundation
 
+public enum WidgetsMock {
+
+    public static func createLightWidget(
+        uiType: String,
+        name: String,
+        state: LightEntity.State
+    ) -> (WidgetConfig, any Entity) {
+        let entityID = UUID().uuidString
+        let entity = LightEntity(id: entityID, name: name, state: state)
+        let widgetConfig = WidgetConfig(id: UUID().uuidString, entityID: entityID, uiType: uiType)
+        return (widgetConfig, entity)
+    }
+
+    public static func createFanWidget(
+        uiType: String,
+        name: String,
+        state: FanEntity.State,
+        percentageStep: Double? = nil,
+        percentage: Double? = nil
+    ) -> (WidgetConfig, any Entity) {
+        let entityID = UUID().uuidString
+        let entity = FanEntity(id: entityID, name: name, percentageStep: percentageStep, percentage: percentage, state: state)
+        let widgetConfig = WidgetConfig(id: UUID().uuidString, entityID: entityID, uiType: uiType)
+        return (widgetConfig, entity)
+    }
+}
+
 public enum DashboardMock {
-    public static let bedroom = Domain.Dashboard(name: "Bedroom", icon: "bed.double", entities: [
-        EntityMock.ledDeskLight.id, EntityMock.ledCeilingLight.id, EntityMock.fan.id
-    ])
-    public static let living = Domain.Dashboard(name: "Living Room", icon: "sofa", entities: [
-        EntityMock.climate.id
-    ])
-    public static let kitchen = Domain.Dashboard(name: "Kitchen", icon: "refrigerator", entities: [
-        EntityMock.coffeeMachine.id
-    ])
-    public static let garden = Domain.Dashboard(name: "Garden", icon: "tree", entities: [
-        EntityMock.mainLight.id, EntityMock.fan.id
-    ])
-    public static let security = Domain.Dashboard(name: "Security", icon: "light.beacon.max", entities: [
-        EntityMock.mainLight.id
-    ])
+    
+    public static let bedroom = Domain.Dashboard(
+        name: "Bedroom",
+        icon: "bed.double",
+        widgetConfigs: [
+            .init(id: "1", entityID: EntityMock.ledDeskLight.id),
+            .init(id: "2", entityID: EntityMock.ledCeilingLight.id),
+            .init(id: "3", entityID: EntityMock.fan.id, uiType: "slider"),
+            .init(id: "4", entityID: EntityMock.fan.id, uiType: "slider"),
+            .init(id: "5", entityID: EntityMock.mainLight.id),
+        ]
+    )
+
+    public static let living = Domain.Dashboard(
+        name: "Living Room",
+        icon: "sofa",
+        widgetConfigs: [
+            .init(id: "4", entityID: EntityMock.climate.id),
+        ]
+    )
+
+    public static let kitchen = Domain.Dashboard(
+        name: "Kitchen",
+        icon: "refrigerator",
+        widgetConfigs: [
+            .init(id: "5", entityID: EntityMock.coffeeMachine.id),
+        ]
+    )
+
+    public static let garden = Domain.Dashboard(
+        name: "Garden",
+        icon: "tree",
+        widgetConfigs: [
+            .init(id: "6", entityID: EntityMock.mainLight.id),
+            .init(id: "7", entityID: EntityMock.fan.id),
+        ]
+    )
+
+    public static let security = Domain.Dashboard(
+        name: "Security",
+        icon: "light.beacon.max",
+        widgetConfigs: [
+            .init(id: "8", entityID: EntityMock.mainLight.id),
+        ]
+    )
 
     public static let all = [bedroom, living, kitchen, garden, security]
     public static var allDict: [String : Dashboard] = all.reduce(into: [:], { $0[$1.name] = $1 })

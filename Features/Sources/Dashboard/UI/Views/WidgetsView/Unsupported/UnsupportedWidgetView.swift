@@ -5,17 +5,20 @@
 //  Created by Breno Aquino on 23/07/23.
 //
 
+import Domain
 import DesignSystem
 import SwiftUI
 
-struct UnsupportedView: View {
+struct UnsupportedWidgetView: WidgetView {
 
-    let name: String
-    let domain: String
+    static let uniqueID: String = "default"
+    static let units: (columns: Int, rows: Int) = (1, 1)
+
+    let entity: any Entity
 
     var body: some View {
         VStack {
-            Text(name)
+            Text(entity.name)
                 .textCase(.uppercase)
                 .multilineTextAlignment(.center)
                 .minimumScaleFactor(0.5)
@@ -25,7 +28,6 @@ struct UnsupportedView: View {
 
             Localizable.unsupported.text
                 .textCase(.uppercase)
-                .scaledToFill()
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)
                 .foregroundColor(DSColor.secondaryLabel)
@@ -42,12 +44,14 @@ struct UnsupportedView: View {
 }
 
 #if DEBUG
-struct UnsupportedView_Preview: PreviewProvider {
+import Preview
+
+struct UnsupportedWidgetView_Preview: PreviewProvider {
 
     static var previews: some View {
         let size: CGFloat = 150
         
-        UnsupportedView(name: "Breno's Fan", domain: "fan")
+        UnsupportedWidgetView(entity: EntityMock.climate)
             .frame(width: size, height: size)
     }
 }

@@ -9,56 +9,54 @@ import SwiftUI
 
 class Coordinator: ObservableObject {
 
-    private lazy var factory: Factory = .init(webSocketDidDisconnect: { [weak self] in
-        self?.webSocketHandler.webSocketDidDisconnect()
-    })
-
-    // MARK: Handlers
-
-    private(set) lazy var lifeCycleHandler = factory.lifeCycleHandler(coordinator: self)
-    private(set) lazy var webSocketHandler = factory.webSocketHandler(coordinator: self)
+    private let factory: Factory = .init()
 
     // MARK: Publishers
 
-    @Published var root: Screen = Screen.launch(style: .default)
+    @Published var root: Screen
     @Published var block: Screen?
-
     @Published var path = NavigationPath()
     @Published var sheet: Screen?
     @Published var fullScreenCover: Screen?
+
+    // MARK: Cache
+
+    init(root: ScreenDestination) {
+        self.root = root.screen(factory: factory)
+    }
 }
 
 // MARK: Present
 
 extension Coordinator {
 
-    func setRoot(_ screen: Screen) {
+    func setRoot(_ destination: ScreenDestination) {
         DispatchQueue.main.async { [self] in
-            self.root = screen
+            self.root = destination.screen(factory: factory)
         }
     }
 
-    func block(_ screen: Screen) {
+    func setBlock(_ destination: ScreenDestination) {
         DispatchQueue.main.async { [self] in
-            self.block = screen
+            self.block = destination.screen(factory: factory)
         }
     }
 
-    func push(_ screen: Screen) {
+    func push(_ destination: ScreenDestination) {
         DispatchQueue.main.async { [self] in
-            self.path.append(screen)
+            self.path.append(destination.screen(factory: factory))
         }
     }
 
-    func preset(sheet: Screen) {
+    func preset(sheet: ScreenDestination) {
         DispatchQueue.main.async { [self] in
-            self.sheet = sheet
+            self.sheet = sheet.screen(factory: factory)
         }
     }
 
-    func preset(fullScreenCover: Screen) {
+    func preset(fullScreenCover: ScreenDestination) {
         DispatchQueue.main.async { [self] in
-            self.fullScreenCover = fullScreenCover
+            self.fullScreenCover = fullScreenCover.screen(factory: factory)
         }
     }
 }
@@ -90,20 +88,5 @@ extension Coordinator {
         DispatchQueue.main.async { [self] in
             self.block = nil
         }
-    }
-}
-
-// MARK: Builds
-
-extension Coordinator {
-
-    @ViewBuilder
-    func rootView() -> some View {
-        root.viewCoordinator(factory).style(root.style)
-    }
-
-    @ViewBuilder
-    func build(screen: Screen) -> some View {
-        screen.viewCoordinator(factory).style(screen.style)
     }
 }

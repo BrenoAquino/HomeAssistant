@@ -15,31 +15,25 @@ class DashboardViewModelPreview: DashboardViewModel {
 
     var delegate: DashboardExternalFlow?
     var toastData: DefaultToastDataContent?
-    var removeEntityAlert: Bool = false
+    var removeWidgetAlert: Bool = false
     var removeDashboardAlert: Bool = false
-
-    @Published var editModel: Bool = false
-    @Published var selectedDashboardName: String? = "Bedroom"
-    @Published var dashboards: [Dashboard] = DashboardMock.all
+    var editModel: Bool = false
+    var selectedDashboardName: String? = "Bedroom"
+    var dashboards: [Dashboard] = DashboardMock.all
+    var widgets: [(config: WidgetConfig, entity: any Entity)] = [
+        (WidgetConfig(id: "1", entityID: EntityMock.mainLight.id), EntityMock.mainLight),
+        (WidgetConfig(id: "2", entityID: EntityMock.ledDeskLight.id), EntityMock.ledDeskLight),
+        (WidgetConfig(id: "3", entityID: EntityMock.ledCeilingLight.id), EntityMock.ledCeilingLight),
+    ]
 
     var currentDashboard: Dashboard? {
         return dashboards[0]
     }
 
-    var entities: [any Entity] {
-        get {
-            guard let currentDashboard else { return [] }
-            return currentDashboard.entitiesIDs.compactMap { EntityMock.allDict[$0] }
-        }
-        set {
-            
-        }
-    }
-
     func deleteRequestedDashboard() {}
     func cancelDashboardDeletion() {}
-    func deleteRequestedEntity() {}
-    func cancelEntityDeletion() {}
+    func deleteRequestedWidget() {}
+    func cancelWidgetDeletion() {}
     func didUpdateEntitiesOrder(_ entities: [any Entity]) {}
     func didUpdateDashboardsOrder(_ dashboards: [Dashboard]) {}
     func didClickAddDashboard() {}
@@ -49,5 +43,7 @@ class DashboardViewModelPreview: DashboardViewModel {
     func didClickConfig() {}
     func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State) {}
     func didClickUpdateFanState(_ fanEntity: FanEntity, newState: FanEntity.State) {}
+    func didUpdateWidgetsOrder(_ widgets: [WidgetData]) {}
+    func didClickRemove(widget: WidgetData) {}
 }
 #endif

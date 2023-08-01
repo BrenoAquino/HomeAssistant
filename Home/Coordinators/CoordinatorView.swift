@@ -10,44 +10,33 @@ import SwiftUI
 struct CoordinatorView: View {
 
     @Environment(\.scenePhase) var scenePhase
-    @ObservedObject private var coordinator = Coordinator()
+    @ObservedObject private var coordinator: Coordinator = .init(root: .launch)
 
     var body: some View {
         viewWithBlockIfNeeded {
             NavigationStack(path: $coordinator.path) {
-                coordinator.rootView()
+                coordinator.root.view
                     .opacityTransition()
                     .navigationDestination(for: Screen.self) { screen in
-                        viewWithBlockIfNeeded { coordinator.build(screen: screen) }
+                        viewWithBlockIfNeeded { screen.view }
                     }
                     .sheet(item: $coordinator.sheet) { screen in
-                        viewWithBlockIfNeeded { coordinator.build(screen: screen) }
+                        viewWithBlockIfNeeded { screen.view }
                     }
                     .fullScreenCover(item: $coordinator.fullScreenCover) { screen in
-                        viewWithBlockIfNeeded { coordinator.build(screen: screen) }
+                        viewWithBlockIfNeeded { screen.view }
                     }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .environmentObject(coordinator)
-        .onChange(of: scenePhase) { newPhase in
-            switch newPhase {
-            case .active:
-                coordinator.lifeCycleHandler.appStateDidChange(.foreground)
-            case .inactive, .background:
-                coordinator.lifeCycleHandler.appStateDidChange(.background)
-            @unknown default:
-                break
-            }
-        }
     }
 
     private func viewWithBlockIfNeeded(@ViewBuilder _ content: () -> some View) -> some View {
         ZStack {
             content()
-
             if let block = coordinator.block {
-                coordinator.build(screen: block)
+                block.view
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }

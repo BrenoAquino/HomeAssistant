@@ -14,11 +14,17 @@ import Foundation
 import SwiftUI
 import Config
 
-class Factory {
+class Factory: ObservableObject {
+
+    // MARK: Infrastructure
 
     private lazy var databaseProviderInstance = UserDefaultsDatabaseProvider()
 
-    private var webSocketProviderInstance: WebSocketProvider
+    private lazy var webSocketProviderInstance = try! WebSocket(
+        url: AppEnvironment.homeAssistantURL,
+        token: AppEnvironment.authToken,
+        didDisconnect: nil
+    )
 
     // MARK: LocalDataSource
 
@@ -82,74 +88,50 @@ class Factory {
         commandRepository: commandRepositoryInstance,
         subscriptionRepository: subscriptionRepositoryInstance
     )
-
-    // MARK: Init
-
-    init(webSocketDidDisconnect: (() -> Void)? = nil) {
-        webSocketProviderInstance = try! WebSocket(
-            url: AppEnvironment.homeAssistantURL,
-            token: AppEnvironment.authToken,
-            didDisconnect: webSocketDidDisconnect
-        )
-    }
 }
 
-// MARK: Coordinator
+// MARK: Screens
 
-extension Factory {
+extension Factory: ScreenFactory {
 
-    @ViewBuilder
-    func launchCoordinator() -> some View {
+    func launchScreen() -> Screen {
         let viewModel = LaunchViewModelImpl(
             entityService: entityServiceInstance,
             dashboardService: dashboardServiceInstance
         )
-        LaunchCoordinator(viewModel: viewModel)
+        return Screen(view: LaunchCoordinator(viewModel: viewModel))
     }
 
-    @ViewBuilder
-    func staticLaunchCoordinator() -> some View {
-        StaticLaunchCoordinator()
+    func staticLaunchScreen() -> Screen {
+        return Screen(view: StaticLaunchCoordinator())
     }
 
-    @ViewBuilder
-    func dashboardCoordinator() -> some View {
+    func dashboardScreen() -> Screen {
         let viewModel = DashboardViewModelImpl(
             dashboardService: dashboardServiceInstance,
             entityService: entityServiceInstance
         )
-        DashboardCoordinator(viewModel: viewModel)
+        return Screen(view: DashboardCoordinator(viewModel: viewModel))
     }
 
-    @ViewBuilder
-    func dashboardCreationCoordinator(mode: DashboardCreationMode) -> some View {
+    func dashboardCreationScreen(mode: DashboardCreationMode) -> Screen {
         let viewModel = DashboardCreationViewModelImpl(
             dashboardService: dashboardServiceInstance,
             entitiesService: entityServiceInstance,
             mode: mode
         )
-        DashboardCreationCoordinator(viewModel: viewModel)
+        return Screen(view: DashboardCreationCoordinator(viewModel: viewModel))
     }
 
-    @ViewBuilder
-    func configCoordinator() -> some View {
+    func configScreen() -> Screen {
         let viewModel = ConfigViewModelImpl(entityService: entityServiceInstance)
-        ConfigCoordinator(viewModel: viewModel)
+        return Screen(view: ConfigCoordinator(viewModel: viewModel))
     }
 }
 
 // MARK: Handlers
 
-extension Factory {
-
-    func lifeCycleHandler(coordinator: Coordinator) -> LifeCycleHandler {
-        LifeCycleHandlerImpl(
-            coordinator: coordinator,
-            dashboardsService: dashboardServiceInstance,
-            entityService: entityServiceInstance,
-            webSocket: webSocketProviderInstance
-        )
-    }
+extension Factory: HandlerFactory {
 
     func webSocketHandler(coordinator: Coordinator) -> WebSocketHandler {
         WebSocketHandlerImpl(coordinator: coordinator)

@@ -78,6 +78,8 @@ public enum DSColor {
     public static let red = Color(UIColor.systemRed)
     public static let teal = Color(UIColor.systemTeal)
     public static let indigo = Color(UIColor.systemIndigo)
+    public static let white = Color(UIColor.white)
+    public static let black = Color(UIColor.black)
 
 }
 

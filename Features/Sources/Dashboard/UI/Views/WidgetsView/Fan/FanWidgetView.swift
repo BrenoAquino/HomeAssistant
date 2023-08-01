@@ -16,7 +16,10 @@ private enum Constants {
     static let strokeOpacity: CGFloat = 0.5
 }
 
-struct FanView: View {
+struct FanWidgetView: WidgetView {
+
+    static let uniqueID: String = "slider"
+    static let units: (columns: Int, rows: Int) = (1, 1)
 
     let fanEntity: FanEntity
     let updateState: (_ fanEntity: FanEntity, _ newState: FanEntity.State) -> Void
@@ -83,7 +86,7 @@ struct FanView: View {
 #if DEBUG
 import Preview
 
-struct FanView_Preview: PreviewProvider {
+struct FanWidgetView_Preview: PreviewProvider {
 
     private static var entityOn = FanEntity(id: "1", name: "Breno's Fan", percentageStep: nil, percentage: nil, state: .on)
     private static var entityOff = FanEntity(id: "2", name: "Couple's Fan", percentageStep: 20, percentage: 40, state: .off)
@@ -92,11 +95,17 @@ struct FanView_Preview: PreviewProvider {
         let size: CGFloat = 150
 
         HStack(spacing: .bigL) {
-            FanView(fanEntity: entityOn, updateState: { _, _ in })
-                .frame(width: size, height: size)
+            FanWidgetView(
+                fanEntity: entityOn,
+                updateState: { _, _ in }
+            )
+            .frame(width: size, height: size)
 
-            FanView(fanEntity: entityOff, updateState: { _, _ in })
-                .frame(width: size, height: size)
+            FanWidgetView(
+                fanEntity: entityOff,
+                updateState: { _, _ in }
+            )
+            .frame(width: size, height: size)
         }
     }
 }

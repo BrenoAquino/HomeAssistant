@@ -27,14 +27,14 @@ struct DashboardCoordinator<ViewModel: DashboardViewModel>: View {
 extension DashboardCoordinator: DashboardExternalFlow {
     
     func didSelectConfig() -> Void {
-        coordinator.preset(sheet: .config(style: .default))
+        coordinator.preset(sheet: .config)
     }
 
     func didSelectAddDashboard() -> Void {
-        coordinator.preset(sheet: .dashboardCreation(style: .default, mode: .creation))
+        coordinator.preset(sheet: .dashboardCreation(mode: .creation))
     }
 
     func didSelectEditDashboard(_ dashboard: Dashboard) -> Void {
-        coordinator.preset(sheet: .dashboardCreation(style: .default, mode: .edit(dashboard)))
+        coordinator.preset(sheet: .dashboardCreation(mode: .edit(dashboard)))
     }
 }

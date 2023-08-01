@@ -16,7 +16,10 @@ private enum Constants {
     static let strokeOpacity: CGFloat = 0.5
 }
 
-struct LightView: View {
+struct LightWidgetView: WidgetView {
+
+    static let uniqueID: String = "default"
+    static let units: (columns: Int, rows: Int) = (1, 1)
 
     let lightEntity: LightEntity
     let updateState: (_ lightEntity: LightEntity, _ newState: LightEntity.State) -> Void
@@ -66,7 +69,7 @@ struct LightView: View {
 #if DEBUG
 import Preview
 
-struct LightView_Preview: PreviewProvider {
+struct LightWidgetView_Preview: PreviewProvider {
 
     private static var entityOn = LightEntity(id: "lgl", name: "Left Garden Led", state: .on)
     private static var entityOff = LightEntity(id: "rgl", name: "Right Garden Led", state: .off)
@@ -75,11 +78,17 @@ struct LightView_Preview: PreviewProvider {
         let size: CGFloat = 150
 
         HStack(spacing: .bigL) {
-            LightView(lightEntity: entityOn, updateState: { _, newState in entityOn.state = newState })
-                .frame(width: size, height: size)
+            LightWidgetView(
+                lightEntity: entityOn,
+                updateState: { _, newState in entityOn.state = newState }
+            )
+            .frame(width: size, height: size)
 
-            LightView(lightEntity: entityOff, updateState: { _, newState in entityOn.state = newState })
-                .frame(width: size, height: size)
+            LightWidgetView(
+                lightEntity: entityOff,
+                updateState: { _, newState in entityOn.state = newState }
+            )
+            .frame(width: size, height: size)
         }
     }
 }

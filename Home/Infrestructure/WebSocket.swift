@@ -24,10 +24,9 @@ actor WebSocket: NSObject {
 
     private let url: URL
     private let token: String
-    nonisolated private let didDisconnect: (() -> Void)?
+    var didDisconnect: (() -> Void)?
 
     private var latestID: Int = 1
-    private let dispatchQueue: DispatchQueue = .init(label: "WebSocket")
     private var isAuthenticated: Bool = false
 
     nonisolated private let topic: PassthroughSubject<WebSocketMessage, Never> = .init()
@@ -158,8 +157,7 @@ extension WebSocket: URLSessionWebSocketDelegate {
         webSocketTask: URLSessionWebSocketTask,
         didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?
     ) {
-        Logger.log(level: .info, "Disconnected")
-        didDisconnect?()
+        Task { await disconnect() }
     }
 }
 

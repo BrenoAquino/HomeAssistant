@@ -67,7 +67,7 @@ extension DashboardCreationViewModelImpl {
         originalName = dashboard.name
         dashboardName = dashboard.name
         selectedIconName = icons.first(where: { $0.name == dashboard.icon })?.name
-        selectedEntitiesIDs = Set(dashboard.entitiesIDs)
+        selectedEntitiesIDs = Set(dashboard.widgetConfigs.map { $0.entityID })
     }
 
     private func setupServiceObservers() {
@@ -180,7 +180,11 @@ extension DashboardCreationViewModelImpl {
             throw DashboardCreationViewModelError.missingEntities
         }
 
-        return Dashboard(name: name, icon: selectedIconName, entities: Array(selectedEntitiesIDs))
+        return Dashboard(
+            name: name,
+            icon: selectedIconName,
+            widgetConfigs: selectedEntitiesIDs.map { WidgetConfig(id: UUID().uuidString, entityID: $0) }
+        )
     }
 }
 

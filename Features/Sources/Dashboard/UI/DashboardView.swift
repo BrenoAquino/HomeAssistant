@@ -20,7 +20,6 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
     
     public var body: some View {
         ScrollView(.vertical) {
-
             Localizable.welcome.text
                 .foregroundColor(DSColor.secondaryLabel)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -45,12 +44,12 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, space: .smallS)
                 .padding(.horizontal, space: .horizontal)
-            
-            EntitiesView(
+
+            WidgetsGridView(
                 editMode: $viewModel.editModel,
-                entities: $viewModel.entities,
-                didUpdateOrder: viewModel.didUpdateEntitiesOrder,
-                didClickRemoveEntity: viewModel.didClickRemove,
+                widgets: $viewModel.widgets,
+                didUpdateWidgetsOrder: viewModel.didUpdateWidgetsOrder,
+                didClickRemoveWidget: viewModel.didClickRemove,
                 didClickUpdateLightState: viewModel.didClickUpdateLightState,
                 didClickUpdateFanState: viewModel.didClickUpdateFanState
             )
@@ -75,9 +74,9 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
         }, message: {
             Localizable.deleteDashboardDescription.text
         })
-        .alert(Localizable.delete.value, isPresented: $viewModel.removeEntityAlert, actions: {
-            Button(Localizable.cancel.value, role: .cancel, action: viewModel.cancelEntityDeletion)
-            Button(Localizable.ok.value, role: .destructive, action: viewModel.deleteRequestedEntity)
+        .alert(Localizable.delete.value, isPresented: $viewModel.removeWidgetAlert, actions: {
+            Button(Localizable.cancel.value, role: .cancel, action: viewModel.cancelWidgetDeletion)
+            Button(Localizable.ok.value, role: .destructive, action: viewModel.deleteRequestedWidget)
         }, message: {
             Localizable.deleteEntityDescription.text
         })
