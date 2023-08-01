@@ -18,7 +18,7 @@ private enum Constants {
 
 struct FanSliderWidgetView: WidgetView {
 
-    static let uniqueID: String = "default"
+    static let uniqueID: String = "slider"
     static let units: (columns: Int, rows: Int) = (2, 1)
 
     let fanEntity: FanEntity
@@ -89,8 +89,7 @@ struct FanSliderWidgetView: WidgetView {
                     backgroundColor: DSColor.gray,
                     foregroundColor: DSColor.white
                 )
-                .frame(height: 30, alignment: .bottom)
-                .padding(.bottom, space: .smallM)
+                .frame(height: 10, alignment: .bottom)
             }
         }
     }

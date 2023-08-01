@@ -5,7 +5,7 @@
 //  Created by Breno Aquino on 31/07/23.
 //
 
-#if DEBUG
+//#if DEBUG || PREVIEW
 import Combine
 import Domain
 import Foundation
@@ -26,4 +26,4 @@ public class ConfigServiceMock: Domain.ConfigService {
         ConfigMock.config
     }
 }
-#endif
+//#endif
