@@ -13,6 +13,7 @@ import DashboardCreation
 import Foundation
 import SwiftUI
 import Config
+import Preview
 
 class Factory: ObservableObject {
 
@@ -75,19 +76,31 @@ class Factory: ObservableObject {
 
     // MARK: Services
 
+#if PREVIEW
     private lazy var configServiceInstance = ConfigServiceImpl(
         serverRepository: serverRepositoryInstance
     )
+#else
+    private lazy var configServiceInstance = ConfigServiceMock()
+#endif
 
+#if PREVIEW
     private lazy var dashboardServiceInstance = DashboardServiceImpl(
         dashboardRepository: dashboardRepositoryInstance
     )
+#else
+    private lazy var dashboardServiceInstance = DashboardServiceMock()
+#endif
 
+#if PREVIEW
     private lazy var entityServiceInstance = EntityServiceImpl(
         entityRepository: entityRepositoryInstance,
         commandRepository: commandRepositoryInstance,
         subscriptionRepository: subscriptionRepositoryInstance
     )
+#else
+    private lazy var entityServiceInstance = EntityServiceMock()
+#endif
 }
 
 // MARK: Screens
