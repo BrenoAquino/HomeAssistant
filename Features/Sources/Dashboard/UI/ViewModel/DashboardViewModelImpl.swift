@@ -208,7 +208,7 @@ extension DashboardViewModelImpl {
         else { return }
 
         currentDashboard.widgetConfigs = widgets.map { $0.config }
-        try! dashboardService.update(
+        try? dashboardService.update(
             dashboardName: currentDashboard.name,
             dashboard: currentDashboard
         )
