@@ -88,6 +88,7 @@ struct WidgetsGridView: View {
 
 //        var index = 0
 //        var indexToSkip: Set<Int> = []
+//
 //        while index < widgets.count {
 //            guard !indexToSkip.contains(index) else {
 //                index += 1
@@ -98,7 +99,7 @@ struct WidgetsGridView: View {
 //            let (columns, rows) = WidgetSize.units(for: widget.config.uiType, entity: widget.entity)
 //
 //            if columnsCount + columns > columnsNumber {
-//                let remainingColumns = columnsNumber - columns
+//                let remainingColumns = columnsNumber - columnsCount
 //                var seekIndex = index + 1
 //
 //                while seekIndex < widgets.count {
@@ -123,13 +124,14 @@ struct WidgetsGridView: View {
 //                columnsCount = .zero
 //                currentRow += 1
 //                matrix.append([])
+//                index += 1
 //            }
 //
 //            else {
+//                columnsCount += columns
 //                matrix[currentRow].append((widget, columns, rows))
+//                index += 1
 //            }
-//
-//            index += 1
 //        }
 
         for widget in widgets {
@@ -144,6 +146,7 @@ struct WidgetsGridView: View {
 
             matrix[currentRow].append((widget, columns, rows))
         }
+
         return matrix
     }
 
