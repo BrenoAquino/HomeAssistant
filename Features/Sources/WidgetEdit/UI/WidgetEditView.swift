@@ -12,6 +12,7 @@ import Domain
 private enum Constants {
 
     static let estimatedUnitSize: CGFloat = 120
+    static let shadowOpacity: CGFloat = 0.2
 }
 
 public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
@@ -23,15 +24,19 @@ public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
     }
 
     public var body: some View {
-        TabView {
-            switch viewModel.entity {
-            case let light as LightEntity:
-                lightWidgets(light)
-            case let fan as FanEntity:
-                fanWidgets(fan)
-            default:
-                EmptyView()
+        VStack {
+            TabView {
+                switch viewModel.entity {
+                case let light as LightEntity:
+                    lightWidgets(light)
+                case let fan as FanEntity:
+                    fanWidgets(fan)
+                default:
+                    EmptyView()
+                }
             }
+
+            editButton
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
         .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
@@ -48,6 +53,17 @@ public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
                 .foregroundColor(DSColor.label)
         }
         .foregroundColor(DSColor.label)
+    }
+
+    private var editButton: some View {
+        Button(action: {}) {
+            Localizable.update.text
+        }
+        .buttonStyle(DefaultMaterialButtonStyle(
+            foregroundColor: DSColor.label,
+            material: .thinMaterial
+        ))
+        .shadow(radius: .easy, color: .black.opacity(Constants.shadowOpacity))
     }
 
     @ViewBuilder
