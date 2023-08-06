@@ -19,12 +19,6 @@ public struct ConfigView<ViewModel: ConfigViewModel>: View {
 
     public var body: some View {
         List {
-            title
-                .padding(.horizontal, space: .horizontal)
-                .listRowInsets(EdgeInsets())
-                .listRowSeparator(.hidden)
-                .listRowBackground(Color.clear)
-
             searchField
                 .padding(.top, space: .normal)
                 .padding(.horizontal, space: .horizontal)
@@ -44,23 +38,17 @@ public struct ConfigView<ViewModel: ConfigViewModel>: View {
         .scrollIndicators(.hidden)
         .listStyle(.plain)
         .background(DSColor.background)
+        .navigationTitle(Localizable.config.text)
+        .toolbar {
+            closeButton
+        }
     }
 
-    private var title: some View {
-        HStack(alignment: .top, spacing: .smallL) {
-            Localizable.config.text
+    private var closeButton: some View {
+        Button(action: viewModel.close) {
+            SystemImages.close
+                .imageScale(.large)
                 .foregroundColor(DSColor.label)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .padding(.top, space: .bigL)
-
-            Button(action: viewModel.close) {
-                SystemImages.close
-                    .imageScale(.large)
-                    .foregroundColor(DSColor.label)
-            }
-            .padding(.top, space: .normal)
         }
     }
 
@@ -121,8 +109,9 @@ public struct ConfigView<ViewModel: ConfigViewModel>: View {
 struct ConfigView_Preview: PreviewProvider {
 
     static var previews: some View {
-        
-        ConfigView(viewModel: ConfigViewModelPreview())
+        NavigationStack {
+            ConfigView(viewModel: ConfigViewModelPreview())
+        }
     }
 }
 #endif
