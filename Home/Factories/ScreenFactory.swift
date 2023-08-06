@@ -6,13 +6,13 @@
 //
 
 import Foundation
-import DashboardCreation
+import DashboardEdit
 
 protocol ScreenFactory {
 
     func launchScreen() -> Screen
     func staticLaunchScreen() -> Screen
     func dashboardScreen() -> Screen
-    func dashboardCreationScreen(mode: DashboardCreationMode) -> Screen
+    func dashboardEditScreen(mode: DashboardEditMode) -> Screen
     func configScreen() -> Screen
 }

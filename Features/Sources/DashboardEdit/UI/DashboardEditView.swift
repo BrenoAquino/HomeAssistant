@@ -1,5 +1,5 @@
 //
-//  DashboardCreationView.swift
+//  DashboardEditView.swift
 //
 //
 //  Created by Breno Aquino on 18/07/23.
@@ -8,7 +8,7 @@
 import DesignSystem
 import SwiftUI
 
-public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View {
+public struct DashboardEditView<ViewModel: DashboardEditViewModel>: View {
 
     @ObservedObject private var viewModel: ViewModel
 
@@ -162,11 +162,11 @@ public struct DashboardCreationView<ViewModel: DashboardCreationViewModel>: View
 }
 
 #if DEBUG
-struct DashboardCreationView_Preview: PreviewProvider {
+struct DashboardEditView_Preview: PreviewProvider {
 
     static var previews: some View {
 
-        DashboardCreationView(viewModel: DashboardCreationViewModelPreview())
+        DashboardEditView(viewModel: DashboardEditViewModelPreview())
     }
 }
 #endif

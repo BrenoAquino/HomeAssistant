@@ -9,7 +9,7 @@ import Domain
 import Data
 import Dashboard
 import Core
-import DashboardCreation
+import DashboardEdit
 import Foundation
 import SwiftUI
 import Config
@@ -130,13 +130,13 @@ extension Factory: ScreenFactory {
         return Screen(view: DashboardCoordinator(viewModel: viewModel))
     }
 
-    func dashboardCreationScreen(mode: DashboardCreationMode) -> Screen {
-        let viewModel = DashboardCreationViewModelImpl(
+    func dashboardEditScreen(mode: DashboardEditMode) -> Screen {
+        let viewModel = DashboardEditViewModelImpl(
             dashboardService: dashboardServiceInstance,
             entitiesService: entityServiceInstance,
             mode: mode
         )
-        return Screen(view: DashboardCreationCoordinator(viewModel: viewModel))
+        return Screen(view: DashboardEditCoordinator(viewModel: viewModel))
     }
 
     func configScreen() -> Screen {

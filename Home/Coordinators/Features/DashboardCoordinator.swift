@@ -31,10 +31,10 @@ extension DashboardCoordinator: DashboardExternalFlow {
     }
 
     func didSelectAddDashboard() -> Void {
-        coordinator.preset(sheet: .dashboardCreation(mode: .creation))
+        coordinator.preset(sheet: .dashboardEdit(mode: .creation))
     }
 
     func didSelectEditDashboard(_ dashboard: Dashboard) -> Void {
-        coordinator.preset(sheet: .dashboardCreation(mode: .edit(dashboard)))
+        coordinator.preset(sheet: .dashboardEdit(mode: .edit(dashboard)))
     }
 }
