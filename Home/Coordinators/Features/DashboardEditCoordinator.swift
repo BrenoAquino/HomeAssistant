@@ -18,8 +18,10 @@ struct DashboardEditCoordinator<ViewModel: DashboardEditViewModel>: View {
     }
 
     var body: some View {
-        DashboardEditView(viewModel: viewModel)
-            .task { viewModel.delegate = self }
+        NavigationStack {
+            DashboardEditView(viewModel: viewModel)
+        }
+        .task { viewModel.delegate = self }
     }
 }
 

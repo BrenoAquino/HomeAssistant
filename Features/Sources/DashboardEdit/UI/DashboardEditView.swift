@@ -18,14 +18,10 @@ public struct DashboardEditView<ViewModel: DashboardEditViewModel>: View {
 
     public var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
-            title
-                .padding(.horizontal, space: .horizontal)
-
             Localizable.dashboardDescription.text
                 .foregroundColor(DSColor.secondaryLabel)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.callout)
-                .padding(.top, space: .smallS)
                 .padding(.horizontal, space: .horizontal)
 
             iconField
@@ -43,27 +39,22 @@ public struct DashboardEditView<ViewModel: DashboardEditViewModel>: View {
         }
         .background(DSColor.background)
         .scrollDismissesKeyboard(.immediately)
+        .navigationTitle(
+            viewModel.mode == .creation ? Localizable.dashboardCreation.value : Localizable.dashboardEdit.value
+        )
+        .toolbar {
+            closeButton
+        }
         .toast(data: $viewModel.toastData)
     }
 
-    private var title: some View {
-        HStack(alignment: .top, spacing: .smallL) {
-            let title = viewModel.mode == .creation ? Localizable.dashboardCreation : Localizable.dashboardEdit
-
-            title.text
+    private var closeButton: some View {
+        Button(action: viewModel.close) {
+            SystemImages.close
+                .imageScale(.large)
                 .foregroundColor(DSColor.label)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .padding(.top, space: .bigL)
-
-            Button(action: viewModel.close) {
-                SystemImages.close
-                    .imageScale(.large)
-                    .foregroundColor(DSColor.label)
-            }
-            .padding(.top, space: .normal)
         }
+        .foregroundColor(DSColor.label)
     }
 
     private var nameField: some View {
@@ -166,7 +157,9 @@ struct DashboardEditView_Preview: PreviewProvider {
 
     static var previews: some View {
 
-        DashboardEditView(viewModel: DashboardEditViewModelPreview())
+        NavigationStack {
+            DashboardEditView(viewModel: DashboardEditViewModelPreview())
+        }
     }
 }
 #endif

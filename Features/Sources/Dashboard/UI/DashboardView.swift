@@ -103,7 +103,7 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
 struct DashboardView_Preview: PreviewProvider {
     
     static var previews: some View {
-        NavigationView {
+        NavigationStack {
             DashboardView(viewModel: DashboardViewModelPreview())
         }
     }
