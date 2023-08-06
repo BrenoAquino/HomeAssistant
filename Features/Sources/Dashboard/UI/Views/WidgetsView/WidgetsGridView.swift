@@ -27,6 +27,7 @@ struct WidgetsGridView: View {
 
     let didUpdateWidgetsOrder: (_ widgets: [WidgetData]) -> Void
     let didClickRemoveWidget: (_ widget: WidgetData) -> Void
+    let didClickEditWidget: (_ widget: WidgetData) -> Void
 
     let didClickUpdateLightState: (_ lightEntity: LightEntity, _ newState: LightEntity.State) -> Void
     let didClickUpdateFanState: (_ fanEntity: FanEntity, _ newState: FanEntity.State) -> Void
@@ -192,8 +193,12 @@ struct WidgetsGridView: View {
         switch widgetConfig.uiType {
         default:
             LightWidgetView(lightEntity: lightEntity) {
-                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                didClickUpdateLightState($0, $1)
+                if editMode {
+                    didClickEditWidget((widgetConfig, lightEntity))
+                } else {
+                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                    didClickUpdateLightState($0, $1)
+                }
             }
         }
     }
@@ -206,11 +211,21 @@ struct WidgetsGridView: View {
         switch widgetConfig.uiType {
         case FanSliderWidgetView.uniqueID:
             FanSliderWidgetView(fanEntity: fanEntity) {
-                didClickUpdateFanState($0, $1)
+                if editMode {
+                    didClickEditWidget((widgetConfig, fanEntity))
+                } else {
+                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                    didClickUpdateFanState($0, $1)
+                }
             }
         default:
             FanWidgetView(fanEntity: fanEntity) {
-                didClickUpdateFanState($0, $1)
+                if editMode {
+                    didClickEditWidget((widgetConfig, fanEntity))
+                } else {
+                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                    didClickUpdateFanState($0, $1)
+                }
             }
         }
     }
@@ -277,6 +292,7 @@ struct WidgetsGridView_Preview: PreviewProvider {
             widgets: .constant(widgets),
             didUpdateWidgetsOrder: { _ in },
             didClickRemoveWidget: { _ in },
+            didClickEditWidget: { _ in },
             didClickUpdateLightState: { _, _ in },
             didClickUpdateFanState: { _, _ in }
         )

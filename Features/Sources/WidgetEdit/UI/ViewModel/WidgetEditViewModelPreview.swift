@@ -13,5 +13,12 @@ import Domain
 class WidgetEditViewModelPreview: WidgetEditViewModel {
 
     var delegate: WidgetEditExternalFlow?
+    var entity: any Entity
+
+    init(entity: any Entity) {
+        self.entity = entity
+    }
+
+    func close() {}
 }
 #endif

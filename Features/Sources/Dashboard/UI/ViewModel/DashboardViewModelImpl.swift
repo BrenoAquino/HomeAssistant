@@ -240,6 +240,11 @@ extension DashboardViewModelImpl {
         removeWidgetAlert = true
     }
 
+    public func didClickEdit(widget: WidgetData) {
+        delegate?.didSelectEditWidget(widget)
+        editModel = false
+    }
+
     public func didClickConfig() {
         delegate?.didSelectConfig()
     }

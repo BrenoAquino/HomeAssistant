@@ -21,4 +21,7 @@ public protocol WidgetEditExternalFlow {
 public protocol WidgetEditViewModel: ObservableObject {
 
     var delegate: WidgetEditExternalFlow? { get set }
+    var entity: any Entity { get set }
+
+    func close()
 }

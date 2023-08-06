@@ -14,6 +14,7 @@
 		552783EF2A6500DB00603EBA /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 552783EE2A6500DB00603EBA /* Domain */; };
 		552783F12A6500E000603EBA /* Features in Frameworks */ = {isa = PBXBuildFile; productRef = 552783F02A6500E000603EBA /* Features */; };
 		552783F52A65027E00603EBA /* LaunchCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552783F42A65027E00603EBA /* LaunchCoordinator.swift */; };
+		554F0B862A804DC800AD0F4C /* WidgetEditCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554F0B852A804DC800AD0F4C /* WidgetEditCoordinator.swift */; };
 		5558B6072A68C825008651CF /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5558B6062A68C825008651CF /* Factory.swift */; };
 		557C953E2A6E243200D980DB /* ConfigCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557C953D2A6E243200D980DB /* ConfigCoordinator.swift */; };
 		5585F5EF2A708E1D00005489 /* WebSocketHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5585F5EE2A708E1D00005489 /* WebSocketHandler.swift */; };
@@ -45,6 +46,7 @@
 		552783E02A64ECCD00603EBA /* Features */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Features; sourceTree = "<group>"; };
 		552783E42A64F5F200603EBA /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		552783F42A65027E00603EBA /* LaunchCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchCoordinator.swift; sourceTree = "<group>"; };
+		554F0B852A804DC800AD0F4C /* WidgetEditCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetEditCoordinator.swift; sourceTree = "<group>"; };
 		5558B6062A68C825008651CF /* Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
 		557C953D2A6E243200D980DB /* ConfigCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigCoordinator.swift; sourceTree = "<group>"; };
 		5585F5EE2A708E1D00005489 /* WebSocketHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketHandler.swift; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 				5508EC892A65C67D00100E18 /* DashboardCoordinator.swift */,
 				5598DB902A677C5B00614AC0 /* DashboardEditCoordinator.swift */,
 				557C953D2A6E243200D980DB /* ConfigCoordinator.swift */,
+				554F0B852A804DC800AD0F4C /* WidgetEditCoordinator.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -320,6 +323,7 @@
 				5585F5F12A708E2100005489 /* WebSocketHandlerImpl.swift in Sources */,
 				55C25BA82A60FB6B00E52C5F /* WebSocket.swift in Sources */,
 				557C953E2A6E243200D980DB /* ConfigCoordinator.swift in Sources */,
+				554F0B862A804DC800AD0F4C /* WidgetEditCoordinator.swift in Sources */,
 				5508EC8A2A65C67D00100E18 /* DashboardCoordinator.swift in Sources */,
 				5508EC972A65D82300100E18 /* CoordinatorView.swift in Sources */,
 				55C25B952A60D8C700E52C5F /* HomeApp.swift in Sources */,

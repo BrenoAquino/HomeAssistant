@@ -5,6 +5,7 @@
 //  Created by Breno Aquino on 31/07/23.
 //
 
+import Domain
 import DashboardEdit
 import Foundation
 
@@ -14,6 +15,7 @@ enum ScreenDestination {
     case staticLaunch
     case dashboard
     case dashboardEdit(mode: DashboardEditMode)
+    case widgetEdit(entity: any Entity)
     case config
 }
 
@@ -30,6 +32,8 @@ extension ScreenDestination {
             return factory.dashboardScreen()
         case .dashboardEdit(let mode):
             return factory.dashboardEditScreen(mode: mode)
+        case .widgetEdit(let entity):
+            return factory.widgetEdit(entity)
         case .config:
             return factory.configScreen()
         }

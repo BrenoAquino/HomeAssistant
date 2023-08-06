@@ -10,7 +10,7 @@ import SwiftUI
 
 enum Localizable: String, CommonLocalizable {
 
-    case empty
+    case light
 }
 
 extension Localizable {

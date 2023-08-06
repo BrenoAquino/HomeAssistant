@@ -39,6 +39,7 @@ class DashboardViewModelPreview: DashboardViewModel {
     func didClickAddDashboard() {}
     func didClickRemove(dashboard: Dashboard) {}
     func didClickEdit(dashboard: Dashboard) {}
+    func didClickEdit(widget: WidgetData) {}
     func didClickRemove(entity: any Entity) {}
     func didClickConfig() {}
     func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State) {}

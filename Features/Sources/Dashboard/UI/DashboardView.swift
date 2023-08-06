@@ -50,6 +50,7 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                 widgets: $viewModel.widgets,
                 didUpdateWidgetsOrder: viewModel.didUpdateWidgetsOrder,
                 didClickRemoveWidget: viewModel.didClickRemove,
+                didClickEditWidget: viewModel.didClickEdit,
                 didClickUpdateLightState: viewModel.didClickUpdateLightState,
                 didClickUpdateFanState: viewModel.didClickUpdateFanState
             )

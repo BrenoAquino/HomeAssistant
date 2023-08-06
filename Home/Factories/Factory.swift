@@ -13,6 +13,7 @@ import DashboardEdit
 import Foundation
 import SwiftUI
 import Config
+import WidgetEdit
 
 #if PREVIEW
 import Preview
@@ -137,6 +138,15 @@ extension Factory: ScreenFactory {
             mode: mode
         )
         return Screen(view: DashboardEditCoordinator(viewModel: viewModel))
+    }
+
+    func widgetEdit(_ entity: any Entity) -> Screen {
+        let viewModel = WidgetEditViewModelImpl(
+            dashboardService: dashboardServiceInstance,
+            entitiesService: entityServiceInstance,
+            entity: entity
+        )
+        return Screen(view: WidgetEditCoordinator(viewModel: viewModel))
     }
 
     func configScreen() -> Screen {

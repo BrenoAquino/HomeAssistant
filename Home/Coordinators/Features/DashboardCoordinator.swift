@@ -25,7 +25,11 @@ struct DashboardCoordinator<ViewModel: DashboardViewModel>: View {
 }
 
 extension DashboardCoordinator: DashboardExternalFlow {
-    
+
+    func didSelectEditWidget(_ widgetData: WidgetData) {
+        coordinator.preset(sheet: .widgetEdit(entity: widgetData.entity))
+    }
+
     func didSelectConfig() -> Void {
         coordinator.preset(sheet: .config)
     }
