@@ -7,3 +7,5 @@
 */
 
 "update" = "Atualizar Widget";
+"description" = "Diferentes widgets podem oferecer diferentes funcionalidades de controle do dispositivo";
+"update_error" = "Não foi possivel atualizar o widget";

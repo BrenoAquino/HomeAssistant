@@ -7,6 +7,8 @@
 
 import Foundation
 
+public typealias WidgetData = (config: WidgetConfig, entity: any Entity)
+
 public struct WidgetConfig {
 
     public let id: String

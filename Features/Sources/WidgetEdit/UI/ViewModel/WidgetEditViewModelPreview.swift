@@ -13,12 +13,17 @@ import Domain
 class WidgetEditViewModelPreview: WidgetEditViewModel {
 
     var delegate: WidgetEditExternalFlow?
-    var entity: any Entity
+    var widgetData: WidgetData
+
+    var selectedViewID: String = "default"
+    var viewIDs: [String] = WidgetViewList.fan.map { $0.uniqueID }
+    var toastData: DefaultToastDataContent?
 
     init(entity: any Entity) {
-        self.entity = entity
+        self.widgetData = (WidgetConfig(id: "default", entityID: entity.id), entity)
     }
 
     func close() {}
+    func updateWidget() {}
 }
 #endif

@@ -28,8 +28,8 @@ struct WidgetEditCoordinator<ViewModel: WidgetEditViewModel>: View {
 
 extension WidgetEditCoordinator: WidgetEditExternalFlow {
 
-    func didFinish(_ widget: WidgetConfig) {
-
+    func didFinish() {
+        coordinator.dismiss()
     }
 
     func didClose() {

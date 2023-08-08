@@ -70,7 +70,6 @@ extension DashboardViewModelImpl {
             .receive(on: RunLoop.main)
             .sink { [weak self] entities in
                 guard let self else { return }
-                print("entities sink \(Unmanaged.passUnretained(self).toOpaque()) \(selectedDashboardName)")
                 self.setWidgets(
                     entities,
                     self.dashboardService.dashboards.value,
@@ -241,7 +240,8 @@ extension DashboardViewModelImpl {
     }
 
     public func didClickEdit(widget: WidgetData) {
-        delegate?.didSelectEditWidget(widget)
+        guard let currentDashboard else { return }
+        delegate?.didSelectEditWidget(widget, currentDashboard)
         editModel = false
     }
 

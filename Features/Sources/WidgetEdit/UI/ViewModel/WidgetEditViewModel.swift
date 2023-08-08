@@ -14,14 +14,19 @@ import SwiftUI
 
 public protocol WidgetEditExternalFlow {
 
-    func didFinish(_ widget: WidgetConfig) -> Void
+    func didFinish() -> Void
     func didClose() -> Void
 }
 
 public protocol WidgetEditViewModel: ObservableObject {
 
     var delegate: WidgetEditExternalFlow? { get set }
-    var entity: any Entity { get set }
+    var widgetData: WidgetData { get }
+    var toastData: DefaultToastDataContent? { get set }
 
+    var selectedViewID: String { get set }
+    var viewIDs: [String] { get }
+
+    func updateWidget()
     func close()
 }

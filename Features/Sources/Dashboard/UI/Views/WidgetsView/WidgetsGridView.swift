@@ -20,7 +20,7 @@ private enum Constants {
 
 struct WidgetsGridView: View {
 
-    private typealias WidgetViewData = (widget: WidgetData, columns: Int, rows: Int)
+    private typealias WidgetViewData = (widget: WidgetData?, columns: Int, rows: Int)
 
     @Binding var editMode: Bool
     @Binding var widgets: [WidgetData]
@@ -48,27 +48,12 @@ struct WidgetsGridView: View {
             ) {
                 ForEach(Array(matrix.enumerated()), id: \.offset) { _, row in
                     GridRow {
-                        ForEach(row, id: \.widget.config.id) { widgetViewData in
-                            let shakeAnimation = Animation.easeInOut(duration: Constants.animationDuration).repeatForever(autoreverses: true)
-
-                            widgetElement(widgetViewData.widget)
-                                .gridCellColumns(widgetViewData.columns)
-                                .rotationEffect(editMode ? .degrees(Constants.shakeAnimationAngle) : .zero)
-                                .animation(editMode ? shakeAnimation : .default, value: editMode)
-                                .padding(.leading, -Constants.removeIconWidth / 3)
-                                .padding(.top, -Constants.removeIconHeight / 3)
-                                .onDrop(of: [.text], delegate: WidgetDropDelegate(
-                                    widget: widgetViewData.widget,
-                                    widgets: $widgets,
-                                    draggedItem: $draggedItem,
-                                    isDragging: $isDragging,
-                                    didUpdateOrder: didUpdateWidgetsOrder
-                                ))
-                                .onDrag {
-                                    draggedItem = widgetViewData.widget
-                                    editMode = true
-                                    return NSItemProvider(object: widgetViewData.widget.config.id as NSString)
-                                } preview: { EmptyView() }
+                        ForEach(Array(row.enumerated()), id: \.offset) { _, widgetViewData in
+                            if let widget = widgetViewData.widget {
+                                gridCell(widget, widgetViewData.columns, widgetViewData.rows)
+                            } else {
+                                Color.clear.gridCellColumns(widgetViewData.columns)
+                            }
                         }
                     }
                     .frame(height: columnsWidth)
@@ -137,18 +122,53 @@ struct WidgetsGridView: View {
 
         for widget in widgets {
             let (columns, rows) = WidgetSize.units(for: widget.config.uiType, entity: widget.entity)
-            columnsCount += columns
 
-            if columnsCount > columnsNumber {
-                columnsCount = columns
+            if columnsCount + columns > columnsNumber {
+                let remainingColumns = columnsNumber - columnsCount
+                if remainingColumns > 0 {
+                    matrix[currentRow].append((nil, remainingColumns, 1))
+                }
+                columnsCount = 0
                 currentRow += 1
                 matrix.append([])
             }
 
+            columnsCount += columns
             matrix[currentRow].append((widget, columns, rows))
         }
 
+        if columnsCount < columnsNumber {
+            matrix[currentRow].append((nil, columnsNumber - columnsCount, 1))
+        }
+
         return matrix
+    }
+
+    @ViewBuilder
+    private func gridCell(
+        _ widget: WidgetData,
+        _ columns: Int,
+        _ rows: Int
+    ) -> some View {
+        let shakeAnimation = Animation.easeInOut(duration: Constants.animationDuration).repeatForever(autoreverses: true)
+        widgetElement(widget)
+            .gridCellColumns(columns)
+            .rotationEffect(editMode ? .degrees(Constants.shakeAnimationAngle) : .zero)
+            .animation(editMode ? shakeAnimation : .default, value: editMode)
+            .padding(.leading, -Constants.removeIconWidth / 3)
+            .padding(.top, -Constants.removeIconHeight / 3)
+            .onDrop(of: [.text], delegate: WidgetDropDelegate(
+                widget: widget,
+                widgets: $widgets,
+                draggedItem: $draggedItem,
+                isDragging: $isDragging,
+                didUpdateOrder: didUpdateWidgetsOrder
+            ))
+            .onDrag {
+                draggedItem = widget
+                editMode = true
+                return NSItemProvider(object: widget.config.id as NSString)
+            } preview: { EmptyView() }
     }
 
     @ViewBuilder

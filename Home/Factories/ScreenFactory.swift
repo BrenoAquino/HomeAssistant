@@ -15,6 +15,6 @@ protocol ScreenFactory {
     func staticLaunchScreen() -> Screen
     func dashboardScreen() -> Screen
     func dashboardEditScreen(mode: DashboardEditMode) -> Screen
-    func widgetEdit(_ entity: any Entity) -> Screen
+    func widgetEdit(widgetData: WidgetData, dashboard: Domain.Dashboard) -> Screen
     func configScreen() -> Screen
 }

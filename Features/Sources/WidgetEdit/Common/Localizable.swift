@@ -11,6 +11,8 @@ import SwiftUI
 enum Localizable: String, CommonLocalizable {
 
     case update
+    case description
+    case updateError = "update_error"
 }
 
 extension Localizable {

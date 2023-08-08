@@ -25,12 +25,18 @@ public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
 
     public var body: some View {
         VStack {
-            TabView {
-                switch viewModel.entity {
+            Localizable.description.text
+                .foregroundColor(DSColor.secondaryLabel)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .font(.callout)
+                .padding(.horizontal, space: .horizontal)
+
+            TabView(selection: $viewModel.selectedViewID) {
+                switch viewModel.widgetData.entity {
                 case let light as LightEntity:
-                    lightWidgets(light)
+                    allWidgetViews { lightWidgets(light, viewID: $0) }
                 case let fan as FanEntity:
-                    fanWidgets(fan)
+                    allWidgetViews { fanWidgets(fan, viewID: $0) }
                 default:
                     EmptyView()
                 }
@@ -38,11 +44,20 @@ public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
 
             editButton
         }
+        .toast(data: $viewModel.toastData)
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
         .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
-        .navigationTitle(viewModel.entity.name)
+        .navigationTitle(viewModel.widgetData.entity.name)
         .toolbar {
             closeButton
+        }
+    }
+
+    private func allWidgetViews<T: View>(
+        @ViewBuilder element: @escaping (_ id: String) -> T
+    ) -> some View {
+        ForEach(viewModel.viewIDs, id: \.self) { widgetViewID in
+            element(widgetViewID)
         }
     }
 
@@ -56,7 +71,7 @@ public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
     }
 
     private var editButton: some View {
-        Button(action: {}) {
+        Button(action: viewModel.updateWidget) {
             Localizable.update.text
         }
         .buttonStyle(DefaultMaterialButtonStyle(
@@ -67,31 +82,43 @@ public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
     }
 
     @ViewBuilder
-    private func lightWidgets(_ lightEntity: LightEntity) -> some View {
-        LightWidgetView(
-            lightEntity: lightEntity,
-            updateState: { _, _ in }
-        )
-        .frame(width: Constants.estimatedUnitSize * CGFloat(LightWidgetView.units.columns))
-        .frame(height: Constants.estimatedUnitSize * CGFloat(LightWidgetView.units.rows))
+    private func lightWidgets(_ lightEntity: LightEntity, viewID: String) -> some View {
+        switch viewID {
+        case LightWidgetView.uniqueID:
+            LightWidgetView(
+                lightEntity: lightEntity,
+                updateState: { _, _ in }
+            )
+            .setupSizeAndTag(unitSize: Constants.estimatedUnitSize)
+
+        default:
+            UnsupportedWidgetView(entity: lightEntity)
+                .setupSizeAndTag(unitSize: Constants.estimatedUnitSize)
+        }
     }
 
     @ViewBuilder
-    private func fanWidgets(_ fanEntity: FanEntity) -> some View {
-        FanWidgetView(
-            fanEntity: fanEntity,
-            updateState: { _, _ in }
-        )
-        .frame(width: Constants.estimatedUnitSize * CGFloat(FanWidgetView.units.columns))
-        .frame(height: Constants.estimatedUnitSize * CGFloat(FanWidgetView.units.rows))
+    private func fanWidgets(_ fanEntity: FanEntity, viewID: String) -> some View {
+        switch viewID {
+        case FanWidgetView.uniqueID:
+            FanWidgetView(
+                fanEntity: fanEntity,
+                updateState: { _, _ in }
+            )
+            .setupSizeAndTag(unitSize: Constants.estimatedUnitSize)
 
-        FanSliderWidgetView(
-            fanEntity: fanEntity,
-            percentage: .constant(0.2),
-            updateState: { _, _ in }
-        )
-        .frame(width: Constants.estimatedUnitSize * CGFloat(FanSliderWidgetView.units.columns))
-        .frame(height: Constants.estimatedUnitSize * CGFloat(FanSliderWidgetView.units.rows))
+        case FanSliderWidgetView.uniqueID:
+            FanSliderWidgetView(
+                fanEntity: fanEntity,
+                percentage: .constant(0.2),
+                updateState: { _, _ in }
+            )
+            .setupSizeAndTag(unitSize: Constants.estimatedUnitSize)
+
+        default:
+            UnsupportedWidgetView(entity: fanEntity)
+                .setupSizeAndTag(unitSize: Constants.estimatedUnitSize)
+        }
     }
 }
 
