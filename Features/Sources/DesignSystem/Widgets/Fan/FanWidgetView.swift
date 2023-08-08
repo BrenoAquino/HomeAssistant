@@ -1,11 +1,10 @@
 //
-//  File.swift
+//  FanWidgetView.swift
 //  
 //
 //  Created by Breno Aquino on 27/07/23.
 //
 
-import DesignSystem
 import Domain
 import SwiftUI
 
@@ -16,17 +15,26 @@ private enum Constants {
     static let strokeOpacity: CGFloat = 0.5
 }
 
-struct FanWidgetView: WidgetView {
+public struct FanWidgetView: WidgetView {
 
-    static let uniqueID: String = "default"
-    static let units: (columns: Int, rows: Int) = (1, 1)
+    public static let uniqueID: String = "default"
+    public static let units: (columns: Int, rows: Int) = (1, 1)
 
     let fanEntity: FanEntity
     let updateState: (_ fanEntity: FanEntity, _ newState: FanEntity.State) -> Void
 
     @State private var isRotating = 0.0
 
-    var body: some View {
+    public init(
+        fanEntity: FanEntity,
+        updateState: @escaping (_ entity: FanEntity, _ newState: FanEntity.State) -> Void
+    ) {
+        self.fanEntity = fanEntity
+        self.updateState = updateState
+        self.isRotating = isRotating
+    }
+
+    public var body: some View {
         content
             .padding(.vertical, space: .smallL)
             .padding(.horizontal, space: .smallL)

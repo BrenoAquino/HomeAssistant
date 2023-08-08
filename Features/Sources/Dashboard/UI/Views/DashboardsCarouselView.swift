@@ -98,7 +98,7 @@ struct DashboardsCarouselView: View {
         _ dashboard: Dashboard,
         _ isSelected: Bool
     ) -> some View {
-        ZStack(alignment: .topLeading) {
+        ZStack(alignment: .top) {
             squareContent(
                 dashboard.name,
                 dashboard.icon,
@@ -108,6 +108,7 @@ struct DashboardsCarouselView: View {
             SystemImages.remove
                 .imageScale(.large)
                 .frame(width: Constants.removeIconWidth, height: Constants.removeIconHeight)
+                .padding(.leading, -Constants.dashboardImageWidth / 2 - Constants.removeIconWidth / 5)
                 .opacity(editMode ? 1 : 0)
                 .animation(.default, value: editMode)
                 .onTapGesture {

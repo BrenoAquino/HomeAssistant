@@ -9,10 +9,15 @@ import Domain
 import Data
 import Dashboard
 import Core
-import DashboardCreation
+import DashboardEdit
 import Foundation
 import SwiftUI
 import Config
+import WidgetEdit
+
+#if PREVIEW
+import Preview
+#endif
 
 class Factory: ObservableObject {
 
@@ -75,19 +80,31 @@ class Factory: ObservableObject {
 
     // MARK: Services
 
+#if PREVIEW
+    private lazy var configServiceInstance = ConfigServiceMock()
+#else
     private lazy var configServiceInstance = ConfigServiceImpl(
         serverRepository: serverRepositoryInstance
     )
+#endif
 
+#if PREVIEW
+    private lazy var dashboardServiceInstance = DashboardServiceMock()
+#else
     private lazy var dashboardServiceInstance = DashboardServiceImpl(
         dashboardRepository: dashboardRepositoryInstance
     )
+#endif
 
+#if PREVIEW
+    private lazy var entityServiceInstance = EntityServiceMock()
+#else
     private lazy var entityServiceInstance = EntityServiceImpl(
         entityRepository: entityRepositoryInstance,
         commandRepository: commandRepositoryInstance,
         subscriptionRepository: subscriptionRepositoryInstance
     )
+#endif
 }
 
 // MARK: Screens
@@ -114,13 +131,22 @@ extension Factory: ScreenFactory {
         return Screen(view: DashboardCoordinator(viewModel: viewModel))
     }
 
-    func dashboardCreationScreen(mode: DashboardCreationMode) -> Screen {
-        let viewModel = DashboardCreationViewModelImpl(
+    func dashboardEditScreen(mode: DashboardEditMode) -> Screen {
+        let viewModel = DashboardEditViewModelImpl(
             dashboardService: dashboardServiceInstance,
             entitiesService: entityServiceInstance,
             mode: mode
         )
-        return Screen(view: DashboardCreationCoordinator(viewModel: viewModel))
+        return Screen(view: DashboardEditCoordinator(viewModel: viewModel))
+    }
+
+    func widgetEdit(widgetData: WidgetData, dashboard: Domain.Dashboard) -> Screen {
+        let viewModel = WidgetEditViewModelImpl(
+            dashboardService: dashboardServiceInstance,
+            dashboard: dashboard,
+            widgetData: widgetData
+        )
+        return Screen(view: WidgetEditCoordinator(viewModel: viewModel))
     }
 
     func configScreen() -> Screen {

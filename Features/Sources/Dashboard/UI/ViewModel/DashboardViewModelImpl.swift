@@ -70,7 +70,6 @@ extension DashboardViewModelImpl {
             .receive(on: RunLoop.main)
             .sink { [weak self] entities in
                 guard let self else { return }
-                print("entities sink \(Unmanaged.passUnretained(self).toOpaque()) \(selectedDashboardName)")
                 self.setWidgets(
                     entities,
                     self.dashboardService.dashboards.value,
@@ -208,7 +207,7 @@ extension DashboardViewModelImpl {
         else { return }
 
         currentDashboard.widgetConfigs = widgets.map { $0.config }
-        try! dashboardService.update(
+        try? dashboardService.update(
             dashboardName: currentDashboard.name,
             dashboard: currentDashboard
         )
@@ -238,6 +237,12 @@ extension DashboardViewModelImpl {
     public func didClickRemove(widget: WidgetData) {
         widgetIDToDelete = widget.config.id
         removeWidgetAlert = true
+    }
+
+    public func didClickEdit(widget: WidgetData) {
+        guard let currentDashboard else { return }
+        delegate?.didSelectEditWidget(widget, currentDashboard)
+        editModel = false
     }
 
     public func didClickConfig() {

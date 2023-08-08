@@ -1,14 +1,15 @@
 //
-//  DashboardCreationCoordinator.swift
+//  WidgetEditCoordinator.swift
 //  Home
 //
-//  Created by Breno Aquino on 18/07/23.
+//  Created by Breno Aquino on 06/08/23.
 //
 
+import Domain
 import SwiftUI
-import DashboardCreation
+import WidgetEdit
 
-struct DashboardCreationCoordinator<ViewModel: DashboardCreationViewModel>: View {
+struct WidgetEditCoordinator<ViewModel: WidgetEditViewModel>: View {
 
     @EnvironmentObject private var coordinator: Coordinator
     @State private var viewModel: ViewModel
@@ -18,12 +19,14 @@ struct DashboardCreationCoordinator<ViewModel: DashboardCreationViewModel>: View
     }
 
     var body: some View {
-        DashboardCreationView(viewModel: viewModel)
-            .task { viewModel.delegate = self }
+        NavigationStack {
+            WidgetEditView(viewModel: viewModel)
+        }
+        .task { viewModel.delegate = self }
     }
 }
 
-extension DashboardCreationCoordinator: DashboardCreationExternalFlow {
+extension WidgetEditCoordinator: WidgetEditExternalFlow {
 
     func didFinish() {
         coordinator.dismiss()

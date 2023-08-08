@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  DashboardEditViewModelError.swift
 //  
 //
 //  Created by Breno Aquino on 25/07/23.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension DashboardCreationViewModelError {
+extension DashboardEditViewModelError {
 
     var message: String {
         switch self {

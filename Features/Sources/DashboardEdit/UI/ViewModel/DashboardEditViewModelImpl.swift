@@ -1,5 +1,5 @@
 //
-//  DashboardCreationViewModel.swift
+//  DashboardEditViewModel.swift
 //
 //
 //  Created by Breno Aquino on 18/07/23.
@@ -12,10 +12,10 @@ import Domain
 import Foundation
 import SwiftUI
 
-public class DashboardCreationViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: DashboardCreationViewModel {
+public class DashboardEditViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: DashboardEditViewModel {
 
-    public let mode: DashboardCreationMode
-    public var delegate: DashboardCreationExternalFlow?
+    public let mode: DashboardEditMode
+    public var delegate: DashboardEditExternalFlow?
 
     private var cancellable: Set<AnyCancellable> = []
     private var originalName: String = ""
@@ -45,7 +45,7 @@ public class DashboardCreationViewModelImpl<DashboardS: DashboardService, Entity
 
     // MARK: Init
 
-    public init(dashboardService: DashboardS, entitiesService: EntityS, mode: DashboardCreationMode) {
+    public init(dashboardService: DashboardS, entitiesService: EntityS, mode: DashboardEditMode) {
         self.dashboardService = dashboardService
         self.entitiesService = entitiesService
         self.mode = mode
@@ -58,9 +58,9 @@ public class DashboardCreationViewModelImpl<DashboardS: DashboardService, Entity
 
 // MARK: - Setups Methods
 
-extension DashboardCreationViewModelImpl {
+extension DashboardEditViewModelImpl {
 
-    private func setupData(_ mode: DashboardCreationMode) {
+    private func setupData(_ mode: DashboardEditMode) {
         selectedDomainsNames = Set(entitiesService.domains.value.map { $0.rawValue })
 
         guard case .edit(let dashboard) = mode else { return }
@@ -124,7 +124,7 @@ extension DashboardCreationViewModelImpl {
 
 // MARK: - Private Methods
 
-extension DashboardCreationViewModelImpl {
+extension DashboardEditViewModelImpl {
 
     private func filterIcon(_ text: String) {
         guard !text.isEmpty else {
@@ -163,21 +163,21 @@ extension DashboardCreationViewModelImpl {
     private func createDashboard() throws -> Dashboard {
         let name = dashboardName
         guard !name.isEmpty else {
-            throw DashboardCreationViewModelError.missingName
+            throw DashboardEditViewModelError.missingName
         }
 
         if name != originalName {
             guard dashboardService.dashboards.value[name] == nil else {
-                throw DashboardCreationViewModelError.nameAlreadyExists
+                throw DashboardEditViewModelError.nameAlreadyExists
             }
         }
 
         guard let selectedIconName else {
-            throw DashboardCreationViewModelError.missingIcon
+            throw DashboardEditViewModelError.missingIcon
         }
 
         guard !selectedEntitiesIDs.isEmpty else {
-            throw DashboardCreationViewModelError.missingEntities
+            throw DashboardEditViewModelError.missingEntities
         }
 
         return Dashboard(
@@ -190,7 +190,7 @@ extension DashboardCreationViewModelImpl {
 
 // MARK: - Interfaces
 
-extension DashboardCreationViewModelImpl {
+extension DashboardEditViewModelImpl {
 
     public func createOrUpdateDashboard() {
         do {
@@ -201,7 +201,7 @@ extension DashboardCreationViewModelImpl {
                 try dashboardService.update(dashboardName: originalName, dashboard: dashboard)
             }
             delegate?.didFinish()
-        } catch let error as DashboardCreationViewModelError {
+        } catch let error as DashboardEditViewModelError {
             toastData = .init(type: .error, title: error.message)
             Logger.log(level: .error, error.localizedDescription)
         } catch {

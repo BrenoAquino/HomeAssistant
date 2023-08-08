@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  DashboardEditViewModelPreview.swift
 //  
 //
 //  Created by Breno Aquino on 23/07/23.
@@ -10,11 +10,11 @@ import DesignSystem
 import Preview
 import Domain
 
-class DashboardCreationViewModelPreview: DashboardCreationViewModel {
+class DashboardEditViewModelPreview: DashboardEditViewModel {
 
     var toastData: DefaultToastDataContent?
-    var delegate: DashboardCreationExternalFlow?
-    var mode: DashboardCreationMode = .creation
+    var delegate: DashboardEditExternalFlow?
+    var mode: DashboardEditMode = .creation
     var dashboardName: String = ""
     var icons: [Icon] = Icon.list
     var selectedIconName: String? = Icon.list.first?.name

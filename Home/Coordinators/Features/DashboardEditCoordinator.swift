@@ -1,15 +1,14 @@
 //
-//  ConfigCoordinator.swift
+//  DashboardEditCoordinator.swift
 //  Home
 //
-//  Created by Breno Aquino on 24/07/23.
+//  Created by Breno Aquino on 18/07/23.
 //
 
-import Domain
 import SwiftUI
-import Config
+import DashboardEdit
 
-struct ConfigCoordinator<ViewModel: ConfigViewModel>: View {
+struct DashboardEditCoordinator<ViewModel: DashboardEditViewModel>: View {
 
     @EnvironmentObject private var coordinator: Coordinator
     @State private var viewModel: ViewModel
@@ -20,13 +19,17 @@ struct ConfigCoordinator<ViewModel: ConfigViewModel>: View {
 
     var body: some View {
         NavigationStack {
-            ConfigView(viewModel: viewModel)
+            DashboardEditView(viewModel: viewModel)
         }
         .task { viewModel.delegate = self }
     }
 }
 
-extension ConfigCoordinator: ConfigExternalFlow {
+extension DashboardEditCoordinator: DashboardEditExternalFlow {
+
+    func didFinish() {
+        coordinator.dismiss()
+    }
 
     func didClose() {
         coordinator.dismiss()

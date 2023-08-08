@@ -13,7 +13,7 @@ class Logger: CommonLogger {
 #if DEBUG
     static var logger: OSLog = .init(
         subsystem: Bundle.main.bundleIdentifier ?? "",
-        category: "Features.DashboardCreation"
+        category: "Features.WidgetEdit"
     )
 #endif
 }

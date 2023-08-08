@@ -1,0 +1,11 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Breno Aquino on 17/07/23.
+  
+*/
+
+"update" = "Atualizar Widget";
+"description" = "Diferentes widgets podem oferecer diferentes funcionalidades de controle do dispositivo";
+"update_error" = "Não foi possivel atualizar o widget";

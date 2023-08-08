@@ -5,7 +5,6 @@
 //  Created by Breno Aquino on 27/07/23.
 //
 
-import DesignSystem
 import Domain
 import SwiftUI
 
@@ -16,17 +15,28 @@ private enum Constants {
     static let strokeOpacity: CGFloat = 0.5
 }
 
-struct FanSliderWidgetView: WidgetView {
+public struct FanSliderWidgetView: WidgetView {
 
-    static let uniqueID: String = "slider"
-    static let units: (columns: Int, rows: Int) = (2, 1)
+    public static let uniqueID: String = "slider"
+    public static let units: (columns: Int, rows: Int) = (2, 1)
 
     let fanEntity: FanEntity
+    var percentage: Binding<Double>?
     let updateState: (_ fanEntity: FanEntity, _ newState: FanEntity.State) -> Void
 
     @State private var isRotating = 0.0
 
-    var body: some View {
+    public init(
+        fanEntity: FanEntity,
+        percentage: Binding<Double>? = nil,
+        updateState: @escaping (_ entity: FanEntity, _ newState: FanEntity.State) -> Void
+    ) {
+        self.fanEntity = fanEntity
+        self.percentage = percentage
+        self.updateState = updateState
+    }
+
+    public var body: some View {
         content
             .padding(.vertical, space: .smallL)
             .padding(.horizontal, space: .smallL)
@@ -82,10 +92,10 @@ struct FanSliderWidgetView: WidgetView {
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }
 
-            if let percentage = fanEntity.percentage {
+            if let percentage = percentage {
                 Spacer()
                 BarSliderView(
-                    percentage: .constant(percentage),
+                    percentage: percentage,
                     backgroundColor: DSColor.gray,
                     foregroundColor: DSColor.white
                 )
@@ -96,7 +106,6 @@ struct FanSliderWidgetView: WidgetView {
 }
 
 #if DEBUG
-import Preview
 
 struct FanSliderWidgetView_Preview: PreviewProvider {
 
@@ -116,12 +125,14 @@ struct FanSliderWidgetView_Preview: PreviewProvider {
 
             FanSliderWidgetView(
                 fanEntity: entityOn2,
+                percentage: .constant(0.2),
                 updateState: { _, _ in }
             )
             .frame(width: 2 * size, height: size)
 
             FanSliderWidgetView(
                 fanEntity: entityOff,
+                percentage: .constant(0.2),
                 updateState: { _, _ in }
             )
             .frame(width: 2 * size, height: size)

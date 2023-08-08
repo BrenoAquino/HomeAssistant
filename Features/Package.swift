@@ -10,7 +10,7 @@ let package = Package(
     products: [
         .library(
             name: "Features",
-            targets: ["DesignSystem", "Core", "Dashboard", "DashboardCreation", "Config"]),
+            targets: ["DesignSystem", "Core", "Dashboard", "DashboardEdit", "WidgetEdit", "Config"]),
     ],
     dependencies: [
         .package(name: "Common", path: "../Common"),
@@ -29,7 +29,11 @@ let package = Package(
             dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
             resources: [.process("Resources")]),
         .target(
-            name: "DashboardCreation",
+            name: "DashboardEdit",
+            dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
+            resources: [.process("Resources")]),
+        .target(
+            name: "WidgetEdit",
             dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
             resources: [.process("Resources")]),
         .target(

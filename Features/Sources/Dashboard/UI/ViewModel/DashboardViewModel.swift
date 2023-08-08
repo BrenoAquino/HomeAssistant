@@ -9,13 +9,12 @@ import DesignSystem
 import Combine
 import Domain
 
-public typealias WidgetData = (config: WidgetConfig, entity: any Entity)
-
 public protocol DashboardExternalFlow {
 
     func didSelectConfig() -> Void
     func didSelectAddDashboard() -> Void
     func didSelectEditDashboard(_ dashboard: Dashboard) -> Void
+    func didSelectEditWidget(_ widgetData: WidgetData, _ dashboard: Dashboard)
 }
 
 public protocol DashboardViewModel: ObservableObject {
@@ -45,6 +44,7 @@ public protocol DashboardViewModel: ObservableObject {
     func didClickConfig()
     func didClickAddDashboard()
     func didClickEdit(dashboard: Dashboard)
+    func didClickEdit(widget: WidgetData)
     func didClickRemove(dashboard: Dashboard)
     func didClickRemove(widget: WidgetData)
 

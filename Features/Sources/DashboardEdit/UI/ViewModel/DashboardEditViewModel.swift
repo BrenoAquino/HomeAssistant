@@ -12,13 +12,13 @@ import Domain
 import Foundation
 import SwiftUI
 
-public enum DashboardCreationMode: Equatable {
+public enum DashboardEditMode: Equatable {
 
     case creation
     case edit(_ dashboard: Dashboard)
 }
 
-public enum DashboardCreationViewModelError: Error {
+public enum DashboardEditViewModelError: Error {
 
     case missingName
     case nameAlreadyExists
@@ -26,16 +26,16 @@ public enum DashboardCreationViewModelError: Error {
     case missingEntities
 }
 
-public protocol DashboardCreationExternalFlow {
+public protocol DashboardEditExternalFlow {
 
     func didFinish() -> Void
     func didClose() -> Void
 }
 
-public protocol DashboardCreationViewModel: ObservableObject {
+public protocol DashboardEditViewModel: ObservableObject {
 
-    var delegate: DashboardCreationExternalFlow? { get set }
-    var mode: DashboardCreationMode { get }
+    var delegate: DashboardEditExternalFlow? { get set }
+    var mode: DashboardEditMode { get }
     var toastData: DefaultToastDataContent? { get set }
 
     var dashboardName: String { get set }
