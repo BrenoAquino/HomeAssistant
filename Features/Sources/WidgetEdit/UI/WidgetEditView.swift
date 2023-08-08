@@ -24,15 +24,27 @@ public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
     }
 
     public var body: some View {
-        VStack {
+        VStack(spacing: .zero) {
             Localizable.description.text
                 .foregroundColor(DSColor.secondaryLabel)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.callout)
                 .padding(.horizontal, space: .horizontal)
 
+            TextField(
+                Localizable.widgetName.value,
+                text: $viewModel.widgetTitle,
+                axis: .vertical
+            )
+            .textFieldStyle(.roundedBorder)
+            .multilineTextAlignment(.center)
+            .font(.title)
+            .fontWeight(.semibold)
+            .padding(.top, space: .bigS)
+            .padding(.horizontal, space: .bigM)
+
             TabView(selection: $viewModel.selectedViewID) {
-                switch viewModel.widgetData.entity {
+                switch viewModel.entity {
                 case let light as LightEntity:
                     allWidgetViews { lightWidgets(light, viewID: $0) }
                 case let fan as FanEntity:
@@ -47,7 +59,7 @@ public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
         .toast(data: $viewModel.toastData)
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
         .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
-        .navigationTitle(viewModel.widgetData.entity.name)
+        .navigationTitle(viewModel.entity.domain.rawValue.capitalized)
         .toolbar {
             closeButton
         }
@@ -130,7 +142,7 @@ struct WidgetEditView_Preview: PreviewProvider {
     static var previews: some View {
         NavigationStack {
             WidgetEditView(viewModel: WidgetEditViewModelPreview(
-                entity: LightEntity(id: "1", name: "Light", state: .on)
+                entity: LightEntity(id: "1", name: "Bedroom's Left Desk Support Light ", state: .on)
             ))
         }
 

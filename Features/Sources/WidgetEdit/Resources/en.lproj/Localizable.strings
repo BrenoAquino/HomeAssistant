@@ -9,3 +9,4 @@
 "update" = "Update Widget";
 "description" = "Different widgets can provide different features to control the device";
 "update_error" = "It was not possible to update the widget";
+"widget_name" = "Widget Title";

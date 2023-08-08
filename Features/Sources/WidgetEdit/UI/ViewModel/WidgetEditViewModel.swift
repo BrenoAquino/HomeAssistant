@@ -21,9 +21,11 @@ public protocol WidgetEditExternalFlow {
 public protocol WidgetEditViewModel: ObservableObject {
 
     var delegate: WidgetEditExternalFlow? { get set }
-    var widgetData: WidgetData { get }
+    var widgetConfig: WidgetConfig { get }
+    var entity: any Entity { get }
     var toastData: DefaultToastDataContent? { get set }
 
+    var widgetTitle: String { get set }
     var selectedViewID: String { get set }
     var viewIDs: [String] { get }
 

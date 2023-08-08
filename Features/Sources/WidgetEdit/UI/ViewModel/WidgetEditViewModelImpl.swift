@@ -17,7 +17,7 @@ public class WidgetEditViewModelImpl<DashboardS: DashboardService>: WidgetEditVi
     private var dashboard: Dashboard
 
     public var delegate: WidgetEditExternalFlow?
-    public private(set) var widgetData: WidgetData
+    private var widgetData: WidgetData
     public private(set) var viewIDs: [String]
 
     // MARK: Services
@@ -26,8 +26,14 @@ public class WidgetEditViewModelImpl<DashboardS: DashboardService>: WidgetEditVi
 
     // MARK: Publishers
 
+    @Published public var widgetTitle: String
     @Published public var selectedViewID: String
     @Published public var toastData: DefaultToastDataContent?
+
+    // MARK: Gets
+
+    public var entity: any Entity { widgetData.entity }
+    public var widgetConfig: WidgetConfig { widgetData.config }
 
     // MARK: Init
 
@@ -35,6 +41,8 @@ public class WidgetEditViewModelImpl<DashboardS: DashboardService>: WidgetEditVi
         self.dashboardService = dashboardService
         self.dashboard = dashboard
         self.widgetData = widgetData
+
+        widgetTitle = widgetData.entity.name
         selectedViewID = widgetData.config.uiType
 
         switch widgetData.entity.domain {

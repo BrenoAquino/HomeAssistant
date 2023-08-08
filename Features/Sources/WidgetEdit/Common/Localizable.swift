@@ -13,6 +13,7 @@ enum Localizable: String, CommonLocalizable {
     case update
     case description
     case updateError = "update_error"
+    case widgetName = "widget_name"
 }
 
 extension Localizable {
