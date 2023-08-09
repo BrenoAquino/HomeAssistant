@@ -19,20 +19,18 @@ struct WidgetEditCoordinator<ViewModel: WidgetEditViewModel>: View {
     }
 
     var body: some View {
-        NavigationStack {
-            WidgetEditView(viewModel: viewModel)
-        }
-        .task { viewModel.delegate = self }
+        WidgetEditView(viewModel: viewModel)
+//            .task { viewModel.delegate = self }
     }
 }
 
-extension WidgetEditCoordinator: WidgetEditExternalFlow {
-
-    func didFinish() {
-        coordinator.dismiss()
-    }
-
-    func didClose() {
-        coordinator.dismiss()
-    }
-}
+//extension WidgetEditCoordinator: WidgetEditExternalFlow {
+//
+//    func didFinish() {
+//        coordinator.dismiss()
+//    }
+//
+//    func didClose() {
+//        coordinator.dismiss()
+//    }
+//}

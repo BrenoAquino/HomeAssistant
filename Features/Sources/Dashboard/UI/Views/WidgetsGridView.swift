@@ -149,9 +149,9 @@ struct WidgetsGridView: View {
     ) -> some View {
         switch widget.entity {
         case let light as LightEntity:
-            lightWidgetView(widget.config, light)
+            lightWidgetView(widget, light)
         case let fan as FanEntity:
-            fanWidgetView(widget.config, fan)
+            fanWidgetView(widget, fan)
         default:
             UnsupportedWidgetView(entity: widget.entity)
         }
@@ -159,14 +159,14 @@ struct WidgetsGridView: View {
 
     @ViewBuilder
     private func lightWidgetView(
-        _ widgetConfig: WidgetConfig,
+        _ widgetData: WidgetData,
         _ lightEntity: LightEntity
     ) -> some View {
-        switch widgetConfig.uiType {
+        switch widgetData.config.uiType {
         default:
             LightWidgetView(lightEntity: lightEntity) {
                 if editMode {
-                    didClickEditWidget((widgetConfig, lightEntity))
+                    didClickEditWidget(widgetData)
                 } else {
                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                     didClickUpdateLightState($0, $1)
@@ -177,14 +177,14 @@ struct WidgetsGridView: View {
 
     @ViewBuilder
     private func fanWidgetView(
-        _ widgetConfig: WidgetConfig,
+        _ widgetData: WidgetData,
         _ fanEntity: FanEntity
     ) -> some View {
-        switch widgetConfig.uiType {
+        switch widgetData.config.uiType {
         case FanSliderWidgetView.uniqueID:
             FanSliderWidgetView(fanEntity: fanEntity) {
                 if editMode {
-                    didClickEditWidget((widgetConfig, fanEntity))
+                    didClickEditWidget(widgetData)
                 } else {
                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                     didClickUpdateFanState($0, $1)
@@ -193,7 +193,7 @@ struct WidgetsGridView: View {
         default:
             FanWidgetView(fanEntity: fanEntity) {
                 if editMode {
-                    didClickEditWidget((widgetConfig, fanEntity))
+                    didClickEditWidget(widgetData)
                 } else {
                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                     didClickUpdateFanState($0, $1)

@@ -31,7 +31,7 @@ extension DashboardCoordinator: DashboardExternalFlow {
     }
 
     func didSelectEditWidget(_ widgetData: WidgetData, _ dashboard: Dashboard) {
-        coordinator.preset(sheet: .widgetEdit(dashboard: dashboard, mode: .edit(widgetData: widgetData)))
+        coordinator.preset(sheet: .widgetEdit(dashboard: dashboard, mode: .edit(entity: widgetData.entity)))
     }
 
     func didSelectConfig() -> Void {

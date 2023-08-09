@@ -14,13 +14,13 @@ private enum Constants {
     static let estimatedUnitSize: CGFloat = 120
 }
 
-struct WidgetUISelectionView: View {
+struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
 
-    let entity: any Entity
-    @Binding var widgetTitle: String
-    let viewIDs: [String]
-    @Binding var selectedViewID: String
-    let createOrUpdateWidget: () -> Void
+    @ObservedObject private var viewModel: ViewModel
+
+    init(viewModel: ViewModel) {
+        self.viewModel = viewModel
+    }
 
     var body: some View {
         VStack(spacing: .zero) {
@@ -32,7 +32,7 @@ struct WidgetUISelectionView: View {
 
             TextField(
                 Localizable.widgetName.value,
-                text: $widgetTitle,
+                text: $viewModel.widgetTitle,
                 axis: .vertical
             )
             .textFieldStyle(.roundedBorder)
@@ -42,8 +42,8 @@ struct WidgetUISelectionView: View {
             .padding(.top, space: .bigS)
             .padding(.horizontal, space: .bigM)
 
-            TabView(selection: $selectedViewID) {
-                switch entity {
+            TabView(selection: $viewModel.selectedViewID) {
+                switch viewModel.entity {
                 case let light as LightEntity:
                     allWidgetViews { lightWidgets(light, viewID: $0) }
                 case let fan as FanEntity:
@@ -62,13 +62,13 @@ struct WidgetUISelectionView: View {
     private func allWidgetViews<T: View>(
         @ViewBuilder element: @escaping (_ id: String) -> T
     ) -> some View {
-        ForEach(viewIDs, id: \.self) { widgetViewID in
+        ForEach(viewModel.viewIDs, id: \.self) { widgetViewID in
             element(widgetViewID)
         }
     }
 
     private var editButton: some View {
-        Button(action: createOrUpdateWidget) {
+        Button(action: viewModel.createOrUpdateWidget) {
             Localizable.update.text
         }
         .buttonStyle(DefaultMaterialButtonStyle(
@@ -125,13 +125,7 @@ import Preview
 struct WidgetUISelectionView_Preview: PreviewProvider {
 
     static var previews: some View {
-        WidgetUISelectionView(
-            entity: EntityMock.fan,
-            widgetTitle: .constant("Fan"),
-            viewIDs: WidgetViewList.fan.map { $0.uniqueID },
-            selectedViewID: .constant("default"),
-            createOrUpdateWidget: {}
-        )
+        WidgetUISelectionView(viewModel: WidgetUISelectionViewModelPreview())
     }
 }
 #endif

@@ -161,7 +161,7 @@ extension DashboardViewModelImpl {
 
         widgets = selectedDashboard.widgetConfigs.compactMap { config in
             if let entity = entities[config.entityID] {
-                return (config, entity)
+                return WidgetData(config: config, entity: entity)
             }
             return nil
         }
