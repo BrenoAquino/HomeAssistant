@@ -20,7 +20,7 @@ struct WidgetEditCoordinator<ViewModel: WidgetEditViewModel>: View {
 
     var body: some View {
         NavigationStack {
-            WidgetEditView(viewModel: viewModel)
+            WidgetEditView_v2(viewModel: viewModel)
         }
         .task { viewModel.delegate = self }
     }

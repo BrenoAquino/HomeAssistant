@@ -12,47 +12,54 @@ import Domain
 import Foundation
 import SwiftUI
 
-public class WidgetEditViewModelImpl<DashboardS: DashboardService>: WidgetEditViewModel {
+private extension WidgetEditMode {
 
-    private var dashboard: Dashboard
+    var totalSteps: Int {
+        switch self {
+        case .creation:
+            return 2
+        case .edit:
+            return 1
+        }
+    }
+}
+
+public class WidgetEditViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: WidgetEditViewModel {
 
     public var delegate: WidgetEditExternalFlow?
-    private var widgetData: WidgetData
-    public private(set) var viewIDs: [String]
+    public private(set) var mode: WidgetEditMode
 
     // MARK: Services
 
     private var dashboardService: DashboardS
+    private var entityService: EntityS
 
     // MARK: Publishers
 
-    @Published public var widgetTitle: String
-    @Published public var selectedViewID: String
     @Published public var toastData: DefaultToastDataContent?
+    @Published public var currentStep: Int = .zero
 
     // MARK: Gets
 
-    public var entity: any Entity { widgetData.entity }
-    public var widgetConfig: WidgetConfig { widgetData.config }
+    public var isFirstStep: Bool { currentStep == .zero }
+    public var isLastStep: Bool { currentStep == (mode.totalSteps - 1) }
 
     // MARK: Init
 
-    public init(dashboardService: DashboardS, dashboard: Dashboard, widgetData: WidgetData) {
+    public init(dashboardService: DashboardS, entityService: EntityS, dashboard: Dashboard, mode: WidgetEditMode) {
         self.dashboardService = dashboardService
-        self.dashboard = dashboard
-        self.widgetData = widgetData
+        self.entityService = entityService
+        self.mode = mode
 
-        widgetTitle = widgetData.entity.name
-        selectedViewID = widgetData.config.uiType
+        setupData(mode)
+    }
+}
 
-        switch widgetData.entity.domain {
-        case .light:
-            viewIDs = WidgetViewList.light.map { $0.uniqueID }
-        case .fan:
-            viewIDs = WidgetViewList.fan.map { $0.uniqueID }
-        case .climate, .switch:
-            viewIDs = []
-        }
+// MARK: - Setups
+
+extension WidgetEditViewModelImpl {
+
+    private func setupData(_ mode: WidgetEditMode) {
     }
 }
 
@@ -73,28 +80,16 @@ extension WidgetEditViewModelImpl {
 
 extension WidgetEditViewModelImpl {
 
-    public func updateWidget() {
-        guard let widgetIndex = dashboard.widgetConfigs.firstIndex(where: { $0.id == widgetData.config.id }) else {
-            return
-        }
+    public func nextStep() {
+        currentStep += 1
+    }
 
-        var dashboard = dashboard
-        let widgetConfig = WidgetConfig(
-            id: widgetData.config.id,
-            entityID: widgetData.config.entityID,
-            uiType: selectedViewID
-        )
+    public func previousStep() {
+        currentStep -= 1
+    }
 
-        dashboard.widgetConfigs[widgetIndex] = widgetConfig
-        do {
-            try dashboardService.update(
-                dashboardName: dashboard.name,
-                dashboard: dashboard
-            )
-            delegate?.didFinish()
-        } catch {
-            setError(message: Localizable.updateError.value)
-        }
+    public func createOrUpdateWidget() {
+
     }
 
     public func close() {

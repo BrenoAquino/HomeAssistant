@@ -12,6 +12,16 @@ import Domain
 import Foundation
 import SwiftUI
 
+public enum WidgetEditMode: Equatable {
+
+    case creation
+    case edit(widgetData: WidgetData)
+
+    public static func == (lhs: WidgetEditMode, rhs: WidgetEditMode) -> Bool {
+        String(describing: lhs) == String(describing: rhs)
+    }
+}
+
 public protocol WidgetEditExternalFlow {
 
     func didFinish() -> Void
@@ -20,15 +30,16 @@ public protocol WidgetEditExternalFlow {
 
 public protocol WidgetEditViewModel: ObservableObject {
 
+    var mode: WidgetEditMode { get }
     var delegate: WidgetEditExternalFlow? { get set }
-    var widgetConfig: WidgetConfig { get }
-    var entity: any Entity { get }
     var toastData: DefaultToastDataContent? { get set }
 
-    var widgetTitle: String { get set }
-    var selectedViewID: String { get set }
-    var viewIDs: [String] { get }
+    var currentStep: Int { get set }
+    var isFirstStep: Bool { get }
+    var isLastStep: Bool { get }
 
-    func updateWidget()
+    func nextStep()
+    func previousStep()
+    func createOrUpdateWidget()
     func close()
 }

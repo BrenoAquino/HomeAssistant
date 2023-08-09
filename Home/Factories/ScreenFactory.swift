@@ -8,6 +8,7 @@
 import Domain
 import Foundation
 import DashboardEdit
+import WidgetEdit
 
 protocol ScreenFactory {
 
@@ -15,6 +16,6 @@ protocol ScreenFactory {
     func staticLaunchScreen() -> Screen
     func dashboardScreen() -> Screen
     func dashboardEditScreen(mode: DashboardEditMode) -> Screen
-    func widgetEdit(widgetData: WidgetData, dashboard: Domain.Dashboard) -> Screen
+    func widgetEdit(dashboard: Domain.Dashboard, mode: WidgetEditMode) -> Screen
     func configScreen() -> Screen
 }

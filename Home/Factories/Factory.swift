@@ -139,11 +139,11 @@ extension Factory: ScreenFactory {
         return Screen(view: DashboardEditCoordinator(viewModel: viewModel))
     }
 
-    func widgetEdit(widgetData: WidgetData, dashboard: Domain.Dashboard) -> Screen {
+    func widgetEdit(dashboard: Domain.Dashboard, mode: WidgetEditMode) -> Screen {
         let viewModel = WidgetEditViewModelImpl(
             dashboardService: dashboardServiceInstance,
             dashboard: dashboard,
-            widgetData: widgetData
+            mode: mode
         )
         return Screen(view: WidgetEditCoordinator(viewModel: viewModel))
     }
