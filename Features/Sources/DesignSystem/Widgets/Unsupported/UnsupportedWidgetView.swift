@@ -13,14 +13,17 @@ public struct UnsupportedWidgetView: WidgetView {
     public static let uniqueID: String = "default"
     public static let units: (columns: Int, rows: Int) = (1, 1)
 
-    let entity: any Entity
+    let title: String
 
-    public init(entity: any Entity) {
-        self.entity = entity
+    public init(
+        entity: any Entity,
+        title: String? = nil
+    ) {
+        self.title = title ?? entity.name
     }
 
     public var body: some View {
-        Text(entity.name)
+        Text(title)
             .textCase(.uppercase)
             .multilineTextAlignment(.center)
             .minimumScaleFactor(0.5)

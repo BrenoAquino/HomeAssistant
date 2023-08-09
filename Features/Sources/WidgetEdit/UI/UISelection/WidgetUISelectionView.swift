@@ -87,6 +87,7 @@ struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
         case LightWidgetView.uniqueID:
             LightWidgetView(
                 lightEntity: lightEntity,
+                title: viewModel.widgetTitle,
                 updateState: { _, _ in }
             )
             .setupSizeAndTag(unitSize: Constants.estimatedUnitSize)
@@ -103,6 +104,7 @@ struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
         case FanWidgetView.uniqueID:
             FanWidgetView(
                 fanEntity: fanEntity,
+                title: viewModel.widgetTitle,
                 updateState: { _, _ in }
             )
             .setupSizeAndTag(unitSize: Constants.estimatedUnitSize)
@@ -110,6 +112,7 @@ struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
         case FanSliderWidgetView.uniqueID:
             FanSliderWidgetView(
                 fanEntity: fanEntity,
+                title: viewModel.widgetTitle,
                 percentage: .constant(0.2),
                 updateState: { _, _ in }
             )

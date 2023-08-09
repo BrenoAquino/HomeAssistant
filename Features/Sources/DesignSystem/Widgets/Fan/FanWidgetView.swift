@@ -21,15 +21,18 @@ public struct FanWidgetView: WidgetView {
     public static let units: (columns: Int, rows: Int) = (1, 1)
 
     let fanEntity: FanEntity
+    let title: String
     let updateState: (_ fanEntity: FanEntity, _ newState: FanEntity.State) -> Void
 
     @State private var isRotating = 0.0
 
     public init(
         fanEntity: FanEntity,
+        title: String? = nil,
         updateState: @escaping (_ entity: FanEntity, _ newState: FanEntity.State) -> Void
     ) {
         self.fanEntity = fanEntity
+        self.title = title ?? fanEntity.name
         self.updateState = updateState
         self.isRotating = isRotating
     }
@@ -82,7 +85,7 @@ public struct FanWidgetView: WidgetView {
                     .opacity(fanEntity.isOn ? 1 : 0)
             }
 
-            Text(fanEntity.name)
+            Text(title)
                 .font(.subheadline)
                 .fontWeight(.semibold)
                 .foregroundColor(fanEntity.isOn ? .black : DSColor.label)
