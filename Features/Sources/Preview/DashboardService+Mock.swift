@@ -16,11 +16,11 @@ public enum WidgetsMock {
         uiType: String,
         name: String,
         state: LightEntity.State
-    ) -> (WidgetConfig, any Entity) {
+    ) -> WidgetData {
         let entityID = UUID().uuidString
         let entity = LightEntity(id: entityID, name: name, state: state)
         let widgetConfig = WidgetConfig(id: UUID().uuidString, entityID: entityID, title: entity.name, uiType: uiType)
-        return (widgetConfig, entity)
+        return WidgetData(config: widgetConfig, entity: entity)
     }
 
     public static func createFanWidget(
@@ -29,11 +29,11 @@ public enum WidgetsMock {
         state: FanEntity.State,
         percentageStep: Double? = nil,
         percentage: Double? = nil
-    ) -> (WidgetConfig, any Entity) {
+    ) -> WidgetData {
         let entityID = UUID().uuidString
         let entity = FanEntity(id: entityID, name: name, percentageStep: percentageStep, percentage: percentage, state: state)
         let widgetConfig = WidgetConfig(id: UUID().uuidString, entityID: entityID, title: entity.name, uiType: uiType)
-        return (widgetConfig, entity)
+        return WidgetData(config: widgetConfig, entity: entity)
     }
 }
 

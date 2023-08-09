@@ -7,23 +7,23 @@
 
 import Foundation
 
-extension WidgetEditStep {
-
-    var next: WidgetEditStep? {
-        switch self {
-        case .entitySelection:
-            return .uiSelection
-        case .uiSelection:
-            return nil
-        }
-    }
-
-    var previous: WidgetEditStep? {
-        switch self {
-        case .entitySelection:
-            return nil
-        case .uiSelection:
-            return .entitySelection
-        }
-    }
-}
+//extension WidgetEditStep {
+//
+//    var next: WidgetEditStep? {
+//        switch self {
+//        case .entitySelection:
+//            return .uiSelection
+//        case .uiSelection:
+//            return nil
+//        }
+//    }
+//
+//    var previous: WidgetEditStep? {
+//        switch self {
+//        case .entitySelection:
+//            return nil
+//        case .uiSelection:
+//            return .entitySelection
+//        }
+//    }
+//}

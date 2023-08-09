@@ -15,13 +15,13 @@ private enum Constants {
     static let searchHeight: CGFloat = 20
 }
 
-struct WidgetEntitySelectionView: View {
+struct WidgetEntitySelectionView<ViewModel: EntitySelectionViewModel>: View {
 
-    let entities: [any Entity]
-    @Binding var entitySearchText: String
-    let domains: [EntityDomain]
-    @Binding var selectedDomains: Set<String>
-    let didSelectEntity: (_ entity: any Entity) -> Void
+    @ObservedObject private var viewModel: ViewModel
+
+    init(viewModel: ViewModel) {
+        self.viewModel = viewModel
+    }
 
     var body: some View {
         List {
@@ -48,16 +48,28 @@ struct WidgetEntitySelectionView: View {
             entitiesList
                 .padding(.top, space: .smallL)
                 .padding(.horizontal, space: .horizontal)
-
         }
         .listStyle(.plain)
         .scrollDismissesKeyboard(.immediately)
+        .navigationTitle(Localizable.entitySelectionTitle.value)
+        .toolbar {
+            closeButton
+        }
+    }
+
+    private var closeButton: some View {
+        Button(action: viewModel.close) {
+            SystemImages.close
+                .imageScale(.large)
+                .foregroundColor(DSColor.label)
+        }
+        .foregroundColor(DSColor.label)
     }
 
     private var filters: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: .smallM) {
-                ForEach(domains, id: \.rawValue) { domain in
+                ForEach(viewModel.domains, id: \.rawValue) { domain in
                     domainElement(domain)
                 }
             }
@@ -66,7 +78,7 @@ struct WidgetEntitySelectionView: View {
     }
 
     @ViewBuilder private func domainElement(_ domain: EntityDomain) -> some View {
-        let isSelected = selectedDomains.contains(domain.rawValue)
+        let isSelected = viewModel.selectedDomainsNames.contains(domain.rawValue)
         Text(domain.rawValue)
             .padding(.vertical, space: .smallS)
             .padding(.horizontal, space: .horizontal)
@@ -76,9 +88,9 @@ struct WidgetEntitySelectionView: View {
             .clipShape(Capsule())
             .onTapGesture {
                 if isSelected {
-                    selectedDomains.remove(domain.rawValue)
+                    viewModel.selectedDomainsNames.remove(domain.rawValue)
                 } else {
-                    selectedDomains.insert(domain.rawValue)
+                    viewModel.selectedDomainsNames.insert(domain.rawValue)
                 }
             }
     }
@@ -88,7 +100,7 @@ struct WidgetEntitySelectionView: View {
             VStack(spacing: .zero) {
                 TextField(
                     Localizable.entitiesSearchExample.value,
-                    text: $entitySearchText,
+                    text: $viewModel.entityFilterText,
                     axis: .horizontal
                 )
                 .foregroundColor(DSColor.secondaryLabel)
@@ -107,26 +119,22 @@ struct WidgetEntitySelectionView: View {
     }
 
     private var entitiesList: some View {
-        ForEach(entities, id: \.id) { entity in
-            HStack(spacing: .smallM) {
-                Image(systemName: entity.domain.icon)
-                    .frame(width: Constants.iconSize)
+        ForEach(viewModel.entities, id: \.entity.id) { anyEntity in
+            NavigationLink(value: anyEntity) {
+                HStack(spacing: .smallM) {
+                    Image(systemName: anyEntity.entity.domain.icon)
+                        .frame(width: Constants.iconSize)
 
-                Text(entity.name)
-                    .foregroundColor(DSColor.label)
-                    .font(.body)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                SystemImages.rightArrow
-                    .frame(width: Constants.iconSize)
+                    Text(anyEntity.entity.name)
+                        .foregroundColor(DSColor.label)
+                        .font(.body)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
             }
             .padding(.top, space: .smallM)
             .padding(.bottom, space: .smallM)
             .listRowInsets(EdgeInsets())
             .contentShape(Rectangle())
-            .onTapGesture {
-                didSelectEntity(entity)
-            }
         }
     }
 }
@@ -136,18 +144,10 @@ import Preview
 
 struct WidgetEntitySelectionView_Preview: PreviewProvider {
 
-    static var entitySearchText: String = ""
-    static var selectedEntities: Set<String> = []
-    static var selectedDomains: Set<String> = []
-
     static var previews: some View {
-        WidgetEntitySelectionView(
-            entities: EntityMock.all,
-            entitySearchText: .init(get: { entitySearchText }, set: { entitySearchText = $0 }),
-            domains: EntityDomain.allCases,
-            selectedDomains: .init(get: { selectedDomains }, set: { selectedDomains = $0 }),
-            didSelectEntity: { _ in }
-        )
+        NavigationStack {
+            WidgetEntitySelectionView(viewModel: EntitySelectionViewModelPreview())
+        }
     }
 }
 #endif
