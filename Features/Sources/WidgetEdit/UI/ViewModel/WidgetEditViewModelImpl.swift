@@ -12,18 +12,6 @@ import Domain
 import Foundation
 import SwiftUI
 
-private extension WidgetEditMode {
-
-    var totalSteps: Int {
-        switch self {
-        case .creation:
-            return 2
-        case .edit:
-            return 1
-        }
-    }
-}
-
 public class WidgetEditViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: WidgetEditViewModel {
 
     public var delegate: WidgetEditExternalFlow?
@@ -39,16 +27,29 @@ public class WidgetEditViewModelImpl<DashboardS: DashboardService, EntityS: Enti
     // MARK: Publishers
 
     @Published public var toastData: DefaultToastDataContent?
-    @Published public var currentStep: Int = .zero
+    @Published public var currentStep: WidgetEditStep
     @Published private(set) public var entities: [any Entity] = []
     @Published public var entityFilterText: String = ""
     @Published public var selectedDomainsNames: Set<String> = []
 
     // MARK: Gets
 
-    public var isFirstStep: Bool { currentStep == .zero }
-    public var isLastStep: Bool { currentStep == (mode.totalSteps - 1) }
-    public var domains: [Domain.EntityDomain] { entityService.domains.value }
+    public var domains: [Domain.EntityDomain] {
+        entityService.domains.value
+    }
+
+    public var isFirstStep: Bool {
+        switch mode {
+        case .creation:
+            return currentStep == .entitySelection
+        case .edit:
+            return currentStep == .uiSelection
+        }
+    }
+
+    public var isLastStep: Bool {
+        currentStep == .uiSelection
+    }
 
     // MARK: Init
 
@@ -56,6 +57,7 @@ public class WidgetEditViewModelImpl<DashboardS: DashboardService, EntityS: Enti
         self.dashboardService = dashboardService
         self.entityService = entityService
         self.mode = mode
+        currentStep = mode == .creation ? .entitySelection : .uiSelection
 
         setupData(mode)
         setupServiceObservers()
@@ -125,7 +127,10 @@ extension WidgetEditViewModelImpl {
             let domainCheck = domainNames.contains(entity.domain.rawValue)
             return nameCheck && domainCheck
         }
-        self.entities = result.isEmpty ? allEntities : result
+
+        DispatchQueue.main.async {
+            self.entities = result.isEmpty ? allEntities : result
+        }
     }
 
     private func setError(
@@ -141,12 +146,18 @@ extension WidgetEditViewModelImpl {
 
 extension WidgetEditViewModelImpl {
 
+    public func didSelectEntity(_ entity: any Entity) {
+
+    }
+
     public func nextStep() {
-        currentStep += 1
+        guard let next = currentStep.next else { return }
+        currentStep = next
     }
 
     public func previousStep() {
-        currentStep -= 1
+        guard let previous = currentStep.previous else { return }
+        currentStep = previous
     }
 
     public func createOrUpdateWidget() {

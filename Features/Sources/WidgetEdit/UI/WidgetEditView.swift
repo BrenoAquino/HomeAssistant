@@ -20,13 +20,18 @@ public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
         VStack(spacing: .zero) {
             steps
         }
-        .navigationTitle(
-            viewModel.mode == .creation ?
-            Localizable.creationTitle.value :
-                Localizable.editTitle.value
-        )
+        .navigationTitle(title)
         .toolbar {
             closeButton
+        }
+    }
+
+    private var title: String {
+        switch viewModel.currentStep {
+        case .entitySelection:
+            return Localizable.entitySelectionTitle.value
+        case .uiSelection:
+            return Localizable.entitySelectionTitle.value
         }
     }
 
@@ -45,17 +50,17 @@ public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
                 entities: viewModel.entities,
                 entitySearchText: $viewModel.entityFilterText,
                 domains: viewModel.domains,
-                selectedDomains: $viewModel.selectedDomainsNames
+                selectedDomains: $viewModel.selectedDomainsNames,
+                didSelectEntity: viewModel.didSelectEntity
             )
-            .tag(0)
+            .tag(WidgetEditStep.entitySelection)
             .disablePageSwipe()
 
             WidgetUISelectionView()
-                .tag(1)
+                .tag(WidgetEditStep.uiSelection)
                 .disablePageSwipe()
         }
-        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
-        .indexViewStyle(.page(backgroundDisplayMode: .always))
+        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
     }
 }
 

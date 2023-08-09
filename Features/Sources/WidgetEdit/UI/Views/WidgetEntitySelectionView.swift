@@ -21,10 +21,14 @@ struct WidgetEntitySelectionView: View {
     @Binding var entitySearchText: String
     let domains: [EntityDomain]
     @Binding var selectedDomains: Set<String>
+    let didSelectEntity: (_ entity: any Entity) -> Void
 
     var body: some View {
         List {
-            title
+            Localizable.entitySelectionDescription.text
+                .foregroundColor(DSColor.secondaryLabel)
+                .font(.footnote)
+                .fontWeight(.medium)
                 .padding(.horizontal, space: .horizontal)
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets())
@@ -48,20 +52,6 @@ struct WidgetEntitySelectionView: View {
         }
         .listStyle(.plain)
         .scrollDismissesKeyboard(.immediately)
-    }
-
-    private var title: some View {
-        VStack(alignment: .leading, spacing: .smallM) {
-            Localizable.entitySelectionTitle.text
-                .foregroundColor(DSColor.label)
-                .font(.title2)
-                .fontWeight(.semibold)
-
-            Localizable.entitySelectionDescription.text
-                .foregroundColor(DSColor.secondaryLabel)
-                .font(.footnote)
-                .fontWeight(.medium)
-        }
     }
 
     private var filters: some View {
@@ -131,8 +121,12 @@ struct WidgetEntitySelectionView: View {
                     .frame(width: Constants.iconSize)
             }
             .padding(.top, space: .smallM)
-            .padding(.bottom, space: .smallS)
+            .padding(.bottom, space: .smallM)
             .listRowInsets(EdgeInsets())
+            .contentShape(Rectangle())
+            .onTapGesture {
+                didSelectEntity(entity)
+            }
         }
     }
 }
@@ -151,7 +145,8 @@ struct WidgetEntitySelectionView_Preview: PreviewProvider {
             entities: EntityMock.all,
             entitySearchText: .init(get: { entitySearchText }, set: { entitySearchText = $0 }),
             domains: EntityDomain.allCases,
-            selectedDomains: .init(get: { selectedDomains }, set: { selectedDomains = $0 })
+            selectedDomains: .init(get: { selectedDomains }, set: { selectedDomains = $0 }),
+            didSelectEntity: { _ in }
         )
     }
 }

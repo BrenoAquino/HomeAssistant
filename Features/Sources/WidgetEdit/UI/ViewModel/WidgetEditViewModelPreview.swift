@@ -15,7 +15,7 @@ class WidgetEditViewModelPreview: WidgetEditViewModel {
     var delegate: WidgetEditExternalFlow?
     var toastData: DefaultToastDataContent?
 
-    var currentStep: Int = 0
+    var currentStep: WidgetEditStep = .entitySelection
     var isLastStep: Bool = false
     var isFirstStep: Bool = false
 
@@ -26,6 +26,7 @@ class WidgetEditViewModelPreview: WidgetEditViewModel {
 
     init() {}
 
+    func didSelectEntity(_ entity: any Entity) {}
     func nextStep() {}
     func previousStep() {}
     func close() {}

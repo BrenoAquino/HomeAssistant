@@ -12,14 +12,16 @@ import Domain
 import Foundation
 import SwiftUI
 
-public enum WidgetEditMode: Equatable {
+public enum WidgetEditMode {
 
     case creation
     case edit(widgetData: WidgetData)
+}
 
-    public static func == (lhs: WidgetEditMode, rhs: WidgetEditMode) -> Bool {
-        String(describing: lhs) == String(describing: rhs)
-    }
+public enum WidgetEditStep: String {
+
+    case entitySelection
+    case uiSelection
 }
 
 public protocol WidgetEditExternalFlow {
@@ -35,7 +37,7 @@ public protocol WidgetEditViewModel: ObservableObject {
     var toastData: DefaultToastDataContent? { get set }
 
     // Tabs
-    var currentStep: Int { get set }
+    var currentStep: WidgetEditStep { get set }
     var isFirstStep: Bool { get }
     var isLastStep: Bool { get }
 
@@ -44,6 +46,8 @@ public protocol WidgetEditViewModel: ObservableObject {
     var entityFilterText: String { get set }
     var domains: [EntityDomain] { get }
     var selectedDomainsNames: Set<String> { get set }
+
+    func didSelectEntity(_ entity: any Entity)
 
     // Tabs
     func nextStep()
