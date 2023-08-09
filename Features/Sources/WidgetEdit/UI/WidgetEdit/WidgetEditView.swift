@@ -8,41 +8,6 @@
 import Domain
 import SwiftUI
 
-public enum WidgetEditMode {
-
-    case creation
-    case edit(entity: any Entity)
-}
-
-public protocol WidgetEditViewModel: ObservableObject {
-
-    var mode: WidgetEditMode { get }
-
-    func entitySelection() -> any View
-    func uiSelection(_ entity: any Entity) -> any View
-}
-
-public class WidgetEditViewModelImpl<EntityS: EntityService>: WidgetEditViewModel {
-
-    public var mode: WidgetEditMode
-    private var entityService: EntityS
-
-    public init(entityService: EntityS, mode: WidgetEditMode) {
-        self.entityService = entityService
-        self.mode = mode
-    }
-
-    public func entitySelection() -> any View {
-        let viewModel = EntitySelectionViewModelImpl(entityService: entityService)
-        return WidgetEntitySelectionView(viewModel: viewModel)
-    }
-
-    public func uiSelection(_ entity: any Entity) -> any View {
-        let viewModel = WidgetUISelectionViewModelImpl(entity: entity)
-        return WidgetUISelectionView(viewModel: viewModel)
-    }
-}
-
 public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
 
     @ObservedObject private var viewModel: ViewModel
@@ -70,12 +35,3 @@ public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
         }
     }
 }
-
-//#if DEBUG
-//struct WidgetEditView_Preview: PreviewProvider {
-//
-//    static var previews: some View {
-//        WidgetEditView(viewModel: .init())
-//    }
-//}
-//#endif

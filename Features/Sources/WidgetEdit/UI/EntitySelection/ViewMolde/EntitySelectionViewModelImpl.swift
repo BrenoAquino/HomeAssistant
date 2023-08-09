@@ -13,6 +13,7 @@ import Foundation
 
 class EntitySelectionViewModelImpl<EntityS: EntityService>: EntitySelectionViewModel {
 
+    weak var delegate: EntitySelectionExternalFlow?
     private var cancellable: Set<AnyCancellable> = []
 
     // MARK: Services
@@ -35,6 +36,7 @@ class EntitySelectionViewModelImpl<EntityS: EntityService>: EntitySelectionViewM
 
     init(entityService: EntityS) {
         self.entityService = entityService
+        selectedDomainsNames = Set(domains.map { $0.rawValue })
 
         setupServiceObservers()
         setupUIObservers()
@@ -44,10 +46,6 @@ class EntitySelectionViewModelImpl<EntityS: EntityService>: EntitySelectionViewM
 // MARK: - Setups
 
 extension EntitySelectionViewModelImpl {
-
-    private func setupData(_ mode: WidgetEditMode) {
-        selectedDomainsNames = Set(domains.map { $0.rawValue })
-    }
 
     private func setupServiceObservers() {
         // Update the entities list if changed
@@ -131,10 +129,11 @@ extension EntitySelectionViewModelImpl {
     }
 }
 
-// MARK: - Public Methods
+// MARK: - Methods
 
 extension EntitySelectionViewModelImpl {
 
-    func didSelectEntity(_ entity: any Entity) {}
-    func close() {}
+    func close() {
+        delegate?.didClose()
+    }
 }
