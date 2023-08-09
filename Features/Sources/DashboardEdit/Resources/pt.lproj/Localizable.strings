@@ -13,6 +13,7 @@
 "name_hint" = "O nome do painel precisa ser único";
 "icon" = "Ícone";
 "icon_hint" = "Você pode procurar por palavras chaves";
+"icon_example" = "Ex \"Quarto\", \"Jardim\", \"Segurança\"";
 "entities" = "Dispositivos";
 "entities_hint" = "Você pode pesquisar por um nome";
 "create" = "Criar Painel";
@@ -20,5 +21,7 @@
 "missing_name_error" = "É necessário preencher o nome";
 "name_already_exists_error" = "Esse nome já está em uso";
 "missing_icon_error" = "É necessário escolher um ícone";
-"missing_entities_error" = "O painel precisa possuir pelo menos 1 dispositivo";
+"invalid_number_columns_error" = "O número de colunas deve ser superior a 1";
 "unknown_error" = "Não foi possível criar o painel";
+"columns" = "Colunas";
+"columns_description" = "Esse numero representa o numero de colunas que será utilizada nesse painel";

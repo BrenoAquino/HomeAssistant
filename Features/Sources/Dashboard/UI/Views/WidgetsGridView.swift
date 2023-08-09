@@ -72,54 +72,6 @@ struct WidgetsGridView: View {
         var currentRow: Int = .zero
         var matrix: [[WidgetViewData]] = [[]]
 
-//        var index = 0
-//        var indexToSkip: Set<Int> = []
-//
-//        while index < widgets.count {
-//            guard !indexToSkip.contains(index) else {
-//                index += 1
-//                continue
-//            }
-//
-//            let widget = widgets[index]
-//            let (columns, rows) = WidgetSize.units(for: widget.config.uiType, entity: widget.entity)
-//
-//            if columnsCount + columns > columnsNumber {
-//                let remainingColumns = columnsNumber - columnsCount
-//                var seekIndex = index + 1
-//
-//                while seekIndex < widgets.count {
-//                    let seekWidget = widgets[seekIndex]
-//                    let (seekColumns, seekRows) = WidgetSize.units(for: seekWidget.config.uiType, entity: seekWidget.entity)
-//
-//                    if seekColumns == remainingColumns {
-//                        matrix[currentRow].append((seekWidget, seekColumns, seekRows))
-//                        columnsCount = .zero
-//                        currentRow += 1
-//                        matrix.append([])
-//                        indexToSkip.insert(seekIndex)
-//                        break
-//                    }
-//
-//                    seekIndex += 1
-//                }
-//            }
-//
-//            else if columnsCount + columns == columnsCount {
-//                matrix[currentRow].append((widget, columns, rows))
-//                columnsCount = .zero
-//                currentRow += 1
-//                matrix.append([])
-//                index += 1
-//            }
-//
-//            else {
-//                columnsCount += columns
-//                matrix[currentRow].append((widget, columns, rows))
-//                index += 1
-//            }
-//        }
-
         for widget in widgets {
             let (columns, rows) = WidgetSize.units(for: widget.config.uiType, entity: widget.entity)
 
@@ -197,9 +149,9 @@ struct WidgetsGridView: View {
     ) -> some View {
         switch widget.entity {
         case let light as LightEntity:
-            lightWidgetView(widget.config, light)
+            lightWidgetView(widget, light)
         case let fan as FanEntity:
-            fanWidgetView(widget.config, fan)
+            fanWidgetView(widget, fan)
         default:
             UnsupportedWidgetView(entity: widget.entity)
         }
@@ -207,14 +159,14 @@ struct WidgetsGridView: View {
 
     @ViewBuilder
     private func lightWidgetView(
-        _ widgetConfig: WidgetConfig,
+        _ widgetData: WidgetData,
         _ lightEntity: LightEntity
     ) -> some View {
-        switch widgetConfig.uiType {
+        switch widgetData.config.uiType {
         default:
             LightWidgetView(lightEntity: lightEntity) {
                 if editMode {
-                    didClickEditWidget((widgetConfig, lightEntity))
+                    didClickEditWidget(widgetData)
                 } else {
                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                     didClickUpdateLightState($0, $1)
@@ -225,14 +177,14 @@ struct WidgetsGridView: View {
 
     @ViewBuilder
     private func fanWidgetView(
-        _ widgetConfig: WidgetConfig,
+        _ widgetData: WidgetData,
         _ fanEntity: FanEntity
     ) -> some View {
-        switch widgetConfig.uiType {
+        switch widgetData.config.uiType {
         case FanSliderWidgetView.uniqueID:
             FanSliderWidgetView(fanEntity: fanEntity) {
                 if editMode {
-                    didClickEditWidget((widgetConfig, fanEntity))
+                    didClickEditWidget(widgetData)
                 } else {
                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                     didClickUpdateFanState($0, $1)
@@ -241,7 +193,7 @@ struct WidgetsGridView: View {
         default:
             FanWidgetView(fanEntity: fanEntity) {
                 if editMode {
-                    didClickEditWidget((widgetConfig, fanEntity))
+                    didClickEditWidget(widgetData)
                 } else {
                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                     didClickUpdateFanState($0, $1)

@@ -1,38 +1,49 @@
 //
-//  WidgetEditView.swift
+//  WidgetUISelectionView.swift
+//  
 //
-//
-//  Created by Breno Aquino on 18/07/23.
+//  Created by Breno Aquino on 09/08/23.
 //
 
+import Domain
 import DesignSystem
 import SwiftUI
-import Domain
 
 private enum Constants {
 
     static let estimatedUnitSize: CGFloat = 120
-    static let shadowOpacity: CGFloat = 0.2
 }
 
-public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
+struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
 
     @ObservedObject private var viewModel: ViewModel
 
-    public init(viewModel: ViewModel) {
+    init(viewModel: ViewModel) {
         self.viewModel = viewModel
     }
 
-    public var body: some View {
-        VStack {
+    var body: some View {
+        VStack(spacing: .zero) {
             Localizable.description.text
                 .foregroundColor(DSColor.secondaryLabel)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.callout)
                 .padding(.horizontal, space: .horizontal)
 
+            TextField(
+                Localizable.widgetName.value,
+                text: $viewModel.widgetTitle,
+                axis: .vertical
+            )
+            .textFieldStyle(.roundedBorder)
+            .multilineTextAlignment(.center)
+            .font(.title)
+            .fontWeight(.semibold)
+            .padding(.top, space: .bigS)
+            .padding(.horizontal, space: .bigM)
+
             TabView(selection: $viewModel.selectedViewID) {
-                switch viewModel.widgetData.entity {
+                switch viewModel.entity {
                 case let light as LightEntity:
                     allWidgetViews { lightWidgets(light, viewID: $0) }
                 case let fan as FanEntity:
@@ -41,16 +52,14 @@ public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
                     EmptyView()
                 }
             }
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+            .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
 
             editButton
+                .padding(.top, space: .normal)
+                .padding(.horizontal, space: .bigM)
         }
-        .toast(data: $viewModel.toastData)
-        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
-        .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
-        .navigationTitle(viewModel.widgetData.entity.name)
-        .toolbar {
-            closeButton
-        }
+        .navigationTitle(Localizable.widgetTitle.value)
     }
 
     private func allWidgetViews<T: View>(
@@ -61,24 +70,15 @@ public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
         }
     }
 
-    private var closeButton: some View {
-        Button(action: viewModel.close) {
-            SystemImages.close
-                .imageScale(.large)
-                .foregroundColor(DSColor.label)
-        }
-        .foregroundColor(DSColor.label)
-    }
-
     private var editButton: some View {
-        Button(action: viewModel.updateWidget) {
+        Button(action: viewModel.createOrUpdateWidget) {
             Localizable.update.text
         }
         .buttonStyle(DefaultMaterialButtonStyle(
             foregroundColor: DSColor.label,
             material: .thinMaterial
         ))
-        .shadow(radius: .easy, color: .black.opacity(Constants.shadowOpacity))
+        .shadow(radius: .normal)
     }
 
     @ViewBuilder
@@ -123,27 +123,13 @@ public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
 }
 
 #if DEBUG
-import Domain
+import Preview
 
-struct WidgetEditView_Preview: PreviewProvider {
+struct WidgetUISelectionView_Preview: PreviewProvider {
 
     static var previews: some View {
         NavigationStack {
-            WidgetEditView(viewModel: WidgetEditViewModelPreview(
-                entity: LightEntity(id: "1", name: "Light", state: .on)
-            ))
-        }
-
-        NavigationStack {
-            WidgetEditView(viewModel: WidgetEditViewModelPreview(
-                entity: FanEntity(
-                    id: "1",
-                    name: "Bedroom's Fan",
-                    percentageStep: 0.2,
-                    percentage: 0.2,
-                    state: .on
-                )
-            ))
+            WidgetUISelectionView(viewModel: WidgetUISelectionViewModelPreview())
         }
     }
 }

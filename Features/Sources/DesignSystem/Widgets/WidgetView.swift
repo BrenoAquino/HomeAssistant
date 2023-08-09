@@ -30,7 +30,7 @@ public enum WidgetSize {
 
     private static let singleUnit = (1, 1)
 
-    static func units(for id: String, entity: any Entity) -> (columns: Int, rows: Int) {
+    public static func units(for id: String, entity: any Entity) -> (columns: Int, rows: Int) {
         switch entity {
         case is LightEntity:
             return findUnits(id, WidgetViewList.light)
