@@ -56,9 +56,17 @@ public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
             .tag(WidgetEditStep.entitySelection)
             .disablePageSwipe()
 
-            WidgetUISelectionView()
+            if let entity = viewModel.entity {
+                WidgetUISelectionView(
+                    entity: entity,
+                    widgetTitle: $viewModel.widgetTitle,
+                    viewIDs: viewModel.viewIDs,
+                    selectedViewID: $viewModel.selectedViewID,
+                    createOrUpdateWidget: viewModel.createOrUpdateWidget
+                )
                 .tag(WidgetEditStep.uiSelection)
                 .disablePageSwipe()
+            }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
     }

@@ -23,13 +23,18 @@ class WidgetEditViewModelPreview: WidgetEditViewModel {
     var entityFilterText: String = ""
     var domains: [EntityDomain] = EntityDomain.allCases
     var selectedDomainsNames: Set<String> = Set(EntityDomain.allCases.map { $0.rawValue })
+    func didSelectEntity(_ entity: any Entity) {}
+
+    var entity: (any Entity)? = EntityMock.fan
+    var widgetTitle: String = "Fan"
+    var viewIDs: [String] = WidgetViewList.fan.map { $0.uniqueID }
+    var selectedViewID: String = "default"
+    func createOrUpdateWidget() {}
 
     init() {}
 
-    func didSelectEntity(_ entity: any Entity) {}
     func nextStep() {}
     func previousStep() {}
     func close() {}
-    func createOrUpdateWidget() {}
 }
 #endif

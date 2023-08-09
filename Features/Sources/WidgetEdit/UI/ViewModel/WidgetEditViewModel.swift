@@ -49,9 +49,16 @@ public protocol WidgetEditViewModel: ObservableObject {
 
     func didSelectEntity(_ entity: any Entity)
 
+    // UI Selection
+    var entity: (any Entity)? { get }
+    var widgetTitle: String { get set }
+    var viewIDs: [String] { get }
+    var selectedViewID: String { get set }
+
+    func createOrUpdateWidget()
+
     // Tabs
     func nextStep()
     func previousStep()
-    func createOrUpdateWidget()
     func close()
 }

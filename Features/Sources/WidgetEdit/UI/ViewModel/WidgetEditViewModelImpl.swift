@@ -28,9 +28,15 @@ public class WidgetEditViewModelImpl<DashboardS: DashboardService, EntityS: Enti
 
     @Published public var toastData: DefaultToastDataContent?
     @Published public var currentStep: WidgetEditStep
-    @Published private(set) public var entities: [any Entity] = []
+    // Entity Selection
+    @Published public private(set) var entities: [any Entity] = []
     @Published public var entityFilterText: String = ""
     @Published public var selectedDomainsNames: Set<String> = []
+    // UI Selection
+    @Published public private(set) var entity: (any Entity)?
+    @Published public var widgetTitle: String = ""
+    @Published public private(set) var viewIDs: [String] = []
+    @Published public var selectedViewID: String = ""
 
     // MARK: Gets
 
@@ -61,6 +67,7 @@ public class WidgetEditViewModelImpl<DashboardS: DashboardService, EntityS: Enti
 
         setupData(mode)
         setupServiceObservers()
+        setupUIObservers()
     }
 }
 
@@ -97,6 +104,22 @@ extension WidgetEditViewModelImpl {
                     self.selectedDomainsNames,
                     self.entityService.entities.value,
                     hiddenEntityIDs
+                )
+            }
+            .store(in: &cancellable)
+    }
+
+    private func setupUIObservers() {
+        // Update entities' list when the user filter for a name or for a domain
+        Publishers
+            .CombineLatest($entityFilterText, $selectedDomainsNames)
+            .sink { [weak self] text, selectedDomains in
+                guard let self else { return }
+                self.filterEntity(
+                    text,
+                    selectedDomains,
+                    self.entityService.entities.value,
+                    self.entityService.hiddenEntityIDs.value
                 )
             }
             .store(in: &cancellable)
@@ -144,11 +167,38 @@ extension WidgetEditViewModelImpl {
 
 // MARK: - Public Methods
 
+// MARK: Entity Selection
+
 extension WidgetEditViewModelImpl {
 
     public func didSelectEntity(_ entity: any Entity) {
+        self.entity = entity
+        widgetTitle = entity.name
+        switch entity.domain {
+        case .light:
+            viewIDs = WidgetViewList.light.map { $0.uniqueID }
+        case .fan:
+            viewIDs = WidgetViewList.fan.map { $0.uniqueID }
+        case .climate, .switch:
+            viewIDs = []
+        }
+        selectedViewID = viewIDs.first ?? "default"
+        nextStep()
+    }
+}
+
+// MARK: UI Selection
+
+extension WidgetEditViewModelImpl {
+
+    public func createOrUpdateWidget() {
 
     }
+}
+
+// MARK: Super View
+
+extension WidgetEditViewModelImpl {
 
     public func nextStep() {
         guard let next = currentStep.next else { return }
@@ -158,10 +208,6 @@ extension WidgetEditViewModelImpl {
     public func previousStep() {
         guard let previous = currentStep.previous else { return }
         currentStep = previous
-    }
-
-    public func createOrUpdateWidget() {
-
     }
 
     public func close() {
