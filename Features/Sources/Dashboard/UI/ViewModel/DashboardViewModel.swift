@@ -13,6 +13,7 @@ public protocol DashboardExternalFlow {
 
     func didSelectConfig() -> Void
     func didSelectAddDashboard() -> Void
+    func didSelectAddWidget(_ dashboard: Dashboard) -> Void
     func didSelectEditDashboard(_ dashboard: Dashboard) -> Void
     func didSelectEditWidget(_ widgetData: WidgetData, _ dashboard: Dashboard)
 }
@@ -43,6 +44,7 @@ public protocol DashboardViewModel: ObservableObject {
 
     func didClickConfig()
     func didClickAddDashboard()
+    func didClickAddWidget()
     func didClickEdit(dashboard: Dashboard)
     func didClickEdit(widget: WidgetData)
     func didClickRemove(dashboard: Dashboard)

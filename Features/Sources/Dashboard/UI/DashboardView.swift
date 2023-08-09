@@ -38,10 +38,7 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             )
             .padding(.top, space: .smallS)
             
-            Localizable.devices.text
-                .font(.title3)
-                .fontWeight(.semibold)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            deviceSection
                 .padding(.top, space: .smallS)
                 .padding(.horizontal, space: .horizontal)
 
@@ -96,6 +93,20 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             viewModel.didClickConfig()
         } label: {
             SystemImages.config
+        }
+    }
+
+    private var deviceSection: some View {
+        HStack(spacing: .zero) {
+            Localizable.devices.text
+                .font(.title3)
+                .fontWeight(.semibold)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            Button(action: viewModel.didClickAddWidget) {
+                SystemImages.plus
+                    .foregroundColor(DSColor.label)
+            }
         }
     }
 }

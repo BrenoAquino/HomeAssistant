@@ -198,6 +198,8 @@ extension DashboardViewModelImpl {
     }
 }
 
+// MARK: Orders
+
 extension DashboardViewModelImpl {
 
     public func didUpdateWidgetsOrder(_ widgets: [WidgetData]) {
@@ -218,20 +220,28 @@ extension DashboardViewModelImpl {
     }
 }
 
+// MARK: Clicks
+
 extension DashboardViewModelImpl {
 
+    public func didClickConfig() {
+        delegate?.didSelectConfig()
+    }
+
+    // Add
     public func didClickAddDashboard() {
         delegate?.didSelectAddDashboard()
     }
 
+    public func didClickAddWidget() {
+        guard let currentDashboard else { return }
+        delegate?.didSelectAddWidget(currentDashboard)
+    }
+
+    // Remove
     public func didClickRemove(dashboard: Dashboard) {
         dashboardNameToDelete = dashboard.name
         removeDashboardAlert = true
-    }
-
-    public func didClickEdit(dashboard: Dashboard) {
-        delegate?.didSelectEditDashboard(dashboard)
-        editModel = false
     }
 
     public func didClickRemove(widget: WidgetData) {
@@ -239,16 +249,20 @@ extension DashboardViewModelImpl {
         removeWidgetAlert = true
     }
 
+    // Edit
+    public func didClickEdit(dashboard: Dashboard) {
+        delegate?.didSelectEditDashboard(dashboard)
+        editModel = false
+    }
+
     public func didClickEdit(widget: WidgetData) {
         guard let currentDashboard else { return }
         delegate?.didSelectEditWidget(widget, currentDashboard)
         editModel = false
     }
-
-    public func didClickConfig() {
-        delegate?.didSelectConfig()
-    }
 }
+
+// MARK: Update States
 
 extension DashboardViewModelImpl {
 

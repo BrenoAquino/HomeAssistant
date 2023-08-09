@@ -46,5 +46,6 @@ class DashboardViewModelPreview: DashboardViewModel {
     func didClickUpdateFanState(_ fanEntity: FanEntity, newState: FanEntity.State) {}
     func didUpdateWidgetsOrder(_ widgets: [WidgetData]) {}
     func didClickRemove(widget: WidgetData) {}
+    func didClickAddWidget() {}
 }
 #endif
