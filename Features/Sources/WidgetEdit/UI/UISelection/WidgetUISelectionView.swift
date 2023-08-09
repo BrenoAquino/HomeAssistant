@@ -16,7 +16,12 @@ private enum Constants {
 
 struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
 
+    private enum Field {
+        case name
+    }
+
     @ObservedObject private var viewModel: ViewModel
+    @FocusState private var focusedField: Field?
 
     init(viewModel: ViewModel) {
         self.viewModel = viewModel
@@ -35,6 +40,7 @@ struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
                 text: $viewModel.widgetTitle,
                 axis: .vertical
             )
+            .focused($focusedField, equals: .name)
             .textFieldStyle(.roundedBorder)
             .multilineTextAlignment(.center)
             .font(.title)
@@ -59,7 +65,18 @@ struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
                 .padding(.top, space: .normal)
                 .padding(.horizontal, space: .bigM)
         }
+        .ignoresSafeArea(.keyboard)
         .navigationTitle(Localizable.widgetTitle.value)
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button {
+                    focusedField = nil
+                } label: {
+                    Localizable.done.text
+                }
+            }
+        }
     }
 
     private func allWidgetViews<T: View>(

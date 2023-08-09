@@ -15,3 +15,4 @@
 "entity_selection_description" = "Selecione um dispositivo para entrar na configuração de widget";
 "entities_hint" = "Você pode pesquisar por um nome";
 "entities_search_example" = "Ex. \"Luz do Quarto\"";
+"done" = "Fechar";
