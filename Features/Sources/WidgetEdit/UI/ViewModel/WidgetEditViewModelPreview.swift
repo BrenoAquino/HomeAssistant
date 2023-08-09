@@ -11,28 +11,20 @@ import Preview
 import Domain
 
 class WidgetEditViewModelPreview: WidgetEditViewModel {
-
     var mode: WidgetEditMode = .creation
     var delegate: WidgetEditExternalFlow?
-    var widgetData: WidgetData?
-
-    var widgetTitle: String?
-    var selectedViewID: String? = "default"
-    var viewIDs: [String]? = WidgetViewList.fan.map { $0.uniqueID }
     var toastData: DefaultToastDataContent?
-
-    var entity: (any Entity)? { widgetData?.entity }
-    var widgetConfig: WidgetConfig? { widgetData?.config }
 
     var currentStep: Int = 0
     var isLastStep: Bool = false
     var isFirstStep: Bool = false
 
-    init() {
-        let entity = EntityMock.fan
-        self.widgetData = (WidgetConfig(id: "default", entityID: entity.id, title: entity.name), entity)
-        widgetTitle = entity.name
-    }
+    var entities: [any Entity] = EntityMock.all
+    var entityFilterText: String = ""
+    var domains: [EntityDomain] = EntityDomain.allCases
+    var selectedDomainsNames: Set<String> = Set(EntityDomain.allCases.map { $0.rawValue })
+
+    init() {}
 
     func nextStep() {}
     func previousStep() {}

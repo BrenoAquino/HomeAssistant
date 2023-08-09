@@ -19,7 +19,6 @@ struct WidgetEntitySelectionView: View {
 
     let entities: [any Entity]
     @Binding var entitySearchText: String
-    @Binding var selectedEntities: Set<String>
     let domains: [EntityDomain]
     @Binding var selectedDomains: Set<String>
 
@@ -124,12 +123,15 @@ struct WidgetEntitySelectionView: View {
                     .frame(width: Constants.iconSize)
 
                 Text(entity.name)
+                    .foregroundColor(DSColor.label)
+                    .font(.body)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 SystemImages.rightArrow
                     .frame(width: Constants.iconSize)
             }
             .padding(.top, space: .smallM)
+            .padding(.bottom, space: .smallS)
             .listRowInsets(EdgeInsets())
         }
     }
@@ -148,7 +150,6 @@ struct WidgetEntitySelectionView_Preview: PreviewProvider {
         WidgetEntitySelectionView(
             entities: EntityMock.all,
             entitySearchText: .init(get: { entitySearchText }, set: { entitySearchText = $0 }),
-            selectedEntities: .init(get: { selectedEntities }, set: { selectedEntities = $0 }),
             domains: EntityDomain.allCases,
             selectedDomains: .init(get: { selectedDomains }, set: { selectedDomains = $0 })
         )

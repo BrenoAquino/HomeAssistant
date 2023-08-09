@@ -34,10 +34,18 @@ public protocol WidgetEditViewModel: ObservableObject {
     var delegate: WidgetEditExternalFlow? { get set }
     var toastData: DefaultToastDataContent? { get set }
 
+    // Tabs
     var currentStep: Int { get set }
     var isFirstStep: Bool { get }
     var isLastStep: Bool { get }
 
+    // Entity Selection
+    var entities: [any Entity] { get }
+    var entityFilterText: String { get set }
+    var domains: [EntityDomain] { get }
+    var selectedDomainsNames: Set<String> { get set }
+
+    // Tabs
     func nextStep()
     func previousStep()
     func createOrUpdateWidget()

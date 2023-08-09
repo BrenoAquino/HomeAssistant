@@ -142,6 +142,7 @@ extension Factory: ScreenFactory {
     func widgetEdit(dashboard: Domain.Dashboard, mode: WidgetEditMode) -> Screen {
         let viewModel = WidgetEditViewModelImpl(
             dashboardService: dashboardServiceInstance,
+            entityService: entityServiceInstance,
             dashboard: dashboard,
             mode: mode
         )

@@ -23,7 +23,7 @@ public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
         .navigationTitle(
             viewModel.mode == .creation ?
             Localizable.creationTitle.value :
-            Localizable.editTitle.value
+                Localizable.editTitle.value
         )
         .toolbar {
             closeButton
@@ -41,9 +41,14 @@ public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
 
     private var steps: some View {
         TabView(selection: $viewModel.currentStep) {
-//            WidgetEntitySelectionView()
-//                .tag(0)
-//                .disablePageSwipe()
+            WidgetEntitySelectionView(
+                entities: viewModel.entities,
+                entitySearchText: $viewModel.entityFilterText,
+                domains: viewModel.domains,
+                selectedDomains: $viewModel.selectedDomainsNames
+            )
+            .tag(0)
+            .disablePageSwipe()
 
             WidgetUISelectionView()
                 .tag(1)
