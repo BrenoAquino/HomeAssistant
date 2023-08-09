@@ -8,34 +8,45 @@
 import DesignSystem
 import SwiftUI
 
+private enum Constants {
+
+    static let inputNameHeight: CGFloat = 40
+    static let inputIconSearchHeight: CGFloat = 20
+}
+
 public struct DashboardEditView<ViewModel: DashboardEditViewModel>: View {
 
     @ObservedObject private var viewModel: ViewModel
+    @State var num: Double = 0
 
     public init(viewModel: ViewModel) {
         self.viewModel = viewModel
     }
 
     public var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            Localizable.dashboardDescription.text
-                .foregroundColor(DSColor.secondaryLabel)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .font(.callout)
-                .padding(.horizontal, space: .horizontal)
+        GeometryReader { proxy in
+            ScrollView(.vertical, showsIndicators: false) {
+                Localizable.dashboardDescription.text
+                    .foregroundColor(DSColor.secondaryLabel)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .font(.callout)
+                    .padding(.horizontal, space: .horizontal)
 
-            iconField
-                .padding(.top, space: .smallS)
+                nameField
+                    .padding(.top, space: .smallS)
+                    .padding(.horizontal, space: .horizontal)
 
-            nameField
-                .padding(.top, space: .smallS)
-                .padding(.horizontal, space: .horizontal)
+                columnsNumber
+                    .padding(.top, space: .smallM)
+                    .padding(.horizontal, space: .horizontal)
 
-            entitiesList
-                .padding(.top, space: .smallS)
+                iconField(proxy)
+                    .padding(.top, space: .smallS)
 
-            createButton
-                .padding(.vertical, space: .normal)
+                Spacer()
+                    .padding(.top, space: .bigL)
+            }
+            .overlay(createButton, alignment: .bottom)
         }
         .background(DSColor.background)
         .scrollDismissesKeyboard(.immediately)
@@ -67,7 +78,7 @@ public struct DashboardEditView<ViewModel: DashboardEditViewModel>: View {
 
             VStack(spacing: .smallS) {
                 TextField("", text: $viewModel.dashboardName, axis: .horizontal)
-                    .frame(height: 40)
+                    .frame(height: Constants.inputNameHeight)
                     .padding(.horizontal, space: .smallL)
                     .overlay(
                         RoundedRectangle(cornerRadius: .normal)
@@ -80,11 +91,32 @@ public struct DashboardEditView<ViewModel: DashboardEditViewModel>: View {
                     .fontWeight(.medium)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-
         }
     }
 
-    private var iconField: some View {
+    private var columnsNumber: some View {
+        VStack(spacing: .smallM) {
+            HStack(spacing: .zero) {
+                Localizable.columns.text
+                    .foregroundColor(DSColor.label)
+                    .font(.headline)
+                    .fontWeight(.medium)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                StepperWithNumber(number: $num)
+            }
+
+            Localizable.columnsDescription.text
+                .foregroundColor(DSColor.secondaryLabel)
+                .font(.footnote)
+                .fontWeight(.medium)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    private func iconField(
+        _ proxy: GeometryProxy
+    ) -> some View {
         VStack(spacing: .smallL) {
             Localizable.icon.text
                 .foregroundColor(DSColor.label)
@@ -93,17 +125,16 @@ public struct DashboardEditView<ViewModel: DashboardEditViewModel>: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, space: .horizontal)
 
-            IconsCarouselView(
-                icons: viewModel.icons,
-                selectedIconName: $viewModel.selectedIconName
-            )
-
             VStack(spacing: .smallS) {
                 VStack(spacing: .zero) {
-                    TextField("", text: $viewModel.iconFilterText, axis: .horizontal)
-                        .foregroundColor(DSColor.secondaryLabel)
-                        .font(.subheadline)
-                        .frame(height: 20)
+                    TextField(
+                        Localizable.iconExample.value,
+                        text: $viewModel.iconFilterText,
+                        axis: .horizontal
+                    )
+                    .foregroundColor(DSColor.secondaryLabel)
+                    .font(.subheadline)
+                    .frame(height: Constants.inputIconSearchHeight)
 
                     Divider()
                 }
@@ -115,6 +146,12 @@ public struct DashboardEditView<ViewModel: DashboardEditViewModel>: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             .padding(.horizontal, space: .horizontal)
+
+            IconsListView(
+                proxy: proxy,
+                icons: viewModel.icons,
+                selectedIconName: $viewModel.selectedIconName
+            )
         }
     }
 
@@ -149,6 +186,7 @@ public struct DashboardEditView<ViewModel: DashboardEditViewModel>: View {
             foregroundColor: DSColor.background,
             backgroundColor: DSColor.label
         ))
+        .shadow(radius: .normal)
     }
 }
 

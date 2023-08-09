@@ -157,7 +157,10 @@ extension DashboardEditViewModelImpl {
             let domainCheck = domainNames.contains(entity.domain.rawValue)
             return nameCheck && domainCheck
         }
-        self.entities = result.isEmpty ? allEntities : result
+
+        DispatchQueue.main.async {
+            self.entities = result.isEmpty ? allEntities : result
+        }
     }
 
     private func createDashboard() throws -> Dashboard {

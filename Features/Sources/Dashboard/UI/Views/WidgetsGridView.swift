@@ -72,54 +72,6 @@ struct WidgetsGridView: View {
         var currentRow: Int = .zero
         var matrix: [[WidgetViewData]] = [[]]
 
-//        var index = 0
-//        var indexToSkip: Set<Int> = []
-//
-//        while index < widgets.count {
-//            guard !indexToSkip.contains(index) else {
-//                index += 1
-//                continue
-//            }
-//
-//            let widget = widgets[index]
-//            let (columns, rows) = WidgetSize.units(for: widget.config.uiType, entity: widget.entity)
-//
-//            if columnsCount + columns > columnsNumber {
-//                let remainingColumns = columnsNumber - columnsCount
-//                var seekIndex = index + 1
-//
-//                while seekIndex < widgets.count {
-//                    let seekWidget = widgets[seekIndex]
-//                    let (seekColumns, seekRows) = WidgetSize.units(for: seekWidget.config.uiType, entity: seekWidget.entity)
-//
-//                    if seekColumns == remainingColumns {
-//                        matrix[currentRow].append((seekWidget, seekColumns, seekRows))
-//                        columnsCount = .zero
-//                        currentRow += 1
-//                        matrix.append([])
-//                        indexToSkip.insert(seekIndex)
-//                        break
-//                    }
-//
-//                    seekIndex += 1
-//                }
-//            }
-//
-//            else if columnsCount + columns == columnsCount {
-//                matrix[currentRow].append((widget, columns, rows))
-//                columnsCount = .zero
-//                currentRow += 1
-//                matrix.append([])
-//                index += 1
-//            }
-//
-//            else {
-//                columnsCount += columns
-//                matrix[currentRow].append((widget, columns, rows))
-//                index += 1
-//            }
-//        }
-
         for widget in widgets {
             let (columns, rows) = WidgetSize.units(for: widget.config.uiType, entity: widget.entity)
 
