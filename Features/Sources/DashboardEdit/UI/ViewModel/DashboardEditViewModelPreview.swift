@@ -19,11 +19,7 @@ class DashboardEditViewModelPreview: DashboardEditViewModel {
     var icons: [Icon] = Icon.list
     var selectedIconName: String? = Icon.list.first?.name
     var iconFilterText: String = ""
-    var entities: [any Entity] = EntityMock.all
-    var selectedEntitiesIDs: Set<String> = []
-    var entityFilterText: String = ""
-    var domains: [EntityDomain] = EntityDomain.allCases
-    var selectedDomainsNames: Set<String> = Set(EntityDomain.allCases.map { $0.rawValue })
+    var columnsNumber: Int = 3
 
     func close() {}
     func createOrUpdateDashboard() {}

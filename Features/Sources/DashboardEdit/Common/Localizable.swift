@@ -25,7 +25,7 @@ enum Localizable: String, CommonLocalizable {
     case missingNameError = "missing_name_error"
     case nameAlreadyExistsError = "name_already_exists_error"
     case missingIconError = "missing_icon_error"
-    case missingEntitiesError = "missing_entities_error"
+    case invalidNumberOfColumnsError = "invalid_number_columns_error"
     case unknownError = "unknown_error"
     case columns
     case columnsDescription = "columns_description"

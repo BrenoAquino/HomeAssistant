@@ -17,8 +17,8 @@ extension DashboardEditViewModelError {
             return Localizable.nameAlreadyExistsError.value
         case .missingIcon:
             return Localizable.missingIconError.value
-        case .missingEntities:
-            return Localizable.missingEntitiesError.value
+        case .invalidNumberOfColumns:
+            return Localizable.invalidNumberOfColumnsError.value
         }
     }
 }

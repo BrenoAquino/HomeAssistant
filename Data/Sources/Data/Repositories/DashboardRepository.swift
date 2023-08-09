@@ -43,6 +43,6 @@ private extension Domain.Dashboard {
 
     func toData() -> Dashboard {
         let widgets = widgetConfigs.map { WidgetConfig(id: $0.id, uiType: $0.uiType, entityID: $0.entityID) }
-        return Dashboard(name: name, icon: icon, widgetConfigs: widgets)
+        return Dashboard(name: name, icon: icon, columns: columns, widgetConfigs: widgets)
     }
 }

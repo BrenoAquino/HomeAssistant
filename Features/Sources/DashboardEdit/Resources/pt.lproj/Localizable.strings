@@ -21,7 +21,7 @@
 "missing_name_error" = "É necessário preencher o nome";
 "name_already_exists_error" = "Esse nome já está em uso";
 "missing_icon_error" = "É necessário escolher um ícone";
-"missing_entities_error" = "O painel precisa possuir pelo menos 1 dispositivo";
+"invalid_number_columns_error" = "O número de colunas deve ser superior a 1";
 "unknown_error" = "Não foi possível criar o painel";
 "columns" = "Colunas";
 "columns_description" = "Esse numero representa o numero de colunas que será utilizada nesse painel";

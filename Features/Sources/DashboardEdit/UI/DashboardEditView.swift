@@ -17,7 +17,6 @@ private enum Constants {
 public struct DashboardEditView<ViewModel: DashboardEditViewModel>: View {
 
     @ObservedObject private var viewModel: ViewModel
-    @State var num: Double = 0
 
     public init(viewModel: ViewModel) {
         self.viewModel = viewModel
@@ -103,7 +102,10 @@ public struct DashboardEditView<ViewModel: DashboardEditViewModel>: View {
                     .fontWeight(.medium)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
-                StepperWithNumber(number: $num)
+                StepperWithNumber(number: .init(
+                    get: { Double(viewModel.columnsNumber) },
+                    set: { viewModel.columnsNumber = Int($0) }
+                ))
             }
 
             Localizable.columnsDescription.text
@@ -151,25 +153,6 @@ public struct DashboardEditView<ViewModel: DashboardEditViewModel>: View {
                 proxy: proxy,
                 icons: viewModel.icons,
                 selectedIconName: $viewModel.selectedIconName
-            )
-        }
-    }
-
-    private var entitiesList: some View {
-        VStack(spacing: .smallL) {
-            Localizable.entities.text
-                .foregroundColor(DSColor.label)
-                .font(.headline)
-                .fontWeight(.medium)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, space: .horizontal)
-
-            EntitiesListView(
-                entities: viewModel.entities,
-                entitySearchText: $viewModel.entityFilterText,
-                selectedEntities: $viewModel.selectedEntitiesIDs,
-                domains: viewModel.domains,
-                selectedDomains: $viewModel.selectedDomainsNames
             )
         }
     }

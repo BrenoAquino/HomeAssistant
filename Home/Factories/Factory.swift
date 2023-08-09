@@ -134,7 +134,6 @@ extension Factory: ScreenFactory {
     func dashboardEditScreen(mode: DashboardEditMode) -> Screen {
         let viewModel = DashboardEditViewModelImpl(
             dashboardService: dashboardServiceInstance,
-            entitiesService: entityServiceInstance,
             mode: mode
         )
         return Screen(view: DashboardEditCoordinator(viewModel: viewModel))

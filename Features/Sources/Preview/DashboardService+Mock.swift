@@ -42,6 +42,7 @@ public enum DashboardMock {
     public static let bedroom = Domain.Dashboard(
         name: "Bedroom",
         icon: "bed.double",
+        columns: 3,
         widgetConfigs: [
             .init(id: "1", entityID: EntityMock.ledDeskLight.id),
             .init(id: "2", entityID: EntityMock.ledCeilingLight.id),
@@ -54,6 +55,7 @@ public enum DashboardMock {
     public static let living = Domain.Dashboard(
         name: "Living Room",
         icon: "sofa",
+        columns: 3,
         widgetConfigs: [
             .init(id: "4", entityID: EntityMock.climate.id),
         ]
@@ -62,6 +64,7 @@ public enum DashboardMock {
     public static let kitchen = Domain.Dashboard(
         name: "Kitchen",
         icon: "refrigerator",
+        columns: 3,
         widgetConfigs: [
             .init(id: "5", entityID: EntityMock.coffeeMachine.id),
         ]
@@ -70,6 +73,7 @@ public enum DashboardMock {
     public static let garden = Domain.Dashboard(
         name: "Garden",
         icon: "tree",
+        columns: 3,
         widgetConfigs: [
             .init(id: "6", entityID: EntityMock.mainLight.id),
             .init(id: "7", entityID: EntityMock.fan.id),
@@ -79,6 +83,7 @@ public enum DashboardMock {
     public static let security = Domain.Dashboard(
         name: "Security",
         icon: "light.beacon.max",
+        columns: 3,
         widgetConfigs: [
             .init(id: "8", entityID: EntityMock.mainLight.id),
         ]
