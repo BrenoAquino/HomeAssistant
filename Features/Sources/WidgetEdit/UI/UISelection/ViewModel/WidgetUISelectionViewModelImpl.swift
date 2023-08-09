@@ -11,10 +11,15 @@ import Foundation
 
 class WidgetUISelectionViewModelImpl: WidgetUISelectionViewModel {
 
-    var entity: any Entity
-    var widgetTitle: String
-    var viewIDs: [String]
-    var selectedViewID: String
+    let entity: any Entity
+    let viewIDs: [String]
+
+    // MARK: Publishers
+
+    @Published var widgetTitle: String
+    @Published var selectedViewID: String
+
+    // MARK: Init
 
     init(entity: any Entity, selectedViewID: String = "default") {
         self.entity = entity

@@ -14,8 +14,7 @@ enum Localizable: String, CommonLocalizable {
     case description
     case updateError = "update_error"
     case widgetName = "widget_name"
-    case creationTitle = "creation_title"
-    case editTitle = "edit_title"
+    case widgetTitle = "widget_title"
     case entitySelectionTitle = "entity_selection_title"
     case entitySelectionDescription = "entity_selection_description"
     case entitiesHint = "entities_hint"

@@ -11,7 +11,7 @@
 "update_error" = "It was not possible to update the widget";
 "widget_name" = "Widget Title";
 "creation_title" = "Widget Creation";
-"edit_title" = "Widget Edit";
+"widget_title" = "Widget Setup";
 "entity_selection_title" = "Choose a device";
 "entity_selection_description" = "Select a device to enter the widget configuration";
 "entities_hint" = "You can search for a name";

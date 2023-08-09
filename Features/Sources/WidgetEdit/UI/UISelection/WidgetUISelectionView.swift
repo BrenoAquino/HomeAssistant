@@ -52,11 +52,14 @@ struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
                     EmptyView()
                 }
             }
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+            .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
 
             editButton
+                .padding(.top, space: .normal)
+                .padding(.horizontal, space: .bigM)
         }
-        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
-        .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+        .navigationTitle(Localizable.widgetTitle.value)
     }
 
     private func allWidgetViews<T: View>(
@@ -125,7 +128,9 @@ import Preview
 struct WidgetUISelectionView_Preview: PreviewProvider {
 
     static var previews: some View {
-        WidgetUISelectionView(viewModel: WidgetUISelectionViewModelPreview())
+        NavigationStack {
+            WidgetUISelectionView(viewModel: WidgetUISelectionViewModelPreview())
+        }
     }
 }
 #endif
