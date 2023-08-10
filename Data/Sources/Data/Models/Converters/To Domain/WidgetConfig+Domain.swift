@@ -11,6 +11,6 @@ import Foundation
 extension WidgetConfig {
 
     func toDomain() -> Domain.WidgetConfig {
-        Domain.WidgetConfig(id: id, entityID: entityID, title: title, uiType: uiType)
+        Domain.WidgetConfig(id: id, entityID: entityID, uiType: uiType, customInfo: customInfo.toDomain())
     }
 }

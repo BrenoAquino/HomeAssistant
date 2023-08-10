@@ -8,6 +8,7 @@
 import DesignSystem
 import Domain
 import Foundation
+import Combine
 
 class WidgetUISelectionViewModelImpl<DashboardS: DashboardService>: WidgetUISelectionViewModel {
 
@@ -17,12 +18,15 @@ class WidgetUISelectionViewModelImpl<DashboardS: DashboardService>: WidgetUISele
     let widgetConfig: WidgetConfig?
     let viewIDs: [String]
 
+    private var cancellable: Set<AnyCancellable> = []
+
     // MARK: Services
 
     private let dashboardService: DashboardS
 
     // MARK: Publishers
 
+    @Published private(set) var widgetCustomInfo: WidgetCustomInfo
     @Published var widgetTitle: String
     @Published var selectedViewID: String
     @Published var toastData: DefaultToastDataContent?
@@ -43,7 +47,8 @@ class WidgetUISelectionViewModelImpl<DashboardS: DashboardService>: WidgetUISele
 
         entity = widgetData.entity
         widgetConfig = widgetData.config
-        widgetTitle = widgetData.config.title
+        widgetCustomInfo = widgetData.config.customInfo
+        widgetTitle = widgetData.config.customInfo.title
         selectedViewID = widgetData.config.uiType
 
         switch entity.domain {
@@ -54,6 +59,8 @@ class WidgetUISelectionViewModelImpl<DashboardS: DashboardService>: WidgetUISele
         case .climate, .switch:
             viewIDs = []
         }
+
+        setupUIObservers()
     }
 
     init(
@@ -66,6 +73,7 @@ class WidgetUISelectionViewModelImpl<DashboardS: DashboardService>: WidgetUISele
 
         self.entity = entity
         widgetConfig = nil
+        widgetCustomInfo = WidgetCustomInfo(title: entity.name)
         widgetTitle = entity.name
         selectedViewID = "default"
 
@@ -77,6 +85,20 @@ class WidgetUISelectionViewModelImpl<DashboardS: DashboardService>: WidgetUISele
         case .climate, .switch:
             viewIDs = []
         }
+
+        setupUIObservers()
+    }
+}
+
+// MARK: - Setups
+
+extension WidgetUISelectionViewModelImpl {
+
+    private func setupUIObservers() {
+        // Generate a new custom info
+        $widgetTitle
+            .sink { [weak self] in self?.widgetCustomInfo.title = $0 }
+            .store(in: &cancellable)
     }
 }
 
@@ -90,12 +112,13 @@ extension WidgetUISelectionViewModelImpl {
             if let id = widgetConfig?.id {
                 dashboard.widgetConfigs.removeAll(where: { $0.id == id })
             }
-            dashboard.widgetConfigs.append(WidgetConfig(
+            let widgetConfig = WidgetConfig(
                 id: widgetConfig?.id ?? UUID().uuidString,
                 entityID: entity.id,
-                title: widgetTitle,
-                uiType: selectedViewID
-            ))
+                uiType: selectedViewID,
+                customInfo: widgetCustomInfo
+            )
+            dashboard.widgetConfigs.append(widgetConfig)
             try dashboardService.update(
                 dashboardName: dashboard.name,
                 dashboard: dashboard

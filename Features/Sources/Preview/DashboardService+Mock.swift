@@ -19,7 +19,8 @@ public enum WidgetsMock {
     ) -> WidgetData {
         let entityID = UUID().uuidString
         let entity = LightEntity(id: entityID, name: name, state: state)
-        let widgetConfig = WidgetConfig(id: UUID().uuidString, entityID: entityID, title: entity.name, uiType: uiType)
+        let widgetCustomInfo = WidgetCustomInfo(title: entity.name)
+        let widgetConfig = WidgetConfig(id: UUID().uuidString, entityID: entityID, uiType: uiType, customInfo: widgetCustomInfo)
         return WidgetData(config: widgetConfig, entity: entity)
     }
 
@@ -32,7 +33,8 @@ public enum WidgetsMock {
     ) -> WidgetData {
         let entityID = UUID().uuidString
         let entity = FanEntity(id: entityID, name: name, percentageStep: percentageStep, percentage: percentage, state: state)
-        let widgetConfig = WidgetConfig(id: UUID().uuidString, entityID: entityID, title: entity.name, uiType: uiType)
+        let widgetCustomInfo = WidgetCustomInfo(title: entity.name)
+        let widgetConfig = WidgetConfig(id: UUID().uuidString, entityID: entityID, uiType: uiType, customInfo: widgetCustomInfo)
         return WidgetData(config: widgetConfig, entity: entity)
     }
 }
@@ -44,11 +46,11 @@ public enum DashboardMock {
         icon: "bed.double",
         columns: 3,
         widgetConfigs: [
-            .init(id: "1", entityID: EntityMock.ledDeskLight.id, title: EntityMock.ledDeskLight.name),
-            .init(id: "2", entityID: EntityMock.ledCeilingLight.id, title: EntityMock.ledCeilingLight.name),
-            .init(id: "3", entityID: EntityMock.fan.id, title: EntityMock.fan.name, uiType: "slider"),
-            .init(id: "4", entityID: EntityMock.fan.id, title: EntityMock.fan.name, uiType: "slider"),
-            .init(id: "5", entityID: EntityMock.mainLight.id, title: EntityMock.mainLight.name),
+            .init(id: "1", entityID: EntityMock.ledDeskLight.id, customInfo: .init(title: EntityMock.ledDeskLight.name)),
+            .init(id: "2", entityID: EntityMock.ledCeilingLight.id, customInfo: .init(title:EntityMock.ledCeilingLight.name)),
+            .init(id: "3", entityID: EntityMock.fan.id, uiType: "slider", customInfo: .init(title:EntityMock.fan.name)),
+            .init(id: "4", entityID: EntityMock.fan.id, uiType: "slider", customInfo: .init(title:EntityMock.fan.name)),
+            .init(id: "5", entityID: EntityMock.mainLight.id, customInfo: .init(title:EntityMock.mainLight.name)),
         ]
     )
 
@@ -57,7 +59,7 @@ public enum DashboardMock {
         icon: "sofa",
         columns: 3,
         widgetConfigs: [
-            .init(id: "4", entityID: EntityMock.climate.id, title: EntityMock.climate.name),
+            .init(id: "4", entityID: EntityMock.climate.id, customInfo: .init(title: EntityMock.climate.name)),
         ]
     )
 
@@ -66,7 +68,7 @@ public enum DashboardMock {
         icon: "refrigerator",
         columns: 3,
         widgetConfigs: [
-            .init(id: "5", entityID: EntityMock.coffeeMachine.id, title: EntityMock.coffeeMachine.name),
+            .init(id: "5", entityID: EntityMock.coffeeMachine.id, customInfo: .init(title: EntityMock.coffeeMachine.name)),
         ]
     )
 
@@ -75,8 +77,8 @@ public enum DashboardMock {
         icon: "tree",
         columns: 3,
         widgetConfigs: [
-            .init(id: "6", entityID: EntityMock.mainLight.id, title: EntityMock.mainLight.name),
-            .init(id: "7", entityID: EntityMock.fan.id, title: EntityMock.fan.name),
+            .init(id: "6", entityID: EntityMock.mainLight.id, customInfo: .init(title: EntityMock.mainLight.name)),
+            .init(id: "7", entityID: EntityMock.fan.id, customInfo: .init(title: EntityMock.fan.name)),
         ]
     )
 
@@ -85,7 +87,7 @@ public enum DashboardMock {
         icon: "light.beacon.max",
         columns: 3,
         widgetConfigs: [
-            .init(id: "8", entityID: EntityMock.mainLight.id, title: EntityMock.mainLight.name),
+            .init(id: "8", entityID: EntityMock.mainLight.id, customInfo: .init(title: EntityMock.mainLight.name)),
         ]
     )
 
