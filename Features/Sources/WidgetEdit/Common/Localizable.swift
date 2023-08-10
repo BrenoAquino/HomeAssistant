@@ -10,7 +10,6 @@ import SwiftUI
 
 enum Localizable: String, CommonLocalizable {
 
-    case update
     case description
     case updateError = "update_error"
     case widgetName = "widget_name"
@@ -20,6 +19,9 @@ enum Localizable: String, CommonLocalizable {
     case entitiesHint = "entities_hint"
     case entitiesSearchExample = "entities_search_example"
     case done
+    case update
+    case create
+    case unknownError = "unknown_error"
 }
 
 extension Localizable {

@@ -12,7 +12,7 @@ import SwiftUI
 public enum WidgetEditMode {
 
     case creation
-    case edit(entity: any Entity)
+    case edit(widgetData: WidgetData)
 }
 
 public protocol WidgetEditExternalFlow {
@@ -24,7 +24,9 @@ public protocol WidgetEditViewModel: ObservableObject {
 
     var delegate: WidgetEditExternalFlow? { get set }
     var mode: WidgetEditMode { get }
+    var dashboard: Dashboard { get }
 
-    func entitySelection() -> any View
-    func uiSelection(_ entity: any Entity) -> any View
+    func entitySelection() -> AnyView
+    func uiSelection(_ entity: any Entity) -> AnyView
+    func uiSelection(_ widgetData: WidgetData) -> AnyView
 }

@@ -6,7 +6,6 @@
   
 */
 
-"update" = "Update Widget";
 "description" = "Different widgets can provide different features to control the device";
 "update_error" = "It was not possible to update the widget";
 "widget_name" = "Widget Title";
@@ -16,3 +15,6 @@
 "entities_hint" = "You can search for a name";
 "entities_search_example" = "E.g. \"Bedroom's Light\"";
 "done" = "Done";
+"update" = "Update Widget";
+"create" = "Create Widget";
+"unknown_error" = "Could not create the dashboard";

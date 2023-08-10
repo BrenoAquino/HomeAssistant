@@ -66,6 +66,7 @@ struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
                 .padding(.horizontal, space: .bigM)
         }
         .ignoresSafeArea(.keyboard)
+        .toast(data: $viewModel.toastData)
         .navigationTitle(Localizable.widgetTitle.value)
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
@@ -89,7 +90,9 @@ struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
 
     private var editButton: some View {
         Button(action: viewModel.createOrUpdateWidget) {
-            Localizable.update.text
+            viewModel.doesWidgetAlreadyExist ?
+            Localizable.update.text :
+            Localizable.create.text
         }
         .buttonStyle(DefaultMaterialButtonStyle(
             foregroundColor: DSColor.label,
