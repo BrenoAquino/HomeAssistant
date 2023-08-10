@@ -80,19 +80,6 @@ class WidgetUISelectionViewModelImpl<DashboardS: DashboardService>: WidgetUISele
     }
 }
 
-// MARK: - Private Methods
-
-extension WidgetUISelectionViewModelImpl {
-
-    private func setError(
-        message: String,
-        logMessage: String? = nil
-    ) {
-        toastData = .init(type: .error, title: message)
-        Logger.log(level: .error, logMessage ?? message)
-    }
-}
-
 // MARK: - Methods
 
 extension WidgetUISelectionViewModelImpl {
@@ -100,21 +87,23 @@ extension WidgetUISelectionViewModelImpl {
     func createOrUpdateWidget() {
         do {
             var dashboard = self.dashboard
-            let widget = WidgetConfig(
+            if let id = widgetConfig?.id {
+                dashboard.widgetConfigs.removeAll(where: { $0.id == id })
+            }
+            dashboard.widgetConfigs.append(WidgetConfig(
                 id: widgetConfig?.id ?? UUID().uuidString,
                 entityID: entity.id,
                 title: widgetTitle,
                 uiType: selectedViewID
-            )
-
-            dashboard.widgetConfigs.append(widget)
+            ))
             try dashboardService.update(
                 dashboardName: dashboard.name,
                 dashboard: dashboard
             )
             delegate?.didClose()
         } catch {
-            setError(message: Localizable.unknownError.value, logMessage: error.localizedDescription)
+            toastData = .init(type: .error, title: Localizable.unknownError.value)
+            Logger.log(level: .error, error.localizedDescription)
         }
     }
 }
