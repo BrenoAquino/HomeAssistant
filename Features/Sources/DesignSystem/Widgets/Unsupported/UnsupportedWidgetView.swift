@@ -13,14 +13,14 @@ public struct UnsupportedWidgetView: WidgetView {
     public static let uniqueID: String = "default"
     public static let units: (columns: Int, rows: Int) = (1, 1)
 
-    let entity: any Entity
+    let title: String
 
-    public init(entity: any Entity) {
-        self.entity = entity
+    public init(title: String) {
+        self.title = title
     }
 
     public var body: some View {
-        Text(entity.name)
+        Text(title)
             .textCase(.uppercase)
             .multilineTextAlignment(.center)
             .minimumScaleFactor(0.5)
@@ -44,7 +44,7 @@ struct UnsupportedWidgetView_Preview: PreviewProvider {
     static var previews: some View {
         let size: CGFloat = 150
         
-        UnsupportedWidgetView(entity: EntityMock.climate)
+        UnsupportedWidgetView(title: EntityMock.climate.name)
             .frame(width: size, height: size)
     }
 }

@@ -27,11 +27,11 @@ public struct WidgetEditView<ViewModel: WidgetEditViewModel>: View {
         case .creation:
             AnyView(viewModel.entitySelection())
                 .navigationDestination(for: AnyEntity.self) { elem in
-                    AnyView(viewModel.uiSelection(elem.entity))
+                    viewModel.uiSelection(elem.entity)
                 }
 
-        case .edit(let entity):
-            AnyView(viewModel.uiSelection(entity))
+        case .edit(let widgetData):
+            viewModel.uiSelection(widgetData)
         }
     }
 }

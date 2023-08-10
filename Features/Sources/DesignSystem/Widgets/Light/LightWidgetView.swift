@@ -21,13 +21,16 @@ public struct LightWidgetView: WidgetView {
     public static let units: (columns: Int, rows: Int) = (1, 1)
 
     let lightEntity: LightEntity
+    let title: String
     let updateState: (_ lightEntity: LightEntity, _ newState: LightEntity.State) -> Void
 
     public init(
         lightEntity: LightEntity,
+        title: String,
         updateState: @escaping (_ entity: LightEntity, _ newState: LightEntity.State) -> Void
     ) {
         self.lightEntity = lightEntity
+        self.title = title
         self.updateState = updateState
     }
 
@@ -64,7 +67,7 @@ public struct LightWidgetView: WidgetView {
                 .clipShape(Circle())
                 .frame(maxWidth: .infinity, alignment: .topLeading)
 
-            Text(lightEntity.name)
+            Text(title)
                 .font(.subheadline)
                 .fontWeight(.semibold)
                 .foregroundColor(lightEntity.isOn ? .black : DSColor.label)
@@ -87,12 +90,14 @@ struct LightWidgetView_Preview: PreviewProvider {
         HStack(spacing: .bigL) {
             LightWidgetView(
                 lightEntity: entityOn,
+                title: entityOn.name,
                 updateState: { _, newState in entityOn.state = newState }
             )
             .frame(width: size, height: size)
 
             LightWidgetView(
                 lightEntity: entityOff,
+                title: entityOff.name,
                 updateState: { _, newState in entityOn.state = newState }
             )
             .frame(width: size, height: size)

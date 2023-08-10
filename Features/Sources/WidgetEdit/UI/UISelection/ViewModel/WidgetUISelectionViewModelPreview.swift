@@ -13,10 +13,13 @@ import Domain
 
 class WidgetUISelectionViewModelPreview: WidgetUISelectionViewModel {
 
+    var delegate: WidgetUISelectionExternalFlow?
+    var toastData: DefaultToastDataContent?
     var entity: any Entity = EntityMock.fan
     var widgetTitle: String = "Fan"
     var viewIDs: [String] = WidgetViewList.fan.map { $0.uniqueID }
     var selectedViewID: String = "default"
+    var doesWidgetAlreadyExist: Bool = false
 
     func createOrUpdateWidget() {}
 }

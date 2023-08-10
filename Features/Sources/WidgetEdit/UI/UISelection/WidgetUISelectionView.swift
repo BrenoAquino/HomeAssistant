@@ -16,7 +16,12 @@ private enum Constants {
 
 struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
 
+    private enum Field {
+        case name
+    }
+
     @ObservedObject private var viewModel: ViewModel
+    @FocusState private var focusedField: Field?
 
     init(viewModel: ViewModel) {
         self.viewModel = viewModel
@@ -35,6 +40,7 @@ struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
                 text: $viewModel.widgetTitle,
                 axis: .vertical
             )
+            .focused($focusedField, equals: .name)
             .textFieldStyle(.roundedBorder)
             .multilineTextAlignment(.center)
             .font(.title)
@@ -59,7 +65,19 @@ struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
                 .padding(.top, space: .normal)
                 .padding(.horizontal, space: .bigM)
         }
+        .ignoresSafeArea(.keyboard)
+        .toast(data: $viewModel.toastData)
         .navigationTitle(Localizable.widgetTitle.value)
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button {
+                    focusedField = nil
+                } label: {
+                    Localizable.done.text
+                }
+            }
+        }
     }
 
     private func allWidgetViews<T: View>(
@@ -72,7 +90,9 @@ struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
 
     private var editButton: some View {
         Button(action: viewModel.createOrUpdateWidget) {
-            Localizable.update.text
+            viewModel.doesWidgetAlreadyExist ?
+            Localizable.update.text :
+            Localizable.create.text
         }
         .buttonStyle(DefaultMaterialButtonStyle(
             foregroundColor: DSColor.label,
@@ -87,12 +107,13 @@ struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
         case LightWidgetView.uniqueID:
             LightWidgetView(
                 lightEntity: lightEntity,
+                title: viewModel.widgetTitle,
                 updateState: { _, _ in }
             )
             .setupSizeAndTag(unitSize: Constants.estimatedUnitSize)
 
         default:
-            UnsupportedWidgetView(entity: lightEntity)
+            UnsupportedWidgetView(title: lightEntity.name)
                 .setupSizeAndTag(unitSize: Constants.estimatedUnitSize)
         }
     }
@@ -103,6 +124,7 @@ struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
         case FanWidgetView.uniqueID:
             FanWidgetView(
                 fanEntity: fanEntity,
+                title: viewModel.widgetTitle,
                 updateState: { _, _ in }
             )
             .setupSizeAndTag(unitSize: Constants.estimatedUnitSize)
@@ -110,13 +132,14 @@ struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
         case FanSliderWidgetView.uniqueID:
             FanSliderWidgetView(
                 fanEntity: fanEntity,
+                title: viewModel.widgetTitle,
                 percentage: .constant(0.2),
                 updateState: { _, _ in }
             )
             .setupSizeAndTag(unitSize: Constants.estimatedUnitSize)
 
         default:
-            UnsupportedWidgetView(entity: fanEntity)
+            UnsupportedWidgetView(title: fanEntity.name)
                 .setupSizeAndTag(unitSize: Constants.estimatedUnitSize)
         }
     }

@@ -21,6 +21,7 @@ public struct FanSliderWidgetView: WidgetView {
     public static let units: (columns: Int, rows: Int) = (2, 1)
 
     let fanEntity: FanEntity
+    let title: String
     var percentage: Binding<Double>?
     let updateState: (_ fanEntity: FanEntity, _ newState: FanEntity.State) -> Void
 
@@ -28,10 +29,12 @@ public struct FanSliderWidgetView: WidgetView {
 
     public init(
         fanEntity: FanEntity,
+        title: String,
         percentage: Binding<Double>? = nil,
         updateState: @escaping (_ entity: FanEntity, _ newState: FanEntity.State) -> Void
     ) {
         self.fanEntity = fanEntity
+        self.title = title
         self.percentage = percentage
         self.updateState = updateState
     }
@@ -85,7 +88,7 @@ public struct FanSliderWidgetView: WidgetView {
                         .opacity(fanEntity.isOn ? 1 : 0)
                 }
 
-                Text(fanEntity.name)
+                Text(title)
                     .font(.subheadline)
                     .fontWeight(.semibold)
                     .foregroundColor(fanEntity.isOn ? .black : DSColor.label)
@@ -119,12 +122,14 @@ struct FanSliderWidgetView_Preview: PreviewProvider {
         VStack(spacing: .bigL) {
             FanSliderWidgetView(
                 fanEntity: entityOn,
+                title: entityOn.name,
                 updateState: { _, _ in }
             )
             .frame(width: 2 * size, height: size)
 
             FanSliderWidgetView(
                 fanEntity: entityOn2,
+                title: entityOn2.name,
                 percentage: .constant(0.2),
                 updateState: { _, _ in }
             )
@@ -132,6 +137,7 @@ struct FanSliderWidgetView_Preview: PreviewProvider {
 
             FanSliderWidgetView(
                 fanEntity: entityOff,
+                title: entityOff.name,
                 percentage: .constant(0.2),
                 updateState: { _, _ in }
             )
