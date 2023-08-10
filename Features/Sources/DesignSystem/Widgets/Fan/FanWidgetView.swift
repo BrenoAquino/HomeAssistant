@@ -20,19 +20,19 @@ public struct FanWidgetView: WidgetView {
     public static let uniqueID: String = "default"
     public static let units: (columns: Int, rows: Int) = (1, 1)
 
+    let customInfo: WidgetCustomInfo
     let fanEntity: FanEntity
-    let title: String
     let updateState: (_ fanEntity: FanEntity, _ newState: FanEntity.State) -> Void
 
     @State private var isRotating = 0.0
 
     public init(
+        customInfo: WidgetCustomInfo,
         fanEntity: FanEntity,
-        title: String,
         updateState: @escaping (_ entity: FanEntity, _ newState: FanEntity.State) -> Void
     ) {
+        self.customInfo = customInfo
         self.fanEntity = fanEntity
-        self.title = title
         self.updateState = updateState
         self.isRotating = isRotating
     }
@@ -85,7 +85,7 @@ public struct FanWidgetView: WidgetView {
                     .opacity(fanEntity.isOn ? 1 : 0)
             }
 
-            Text(title)
+            Text(customInfo.title)
                 .font(.subheadline)
                 .fontWeight(.semibold)
                 .foregroundColor(fanEntity.isOn ? .black : DSColor.label)
@@ -107,15 +107,15 @@ struct FanWidgetView_Preview: PreviewProvider {
 
         HStack(spacing: .bigL) {
             FanWidgetView(
+                customInfo: .init(title: entityOn.name),
                 fanEntity: entityOn,
-                title: entityOn.name,
                 updateState: { _, _ in }
             )
             .frame(width: size, height: size)
 
             FanWidgetView(
+                customInfo: .init(title: entityOff.name),
                 fanEntity: entityOff,
-                title: entityOff.name,
                 updateState: { _, _ in }
             )
             .frame(width: size, height: size)

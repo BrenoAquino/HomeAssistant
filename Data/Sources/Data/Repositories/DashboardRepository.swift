@@ -42,7 +42,12 @@ extension DashboardRepositoryImpl: Domain.DashboardRepository {
 private extension Domain.Dashboard {
 
     func toData() -> Dashboard {
-        let widgets = widgetConfigs.map { WidgetConfig(id: $0.id, uiType: $0.uiType, title: $0.title, entityID: $0.entityID) }
+        let widgets = widgetConfigs.map { WidgetConfig(
+            id: $0.id,
+            uiType: $0.uiType,
+            entityID: $0.entityID,
+            customInfo: WidgetCustomInfo(title: $0.customInfo.title)
+        )}
         return Dashboard(name: name, icon: icon, columns: columns, widgetConfigs: widgets)
     }
 }

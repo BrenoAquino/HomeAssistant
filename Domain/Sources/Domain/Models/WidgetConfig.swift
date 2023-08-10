@@ -11,22 +11,31 @@ public struct WidgetConfig {
 
     public let id: String
     public let entityID: String
-    public let title: String
     public let uiType: String
+    public let customInfo: WidgetCustomInfo
 
     public init(
         id: String,
         entityID: String,
-        title: String,
-        uiType: String = "default"
+        uiType: String = "default",
+        customInfo: WidgetCustomInfo
     ) {
         self.id = id
         self.entityID = entityID
-        self.title = title
         self.uiType = uiType
+        self.customInfo = customInfo
     }
 }
 
 // MARK: - Hashable
 
-extension WidgetConfig: Hashable {}
+extension WidgetConfig: Hashable {
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
+    public static func == (lhs: WidgetConfig, rhs: WidgetConfig) -> Bool {
+        lhs.id == rhs.id
+    }
+}

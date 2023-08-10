@@ -20,21 +20,21 @@ public struct FanSliderWidgetView: WidgetView {
     public static let uniqueID: String = "slider"
     public static let units: (columns: Int, rows: Int) = (2, 1)
 
+    let customInfo: WidgetCustomInfo
     let fanEntity: FanEntity
-    let title: String
     var percentage: Binding<Double>?
     let updateState: (_ fanEntity: FanEntity, _ newState: FanEntity.State) -> Void
 
     @State private var isRotating = 0.0
 
     public init(
+        customInfo: WidgetCustomInfo,
         fanEntity: FanEntity,
-        title: String,
         percentage: Binding<Double>? = nil,
         updateState: @escaping (_ entity: FanEntity, _ newState: FanEntity.State) -> Void
     ) {
+        self.customInfo = customInfo
         self.fanEntity = fanEntity
-        self.title = title
         self.percentage = percentage
         self.updateState = updateState
     }
@@ -88,7 +88,7 @@ public struct FanSliderWidgetView: WidgetView {
                         .opacity(fanEntity.isOn ? 1 : 0)
                 }
 
-                Text(title)
+                Text(customInfo.title)
                     .font(.subheadline)
                     .fontWeight(.semibold)
                     .foregroundColor(fanEntity.isOn ? .black : DSColor.label)
@@ -121,23 +121,23 @@ struct FanSliderWidgetView_Preview: PreviewProvider {
 
         VStack(spacing: .bigL) {
             FanSliderWidgetView(
+                customInfo: .init(title: entityOn.name),
                 fanEntity: entityOn,
-                title: entityOn.name,
                 updateState: { _, _ in }
             )
             .frame(width: 2 * size, height: size)
 
             FanSliderWidgetView(
+                customInfo: .init(title: entityOn2.name),
                 fanEntity: entityOn2,
-                title: entityOn2.name,
                 percentage: .constant(0.2),
                 updateState: { _, _ in }
             )
             .frame(width: 2 * size, height: size)
 
             FanSliderWidgetView(
+                customInfo: .init(title: entityOff.name),
                 fanEntity: entityOff,
-                title: entityOff.name,
                 percentage: .constant(0.2),
                 updateState: { _, _ in }
             )

@@ -20,17 +20,17 @@ public struct LightWidgetView: WidgetView {
     public static let uniqueID: String = "default"
     public static let units: (columns: Int, rows: Int) = (1, 1)
 
+    let customInfo: WidgetCustomInfo
     let lightEntity: LightEntity
-    let title: String
     let updateState: (_ lightEntity: LightEntity, _ newState: LightEntity.State) -> Void
 
     public init(
+        customInfo: WidgetCustomInfo,
         lightEntity: LightEntity,
-        title: String,
         updateState: @escaping (_ entity: LightEntity, _ newState: LightEntity.State) -> Void
     ) {
+        self.customInfo = customInfo
         self.lightEntity = lightEntity
-        self.title = title
         self.updateState = updateState
     }
 
@@ -67,7 +67,7 @@ public struct LightWidgetView: WidgetView {
                 .clipShape(Circle())
                 .frame(maxWidth: .infinity, alignment: .topLeading)
 
-            Text(title)
+            Text(customInfo.title)
                 .font(.subheadline)
                 .fontWeight(.semibold)
                 .foregroundColor(lightEntity.isOn ? .black : DSColor.label)
@@ -89,15 +89,15 @@ struct LightWidgetView_Preview: PreviewProvider {
 
         HStack(spacing: .bigL) {
             LightWidgetView(
+                customInfo: .init(title: entityOn.name),
                 lightEntity: entityOn,
-                title: entityOn.name,
                 updateState: { _, newState in entityOn.state = newState }
             )
             .frame(width: size, height: size)
 
             LightWidgetView(
+                customInfo: .init(title: entityOff.name),
                 lightEntity: entityOff,
-                title: entityOff.name,
                 updateState: { _, newState in entityOn.state = newState }
             )
             .frame(width: size, height: size)
