@@ -1,0 +1,27 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Breno Aquino on 17/07/23.
+  
+*/
+
+"dashboard_creation" = "Dashboard Creation";
+"dashboard_edit" = "Dashboard Edit";
+"dashboard_description" = "A dashboard is the grouping of devices and the must be unique";
+"name" = "Name";
+"name_hint" = "The dashboard's name must be unique";
+"icon" = "Icon";
+"icon_hint" = "You can search for keywords";
+"icon_example" = "E.g. \"Bedroom\", \"Garden\", \"Security\"";
+"entities" = "Devices";
+"entities_hint" = "You can search for a name";
+"create" = "Create Dashboard";
+"update" = "Update Dashboard";
+"missing_name_error" = "It is necessary to fill in the name";
+"name_already_exists_error" = "This name is already in use";
+"missing_icon_error" = "It is necessary to choose an icon";
+"invalid_number_columns_error" = "The number of columns must be greater than 1";
+"unknown_error" = "Could not create the dashboard";
+"columns" = "Columns";
+"columns_description" = "This number represents the number of columns that will be shown in this dashboard";

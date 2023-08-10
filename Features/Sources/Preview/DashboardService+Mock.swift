@@ -5,7 +5,7 @@
 //  Created by Breno Aquino on 18/07/23.
 //
 
-#if DEBUG
+//#if DEBUG || PREVIEW
 import Combine
 import Domain
 import Foundation
@@ -16,11 +16,11 @@ public enum WidgetsMock {
         uiType: String,
         name: String,
         state: LightEntity.State
-    ) -> (WidgetConfig, any Entity) {
+    ) -> WidgetData {
         let entityID = UUID().uuidString
         let entity = LightEntity(id: entityID, name: name, state: state)
-        let widgetConfig = WidgetConfig(id: UUID().uuidString, entityID: entityID, uiType: uiType)
-        return (widgetConfig, entity)
+        let widgetConfig = WidgetConfig(id: UUID().uuidString, entityID: entityID, title: entity.name, uiType: uiType)
+        return WidgetData(config: widgetConfig, entity: entity)
     }
 
     public static func createFanWidget(
@@ -29,11 +29,11 @@ public enum WidgetsMock {
         state: FanEntity.State,
         percentageStep: Double? = nil,
         percentage: Double? = nil
-    ) -> (WidgetConfig, any Entity) {
+    ) -> WidgetData {
         let entityID = UUID().uuidString
         let entity = FanEntity(id: entityID, name: name, percentageStep: percentageStep, percentage: percentage, state: state)
-        let widgetConfig = WidgetConfig(id: UUID().uuidString, entityID: entityID, uiType: uiType)
-        return (widgetConfig, entity)
+        let widgetConfig = WidgetConfig(id: UUID().uuidString, entityID: entityID, title: entity.name, uiType: uiType)
+        return WidgetData(config: widgetConfig, entity: entity)
     }
 }
 
@@ -42,45 +42,50 @@ public enum DashboardMock {
     public static let bedroom = Domain.Dashboard(
         name: "Bedroom",
         icon: "bed.double",
+        columns: 3,
         widgetConfigs: [
-            .init(id: "1", entityID: EntityMock.ledDeskLight.id),
-            .init(id: "2", entityID: EntityMock.ledCeilingLight.id),
-            .init(id: "3", entityID: EntityMock.fan.id, uiType: "slider"),
-            .init(id: "4", entityID: EntityMock.fan.id, uiType: "slider"),
-            .init(id: "5", entityID: EntityMock.mainLight.id),
+            .init(id: "1", entityID: EntityMock.ledDeskLight.id, title: EntityMock.ledDeskLight.name),
+            .init(id: "2", entityID: EntityMock.ledCeilingLight.id, title: EntityMock.ledCeilingLight.name),
+            .init(id: "3", entityID: EntityMock.fan.id, title: EntityMock.fan.name, uiType: "slider"),
+            .init(id: "4", entityID: EntityMock.fan.id, title: EntityMock.fan.name, uiType: "slider"),
+            .init(id: "5", entityID: EntityMock.mainLight.id, title: EntityMock.mainLight.name),
         ]
     )
 
     public static let living = Domain.Dashboard(
         name: "Living Room",
         icon: "sofa",
+        columns: 3,
         widgetConfigs: [
-            .init(id: "4", entityID: EntityMock.climate.id),
+            .init(id: "4", entityID: EntityMock.climate.id, title: EntityMock.climate.name),
         ]
     )
 
     public static let kitchen = Domain.Dashboard(
         name: "Kitchen",
         icon: "refrigerator",
+        columns: 3,
         widgetConfigs: [
-            .init(id: "5", entityID: EntityMock.coffeeMachine.id),
+            .init(id: "5", entityID: EntityMock.coffeeMachine.id, title: EntityMock.coffeeMachine.name),
         ]
     )
 
     public static let garden = Domain.Dashboard(
         name: "Garden",
         icon: "tree",
+        columns: 3,
         widgetConfigs: [
-            .init(id: "6", entityID: EntityMock.mainLight.id),
-            .init(id: "7", entityID: EntityMock.fan.id),
+            .init(id: "6", entityID: EntityMock.mainLight.id, title: EntityMock.mainLight.name),
+            .init(id: "7", entityID: EntityMock.fan.id, title: EntityMock.fan.name),
         ]
     )
 
     public static let security = Domain.Dashboard(
         name: "Security",
         icon: "light.beacon.max",
+        columns: 3,
         widgetConfigs: [
-            .init(id: "8", entityID: EntityMock.mainLight.id),
+            .init(id: "8", entityID: EntityMock.mainLight.id, title: EntityMock.mainLight.name),
         ]
     )
 
@@ -103,5 +108,4 @@ public class DashboardServiceMock: Domain.DashboardService {
     public func updateAll(dashboards: [Domain.Dashboard]) {}
     public func update(order: [String]) throws {}
 }
-
-#endif
+//#endif

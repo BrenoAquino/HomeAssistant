@@ -70,7 +70,6 @@ extension DashboardViewModelImpl {
             .receive(on: RunLoop.main)
             .sink { [weak self] entities in
                 guard let self else { return }
-                print("entities sink \(Unmanaged.passUnretained(self).toOpaque()) \(selectedDashboardName)")
                 self.setWidgets(
                     entities,
                     self.dashboardService.dashboards.value,
@@ -162,7 +161,7 @@ extension DashboardViewModelImpl {
 
         widgets = selectedDashboard.widgetConfigs.compactMap { config in
             if let entity = entities[config.entityID] {
-                return (config, entity)
+                return WidgetData(config: config, entity: entity)
             }
             return nil
         }
@@ -199,6 +198,8 @@ extension DashboardViewModelImpl {
     }
 }
 
+// MARK: Orders
+
 extension DashboardViewModelImpl {
 
     public func didUpdateWidgetsOrder(_ widgets: [WidgetData]) {
@@ -208,7 +209,7 @@ extension DashboardViewModelImpl {
         else { return }
 
         currentDashboard.widgetConfigs = widgets.map { $0.config }
-        try! dashboardService.update(
+        try? dashboardService.update(
             dashboardName: currentDashboard.name,
             dashboard: currentDashboard
         )
@@ -219,20 +220,28 @@ extension DashboardViewModelImpl {
     }
 }
 
+// MARK: Clicks
+
 extension DashboardViewModelImpl {
 
+    public func didClickConfig() {
+        delegate?.didSelectConfig()
+    }
+
+    // Add
     public func didClickAddDashboard() {
         delegate?.didSelectAddDashboard()
     }
 
+    public func didClickAddWidget() {
+        guard let currentDashboard else { return }
+        delegate?.didSelectAddWidget(currentDashboard)
+    }
+
+    // Remove
     public func didClickRemove(dashboard: Dashboard) {
         dashboardNameToDelete = dashboard.name
         removeDashboardAlert = true
-    }
-
-    public func didClickEdit(dashboard: Dashboard) {
-        delegate?.didSelectEditDashboard(dashboard)
-        editModel = false
     }
 
     public func didClickRemove(widget: WidgetData) {
@@ -240,10 +249,20 @@ extension DashboardViewModelImpl {
         removeWidgetAlert = true
     }
 
-    public func didClickConfig() {
-        delegate?.didSelectConfig()
+    // Edit
+    public func didClickEdit(dashboard: Dashboard) {
+        delegate?.didSelectEditDashboard(dashboard)
+        editModel = false
+    }
+
+    public func didClickEdit(widget: WidgetData) {
+        guard let currentDashboard else { return }
+        delegate?.didSelectEditWidget(widget, currentDashboard)
+        editModel = false
     }
 }
+
+// MARK: Update States
 
 extension DashboardViewModelImpl {
 

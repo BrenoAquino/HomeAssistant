@@ -11,5 +11,6 @@ public struct WidgetConfig: Codable {
 
     public let id: String
     public let uiType: String
+    public let title: String
     public let entityID: String
 }

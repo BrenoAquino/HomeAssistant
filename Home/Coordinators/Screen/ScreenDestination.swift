@@ -5,7 +5,9 @@
 //  Created by Breno Aquino on 31/07/23.
 //
 
-import DashboardCreation
+import Domain
+import DashboardEdit
+import WidgetEdit
 import Foundation
 
 enum ScreenDestination {
@@ -13,7 +15,8 @@ enum ScreenDestination {
     case launch
     case staticLaunch
     case dashboard
-    case dashboardCreation(mode: DashboardCreationMode)
+    case dashboardEdit(mode: DashboardEditMode)
+    case widgetEdit(dashboard: Dashboard, mode: WidgetEditMode)
     case config
 }
 
@@ -28,8 +31,10 @@ extension ScreenDestination {
             return factory.staticLaunchScreen()
         case .dashboard:
             return factory.dashboardScreen()
-        case .dashboardCreation(let mode):
-            return factory.dashboardCreationScreen(mode: mode)
+        case .dashboardEdit(let mode):
+            return factory.dashboardEditScreen(mode: mode)
+        case .widgetEdit(let dashboard, let mode):
+            return factory.widgetEdit(dashboard: dashboard, mode: mode)
         case .config:
             return factory.configScreen()
         }

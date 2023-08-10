@@ -19,8 +19,10 @@ struct ConfigCoordinator<ViewModel: ConfigViewModel>: View {
     }
 
     var body: some View {
-        ConfigView(viewModel: viewModel)
-            .task { viewModel.delegate = self }
+        NavigationStack {
+            ConfigView(viewModel: viewModel)
+        }
+        .task { viewModel.delegate = self }
     }
 }
 

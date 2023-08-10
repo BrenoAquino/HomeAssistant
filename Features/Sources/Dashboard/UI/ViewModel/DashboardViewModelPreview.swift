@@ -20,10 +20,19 @@ class DashboardViewModelPreview: DashboardViewModel {
     var editModel: Bool = false
     var selectedDashboardName: String? = "Bedroom"
     var dashboards: [Dashboard] = DashboardMock.all
-    var widgets: [(config: WidgetConfig, entity: any Entity)] = [
-        (WidgetConfig(id: "1", entityID: EntityMock.mainLight.id), EntityMock.mainLight),
-        (WidgetConfig(id: "2", entityID: EntityMock.ledDeskLight.id), EntityMock.ledDeskLight),
-        (WidgetConfig(id: "3", entityID: EntityMock.ledCeilingLight.id), EntityMock.ledCeilingLight),
+    var widgets: [WidgetData] = [
+        .init(
+            config: WidgetConfig(id: "1", entityID: EntityMock.mainLight.id, title: EntityMock.mainLight.name),
+            entity: EntityMock.mainLight
+        ),
+        .init(
+            config: WidgetConfig(id: "2", entityID: EntityMock.ledDeskLight.id, title: EntityMock.ledDeskLight.name),
+            entity: EntityMock.ledDeskLight
+        ),
+        .init(
+            config: WidgetConfig(id: "3", entityID: EntityMock.ledCeilingLight.id, title: EntityMock.ledCeilingLight.name),
+            entity: EntityMock.ledCeilingLight
+        ),
     ]
 
     var currentDashboard: Dashboard? {
@@ -39,11 +48,13 @@ class DashboardViewModelPreview: DashboardViewModel {
     func didClickAddDashboard() {}
     func didClickRemove(dashboard: Dashboard) {}
     func didClickEdit(dashboard: Dashboard) {}
+    func didClickEdit(widget: WidgetData) {}
     func didClickRemove(entity: any Entity) {}
     func didClickConfig() {}
     func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State) {}
     func didClickUpdateFanState(_ fanEntity: FanEntity, newState: FanEntity.State) {}
     func didUpdateWidgetsOrder(_ widgets: [WidgetData]) {}
     func didClickRemove(widget: WidgetData) {}
+    func didClickAddWidget() {}
 }
 #endif

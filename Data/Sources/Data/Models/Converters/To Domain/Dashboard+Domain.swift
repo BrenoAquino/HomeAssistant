@@ -14,6 +14,7 @@ extension Dashboard {
         Domain.Dashboard(
             name: name,
             icon: icon,
+            columns: columns,
             widgetConfigs: widgetConfigs.map { $0.toDomain() }
         )
     }

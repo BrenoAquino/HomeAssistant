@@ -11,5 +11,6 @@ public struct Dashboard: Codable {
 
     let name: String
     let icon: String
+    let columns: Int
     let widgetConfigs: [WidgetConfig]
 }

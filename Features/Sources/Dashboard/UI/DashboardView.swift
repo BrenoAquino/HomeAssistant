@@ -38,10 +38,7 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             )
             .padding(.top, space: .smallS)
             
-            Localizable.devices.text
-                .font(.title3)
-                .fontWeight(.semibold)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            deviceSection
                 .padding(.top, space: .smallS)
                 .padding(.horizontal, space: .horizontal)
 
@@ -50,6 +47,7 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                 widgets: $viewModel.widgets,
                 didUpdateWidgetsOrder: viewModel.didUpdateWidgetsOrder,
                 didClickRemoveWidget: viewModel.didClickRemove,
+                didClickEditWidget: viewModel.didClickEdit,
                 didClickUpdateLightState: viewModel.didClickUpdateLightState,
                 didClickUpdateFanState: viewModel.didClickUpdateFanState
             )
@@ -97,13 +95,27 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
             SystemImages.config
         }
     }
+
+    private var deviceSection: some View {
+        HStack(spacing: .zero) {
+            Localizable.devices.text
+                .font(.title3)
+                .fontWeight(.semibold)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            Button(action: viewModel.didClickAddWidget) {
+                SystemImages.plus
+                    .foregroundColor(DSColor.label)
+            }
+        }
+    }
 }
 
 #if DEBUG
 struct DashboardView_Preview: PreviewProvider {
     
     static var previews: some View {
-        NavigationView {
+        NavigationStack {
             DashboardView(viewModel: DashboardViewModelPreview())
         }
     }
