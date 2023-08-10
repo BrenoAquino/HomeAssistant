@@ -113,7 +113,7 @@ struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
             .setupSizeAndTag(unitSize: Constants.estimatedUnitSize)
 
         default:
-            UnsupportedWidgetView(entity: lightEntity)
+            UnsupportedWidgetView(title: lightEntity.name)
                 .setupSizeAndTag(unitSize: Constants.estimatedUnitSize)
         }
     }
@@ -139,7 +139,7 @@ struct WidgetUISelectionView<ViewModel: WidgetUISelectionViewModel>: View {
             .setupSizeAndTag(unitSize: Constants.estimatedUnitSize)
 
         default:
-            UnsupportedWidgetView(entity: fanEntity)
+            UnsupportedWidgetView(title: fanEntity.name)
                 .setupSizeAndTag(unitSize: Constants.estimatedUnitSize)
         }
     }

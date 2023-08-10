@@ -15,11 +15,8 @@ public struct UnsupportedWidgetView: WidgetView {
 
     let title: String
 
-    public init(
-        entity: any Entity,
-        title: String? = nil
-    ) {
-        self.title = title ?? entity.name
+    public init(title: String) {
+        self.title = title
     }
 
     public var body: some View {
@@ -47,7 +44,7 @@ struct UnsupportedWidgetView_Preview: PreviewProvider {
     static var previews: some View {
         let size: CGFloat = 150
         
-        UnsupportedWidgetView(entity: EntityMock.climate)
+        UnsupportedWidgetView(title: EntityMock.climate.name)
             .frame(width: size, height: size)
     }
 }

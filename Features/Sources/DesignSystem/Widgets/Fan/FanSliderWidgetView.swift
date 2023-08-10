@@ -29,12 +29,12 @@ public struct FanSliderWidgetView: WidgetView {
 
     public init(
         fanEntity: FanEntity,
-        title: String? = nil,
+        title: String,
         percentage: Binding<Double>? = nil,
         updateState: @escaping (_ entity: FanEntity, _ newState: FanEntity.State) -> Void
     ) {
         self.fanEntity = fanEntity
-        self.title = title ?? fanEntity.name
+        self.title = title
         self.percentage = percentage
         self.updateState = updateState
     }
@@ -122,12 +122,14 @@ struct FanSliderWidgetView_Preview: PreviewProvider {
         VStack(spacing: .bigL) {
             FanSliderWidgetView(
                 fanEntity: entityOn,
+                title: entityOn.name,
                 updateState: { _, _ in }
             )
             .frame(width: 2 * size, height: size)
 
             FanSliderWidgetView(
                 fanEntity: entityOn2,
+                title: entityOn2.name,
                 percentage: .constant(0.2),
                 updateState: { _, _ in }
             )
@@ -135,6 +137,7 @@ struct FanSliderWidgetView_Preview: PreviewProvider {
 
             FanSliderWidgetView(
                 fanEntity: entityOff,
+                title: entityOff.name,
                 percentage: .constant(0.2),
                 updateState: { _, _ in }
             )

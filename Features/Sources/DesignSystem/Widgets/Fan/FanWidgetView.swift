@@ -28,11 +28,11 @@ public struct FanWidgetView: WidgetView {
 
     public init(
         fanEntity: FanEntity,
-        title: String? = nil,
+        title: String,
         updateState: @escaping (_ entity: FanEntity, _ newState: FanEntity.State) -> Void
     ) {
         self.fanEntity = fanEntity
-        self.title = title ?? fanEntity.name
+        self.title = title
         self.updateState = updateState
         self.isRotating = isRotating
     }
@@ -108,12 +108,14 @@ struct FanWidgetView_Preview: PreviewProvider {
         HStack(spacing: .bigL) {
             FanWidgetView(
                 fanEntity: entityOn,
+                title: entityOn.name,
                 updateState: { _, _ in }
             )
             .frame(width: size, height: size)
 
             FanWidgetView(
                 fanEntity: entityOff,
+                title: entityOff.name,
                 updateState: { _, _ in }
             )
             .frame(width: size, height: size)

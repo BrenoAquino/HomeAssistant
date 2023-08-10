@@ -153,7 +153,7 @@ struct WidgetsGridView: View {
         case let fan as FanEntity:
             fanWidgetView(widget, fan)
         default:
-            UnsupportedWidgetView(entity: widget.entity)
+            UnsupportedWidgetView(title: widget.entity.name)
         }
     }
 
@@ -164,7 +164,10 @@ struct WidgetsGridView: View {
     ) -> some View {
         switch widgetData.config.uiType {
         default:
-            LightWidgetView(lightEntity: lightEntity) {
+            LightWidgetView(
+                lightEntity: lightEntity,
+                title: widgetData.config.title
+            ) {
                 if editMode {
                     didClickEditWidget(widgetData)
                 } else {
@@ -182,7 +185,10 @@ struct WidgetsGridView: View {
     ) -> some View {
         switch widgetData.config.uiType {
         case FanSliderWidgetView.uniqueID:
-            FanSliderWidgetView(fanEntity: fanEntity) {
+            FanSliderWidgetView(
+                fanEntity: fanEntity,
+                title: widgetData.config.title
+            ) {
                 if editMode {
                     didClickEditWidget(widgetData)
                 } else {
@@ -191,7 +197,10 @@ struct WidgetsGridView: View {
                 }
             }
         default:
-            FanWidgetView(fanEntity: fanEntity) {
+            FanWidgetView(
+                fanEntity: fanEntity,
+                title: widgetData.config.title
+            ) {
                 if editMode {
                     didClickEditWidget(widgetData)
                 } else {

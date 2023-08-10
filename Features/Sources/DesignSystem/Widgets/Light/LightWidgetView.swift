@@ -26,11 +26,11 @@ public struct LightWidgetView: WidgetView {
 
     public init(
         lightEntity: LightEntity,
-        title: String? = nil,
+        title: String,
         updateState: @escaping (_ entity: LightEntity, _ newState: LightEntity.State) -> Void
     ) {
         self.lightEntity = lightEntity
-        self.title = title ?? lightEntity.name
+        self.title = title
         self.updateState = updateState
     }
 
@@ -90,12 +90,14 @@ struct LightWidgetView_Preview: PreviewProvider {
         HStack(spacing: .bigL) {
             LightWidgetView(
                 lightEntity: entityOn,
+                title: entityOn.name,
                 updateState: { _, newState in entityOn.state = newState }
             )
             .frame(width: size, height: size)
 
             LightWidgetView(
                 lightEntity: entityOff,
+                title: entityOff.name,
                 updateState: { _, newState in entityOn.state = newState }
             )
             .frame(width: size, height: size)
