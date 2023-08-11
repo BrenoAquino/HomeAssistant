@@ -33,6 +33,8 @@ extension WidgetConfig: Hashable {
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
+        hasher.combine(uiType)
+        hasher.combine(customInfo)
     }
 
     public static func == (lhs: WidgetConfig, rhs: WidgetConfig) -> Bool {

@@ -24,29 +24,30 @@ actor WebSocket: NSObject {
 
     private let url: URL
     private let token: String
-    var didDisconnect: (() -> Void)?
 
     private var latestID: Int = 1
-    private var isAuthenticated: Bool = false
+    private var state: WebSocketProviderState = .offline {
+        didSet { stateTopic.send(state) }
+    }
 
-    nonisolated private let topic: PassthroughSubject<WebSocketMessage, Never> = .init()
     private var session: URLSession?
     private var webSocket: URLSessionWebSocketTask?
     private var responseCancellable: AnyCancellable?
+
+    nonisolated private let stateTopic: PassthroughSubject<WebSocketProviderState, Never> = .init()
+    nonisolated private let messageTopic: PassthroughSubject<WebSocketMessage, Never> = .init()
 
     // MARK: Init
 
     init(
         url: String,
-        token: String,
-        didDisconnect: (() -> Void)? = nil
+        token: String
     ) throws {
         guard let url = URL(string: url) else {
             throw WebSocketError.invalidURL
         }
         self.url = url
         self.token = token
-        self.didDisconnect = didDisconnect
     }
 }
 
@@ -89,11 +90,11 @@ extension WebSocket {
         guard let header = try? WebSocketMessageHeader(jsonData: message) else {
             return
         }
-        topic.send((header, message))
+        messageTopic.send((header, message))
     }
 
     private func authenticateIfNeeded() async throws {
-        guard !isAuthenticated || webSocket?.state != .running else { return }
+        guard state == .offline || webSocket?.state != .running else { return }
 
         do {
             session = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
@@ -107,7 +108,7 @@ extension WebSocket {
             let message = try AuthenticationMessage(accessToken: token).toJSON()
             let wsMessage = URLSessionWebSocketTask.Message.string(message)
             try await webSocket?.send(wsMessage)
-            isAuthenticated = true
+            state = .online
         } catch {
             await disconnect()
             throw error
@@ -118,7 +119,7 @@ extension WebSocket {
         _ continuation: CheckedContinuation<Void, Error>
     ) {
         var hasValue = false
-        responseCancellable = topic
+        responseCancellable = messageTopic
             .timeout(.seconds(10), scheduler: DispatchQueue.global())
             .map {
                 $0
@@ -165,19 +166,12 @@ extension WebSocket: URLSessionWebSocketDelegate {
 
 extension WebSocket: WebSocketProvider {
 
-    func isConnected() async -> Bool {
-        return isAuthenticated && webSocket?.state == .running
+    nonisolated var stateChanged: AnyPublisher<WebSocketProviderState, Never> {
+        stateTopic.eraseToAnyPublisher()
     }
 
     nonisolated var messageReceived: AnyPublisher<WebSocketMessage, Never> {
-        topic.eraseToAnyPublisher()
-    }
-
-    func disconnect() async {
-        isAuthenticated = false
-        webSocket?.cancel()
-        webSocket = nil
-        didDisconnect?()
+        messageTopic.eraseToAnyPublisher()
     }
 
     @discardableResult func send<Message: Encodable>(message: Message) async throws -> Int {
@@ -211,7 +205,7 @@ extension WebSocket: WebSocketProvider {
         _ messageID: Int
     ) {
         var hasValue = false
-        responseCancellable = topic
+        responseCancellable = messageTopic
             .timeout(.seconds(10), scheduler: DispatchQueue.global())
             .filter { $0.header.id == messageID && $0.header.type == .result }
             .tryCompactMap { try ResultWebSocketMessage<Response>(jsonData: $0.data) }
@@ -233,6 +227,12 @@ extension WebSocket: WebSocketProvider {
                 hasValue = true
                 continuation.resume(returning: messageData)
             })
+    }
+
+    private func disconnect() async {
+        webSocket?.cancel()
+        webSocket = nil
+        state = .offline
     }
 }
 

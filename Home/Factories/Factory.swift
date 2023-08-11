@@ -27,8 +27,7 @@ class Factory: ObservableObject {
 
     private lazy var webSocketProviderInstance = try! WebSocket(
         url: AppEnvironment.homeAssistantURL,
-        token: AppEnvironment.authToken,
-        didDisconnect: nil
+        token: AppEnvironment.authToken
     )
 
     // MARK: LocalDataSource
@@ -160,6 +159,6 @@ extension Factory: ScreenFactory {
 extension Factory: HandlerFactory {
 
     func webSocketHandler(coordinator: Coordinator) -> WebSocketHandler {
-        WebSocketHandlerImpl(coordinator: coordinator)
+        WebSocketHandlerImpl(coordinator: coordinator, webSocketProvider: webSocketProviderInstance)
     }
 }

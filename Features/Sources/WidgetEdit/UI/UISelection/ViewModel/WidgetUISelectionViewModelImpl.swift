@@ -108,22 +108,33 @@ extension WidgetUISelectionViewModelImpl {
 
     func createOrUpdateWidget() {
         do {
-            var dashboard = self.dashboard
-            if let id = widgetConfig?.id {
-                dashboard.widgetConfigs.removeAll(where: { $0.id == id })
+            // Get index if exists
+            var indexToReplace: Int?
+            if let widgetConfig = widgetConfig {
+                indexToReplace = dashboard.widgetConfigs.firstIndex(of: widgetConfig)
             }
+
+            // Create the new widget
             let widgetConfig = WidgetConfig(
                 id: widgetConfig?.id ?? UUID().uuidString,
                 entityID: entity.id,
                 uiType: selectedViewID,
                 customInfo: widgetCustomInfo
             )
-            dashboard.widgetConfigs.append(widgetConfig)
+
+            // Update/Create
+            var dashboard = self.dashboard
+            if let indexToReplace {
+                dashboard.widgetConfigs[indexToReplace] = widgetConfig
+            } else {
+                dashboard.widgetConfigs.append(widgetConfig)
+            }
             try dashboardService.update(
                 dashboardName: dashboard.name,
                 dashboard: dashboard
             )
             delegate?.didClose()
+            
         } catch {
             toastData = .init(type: .error, title: Localizable.unknownError.value)
             Logger.log(level: .error, error.localizedDescription)

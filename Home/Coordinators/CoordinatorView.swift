@@ -30,6 +30,7 @@ struct CoordinatorView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .environmentObject(coordinator)
+        .onAppear(perform: coordinator.startHandlers)
     }
 
     private func viewWithBlockIfNeeded(@ViewBuilder _ content: () -> some View) -> some View {
