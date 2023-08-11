@@ -10,7 +10,4 @@ import Domain
 import Foundation
 import SwiftUI
 
-protocol WebSocketHandler {
-
-    func webSocketDidDisconnect()
-}
+protocol WebSocketHandler: Handler {}

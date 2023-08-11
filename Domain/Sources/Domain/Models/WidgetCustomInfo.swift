@@ -15,3 +15,12 @@ public struct WidgetCustomInfo {
         self.title = title
     }
 }
+
+// MARK: - Hashable
+
+extension WidgetCustomInfo: Hashable {
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(title)
+    }
+}

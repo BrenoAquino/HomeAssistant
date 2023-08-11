@@ -59,6 +59,11 @@ public struct FanWidgetView: WidgetView {
             .onTapGesture {
                 updateState(fanEntity, fanEntity.invertedState)
             }
+            .onAppear {
+                withAnimation(.linear.speed(0.1).repeatForever(autoreverses: false)) {
+                    isRotating = -360
+                }
+            }
             .onChange(of: fanEntity.isOn) { newValue in
                 withAnimation(.linear.speed(0.1).repeatForever(autoreverses: false)) {
                     isRotating = -360

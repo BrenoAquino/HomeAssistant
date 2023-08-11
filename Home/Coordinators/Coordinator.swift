@@ -11,6 +11,10 @@ class Coordinator: ObservableObject {
 
     private let factory: Factory = .init()
 
+    // MARK: Handlers
+
+    private lazy var webSocketHandler = factory.webSocketHandler(coordinator: self)
+
     // MARK: Publishers
 
     @Published var root: Screen
@@ -23,6 +27,10 @@ class Coordinator: ObservableObject {
 
     init(root: ScreenDestination) {
         self.root = root.screen(factory: factory)
+    }
+
+    func startHandlers() {
+        webSocketHandler.start()
     }
 }
 
