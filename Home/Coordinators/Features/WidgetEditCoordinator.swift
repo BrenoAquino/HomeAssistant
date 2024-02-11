@@ -25,7 +25,6 @@ struct WidgetEditCoordinator<ViewModel: WidgetEditViewModel>: View {
 }
 
 extension WidgetEditCoordinator: WidgetEditExternalFlow {
-
     func didClose() {
         coordinator.dismiss()
     }

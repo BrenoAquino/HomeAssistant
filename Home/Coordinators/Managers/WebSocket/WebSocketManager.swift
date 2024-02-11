@@ -10,4 +10,4 @@ import Domain
 import Foundation
 import SwiftUI
 
-protocol WebSocketHandler: Handler {}
+protocol WebSocketManager: Manager {}

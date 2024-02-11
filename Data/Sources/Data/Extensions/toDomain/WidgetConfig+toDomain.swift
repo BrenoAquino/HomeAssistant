@@ -9,8 +9,12 @@ import Domain
 import Foundation
 
 extension WidgetConfig {
-
     func toDomain() -> Domain.WidgetConfig {
-        Domain.WidgetConfig(id: id, entityID: entityID, uiType: uiType, customInfo: customInfo.toDomain())
+        Domain.WidgetConfig(
+            id: id,
+            entityID: entityID,
+            uiType: uiType, 
+            customInfo: customInfo.toDomain()
+        )
     }
 }

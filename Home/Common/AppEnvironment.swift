@@ -8,7 +8,6 @@
 import Foundation
 
 enum AppEnvironment {
-
     static let authToken: String = {
         Bundle.main.infoDictionary?["Auth Token"] as? String ?? ""
     }()

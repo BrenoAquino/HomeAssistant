@@ -9,11 +9,15 @@ import Common
 import Foundation
 
 struct CallServiceMessage<T: Encodable>: Encodable {
-
+    /// WebSocket message type
     let type: WebSocketMessageType = .callService
+    /// Domain for the service
     let domain: String
+    /// Command to execute
     let service: String
+    /// Entity to suffer the command
     let entityID: String?
+    /// Required data to run the command requested
     let serviceData: T?
 
     enum CodingKeys: String, CodingKey {

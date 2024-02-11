@@ -1,21 +1,20 @@
 //
-//  DomainEntityActionService+string.swift
+//  File.swift
 //  
 //
-//  Created by Breno Aquino on 16/07/23.
+//  Created by Breno Aquino on 11/02/24.
 //
 
 import Domain
 import Foundation
 
 extension Domain.EntityActionService {
-
-    var string: String {
+    func toData() -> String {
         switch self {
         case .turnOn:
-            return "turn_on"
+            "turn_on"
         case .turnOff:
-            return "turn_off"
+            "turn_off"
         }
     }
 }

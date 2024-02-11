@@ -9,7 +9,6 @@ import Domain
 import Foundation
 
 public class EntityRepositoryImpl {
-
     private let entityLocalDataSource: EntityLocalDataSource
     private let fetcherRemoteDataSource: FetcherRemoteDataSource
 
@@ -22,7 +21,6 @@ public class EntityRepositoryImpl {
 // MARK: - EntityRepository
 
 extension EntityRepositoryImpl: EntityRepository {
-
     public func save(hiddenEntityIDs: Set<String>) async throws {
         try await entityLocalDataSource.save(hiddenEntityIDs: Array(hiddenEntityIDs))
     }
@@ -32,6 +30,6 @@ extension EntityRepositoryImpl: EntityRepository {
     }
 
     public func fetchStates() async throws -> [any Domain.Entity] {
-        try await fetcherRemoteDataSource.fetchStates().compactMap { try? $0.toDomain() }
+        try await fetcherRemoteDataSource.fetchEntities().compactMap { try? $0.toDomain() }
     }
 }

@@ -22,6 +22,6 @@ public class ServerRepositoryImpl {
 extension ServerRepositoryImpl: ServerRepository {
 
     public func fetchConfig() async throws -> Domain.ServerConfig {
-        try await fetcherRemoteDataSource.fetchConfig().toDomain()
+        try await fetcherRemoteDataSource.fetchServerConfig().toDomain()
     }
 }

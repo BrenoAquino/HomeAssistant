@@ -11,7 +11,6 @@ import WidgetEdit
 import Foundation
 
 enum ScreenDestination {
-
     case launch
     case staticLaunch
     case dashboard
@@ -21,9 +20,7 @@ enum ScreenDestination {
 }
 
 extension ScreenDestination {
-
     func screen(factory: ScreenFactory) -> Screen {
-
         switch self {
         case .launch:
             return factory.launchScreen()

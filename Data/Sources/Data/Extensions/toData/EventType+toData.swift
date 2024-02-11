@@ -1,19 +1,18 @@
 //
-//  DomainEventType+string.swift
+//  File.swift
 //  
 //
-//  Created by Breno Aquino on 16/07/23.
+//  Created by Breno Aquino on 11/02/24.
 //
 
 import Domain
 import Foundation
 
 extension Domain.EventType {
-
-    var string: String {
+    func toData() -> String {
         switch self {
         case .stateChanged:
-            return "state_changed"
+            "state_changed"
         }
     }
 }

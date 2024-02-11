@@ -8,8 +8,9 @@
 import Foundation
 
 struct SubscribeToEventMessage: Encodable {
-
+    /// WebSocket message type
     let type: WebSocketMessageType = .subscribeToEvents
+    /// Event type to subscribe for
     let eventType: String?
 
     enum CodingKeys: String, CodingKey {

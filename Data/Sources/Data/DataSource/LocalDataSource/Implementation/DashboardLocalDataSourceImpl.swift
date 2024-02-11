@@ -8,7 +8,6 @@
 import Foundation
 
 public class DashboardLocalDataSourceImpl {
-
     private static let dashboardsKey = "DASHBOARDS"
 
     private let databaseProvider: DatabaseProvider
@@ -21,7 +20,6 @@ public class DashboardLocalDataSourceImpl {
 // MARK: - DashboardLocalDataSource
 
 extension DashboardLocalDataSourceImpl: DashboardLocalDataSource {
-
     public func dashboards() async throws -> [Dashboard] {
         try await databaseProvider.load(key: Self.dashboardsKey)
     }

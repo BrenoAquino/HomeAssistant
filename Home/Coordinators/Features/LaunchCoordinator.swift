@@ -24,7 +24,6 @@ struct LaunchCoordinator<ViewModel: LaunchViewModel>: View {
 }
 
 extension LaunchCoordinator: LaunchExternalFlow {
-
     func launchFinished() {
         if coordinator.block != nil {
             coordinator.dismissBlock()

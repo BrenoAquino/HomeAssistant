@@ -27,7 +27,6 @@ struct ConfigCoordinator<ViewModel: ConfigViewModel>: View {
 }
 
 extension ConfigCoordinator: ConfigExternalFlow {
-
     func didClose() {
         coordinator.dismiss()
     }

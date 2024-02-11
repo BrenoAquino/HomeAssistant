@@ -27,14 +27,14 @@ actor WebSocket: NSObject {
 
     private var latestID: Int = 1
     private var state: WebSocketProviderState = .offline {
-        didSet { stateTopic.send(state) }
+        didSet { connectionStateTopic.send(state) }
     }
 
     private var session: URLSession?
     private var webSocket: URLSessionWebSocketTask?
     private var responseCancellable: AnyCancellable?
 
-    nonisolated private let stateTopic: PassthroughSubject<WebSocketProviderState, Never> = .init()
+    nonisolated private let connectionStateTopic: PassthroughSubject<WebSocketProviderState, Never> = .init()
     nonisolated private let messageTopic: PassthroughSubject<WebSocketMessage, Never> = .init()
 
     // MARK: Init
@@ -139,66 +139,6 @@ extension WebSocket {
                 continuation.resume()
             })
     }
-}
-
-// MARK: - URLSessionWebSocketDelegate
-
-extension WebSocket: URLSessionWebSocketDelegate {
-
-    nonisolated func urlSession(
-        _ session: URLSession,
-        webSocketTask: URLSessionWebSocketTask,
-        didOpenWithProtocol protocol: String?
-    ) {
-        Logger.log(level: .info, "Connected")
-    }
-
-    nonisolated func urlSession(
-        _ session: URLSession,
-        webSocketTask: URLSessionWebSocketTask,
-        didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?
-    ) {
-        Task { await disconnect() }
-    }
-}
-
-// MARK: - Data.WebSocketProvider
-
-extension WebSocket: WebSocketProvider {
-
-    nonisolated var stateChanged: AnyPublisher<WebSocketProviderState, Never> {
-        stateTopic.eraseToAnyPublisher()
-    }
-
-    nonisolated var messageReceived: AnyPublisher<WebSocketMessage, Never> {
-        messageTopic.eraseToAnyPublisher()
-    }
-
-    @discardableResult func send<Message: Encodable>(message: Message) async throws -> Int {
-        let (id, _): (Int, EmptyCodable) = try await send(message: message)
-        return id
-    }
-
-    func send<Message: Encodable, Response: Decodable>(
-        message: Message
-    ) async throws -> (id: Int, response: Response) {
-        try await authenticateIfNeeded()
-
-        let id = latestID
-        let message = WebSocketSendMessageWrapper(id: id, messageData: message)
-        latestID += 1
-        let data = try message.toJSON()
-        try await webSocket?.send(.string(data))
-
-        let response: ResultWebSocketMessage<Response> = try await withCheckedThrowingContinuation { continuationHandler($0, id) }
-        if let result = response.result {
-            return (id, result)
-        } else if response.success, let emptyCodable = EmptyCodable() as? Response {
-            return (id, emptyCodable)
-        } else {
-            throw WebSocketError.emptyData
-        }
-    }
 
     private func continuationHandler<Response: Decodable>(
         _ continuation: CheckedContinuation<ResultWebSocketMessage<Response>, Error>,
@@ -233,6 +173,64 @@ extension WebSocket: WebSocketProvider {
         webSocket?.cancel()
         webSocket = nil
         state = .offline
+    }
+}
+
+// MARK: - URLSessionWebSocketDelegate
+
+extension WebSocket: URLSessionWebSocketDelegate {
+
+    nonisolated func urlSession(
+        _ session: URLSession,
+        webSocketTask: URLSessionWebSocketTask,
+        didOpenWithProtocol protocol: String?
+    ) {
+        Logger.log(level: .debug, "Connected")
+    }
+
+    nonisolated func urlSession(
+        _ session: URLSession,
+        webSocketTask: URLSessionWebSocketTask,
+        didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?
+    ) {
+        Task { await disconnect() }
+    }
+}
+
+// MARK: - Data.WebSocketProvider
+
+extension WebSocket: WebSocketProvider {
+
+    nonisolated var connectionStateChanged: AnyPublisher<WebSocketProviderState, Never> {
+        connectionStateTopic.eraseToAnyPublisher()
+    }
+
+    nonisolated var messageReceived: AnyPublisher<WebSocketMessage, Never> {
+        messageTopic.eraseToAnyPublisher()
+    }
+
+    @discardableResult func send<Message: Encodable>(message: Message) async throws -> Int {
+        let (id, _): (Int, EmptyCodable) = try await send(message: message)
+        return id
+    }
+
+    func send<Message: Encodable, Response: Decodable>(message: Message) async throws -> (id: Int, response: Response) {
+        try await authenticateIfNeeded()
+
+        let id = latestID
+        let message = WebSocketSendMessageWrapper(id: id, messageData: message)
+        latestID += 1
+        let data = try message.toJSON()
+        try await webSocket?.send(.string(data))
+
+        let response: ResultWebSocketMessage<Response> = try await withCheckedThrowingContinuation { continuationHandler($0, id) }
+        if let result = response.result {
+            return (id, result)
+        } else if response.success, let emptyCodable = EmptyCodable() as? Response {
+            return (id, emptyCodable)
+        } else {
+            throw WebSocketError.emptyData
+        }
     }
 }
 

@@ -10,7 +10,6 @@ import Common
 import Foundation
 
 public class SubscriptionRemoteDataSourceImpl {
-
     private let webSocketProvider: WebSocketProvider
 
     public init(webSocketProvider: WebSocketProvider) {
@@ -21,7 +20,6 @@ public class SubscriptionRemoteDataSourceImpl {
 // MARK: - SubscriptionRemoteDataSource
 
 extension SubscriptionRemoteDataSourceImpl: SubscriptionRemoteDataSource {
-
     public var event: AnyPublisher<Data, Never> {
         webSocketProvider
             .messageReceived

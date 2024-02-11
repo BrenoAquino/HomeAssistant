@@ -8,13 +8,19 @@
 import Foundation
 
 public struct ServerConfig: Decodable {
-
+    /// Latitude in degree
     let latitude: Double
+    /// Longitude in degree
     let longitude: Double
+    /// Elevation in degree
     let elevation: Double
+    /// Location name
     let locationName: String
+    /// Timezone
     let timeZone: String
+    /// Home Assistant version
     let version: String
+    /// Current server state
     let state: String
 
     enum CodingKeys: String, CodingKey {

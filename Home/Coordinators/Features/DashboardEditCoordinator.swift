@@ -26,7 +26,6 @@ struct DashboardEditCoordinator<ViewModel: DashboardEditViewModel>: View {
 }
 
 extension DashboardEditCoordinator: DashboardEditExternalFlow {
-
     func didFinish() {
         coordinator.dismiss()
     }

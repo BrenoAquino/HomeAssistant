@@ -11,8 +11,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-class WebSocketHandlerImpl: WebSocketHandler {
-
+class WebSocketManagerImpl {
     private weak var coordinator: Coordinator?
     private var webSocketProvider: WebSocketProvider?
     private var cancellable: Set<AnyCancellable> = []
@@ -30,13 +29,18 @@ class WebSocketHandlerImpl: WebSocketHandler {
 
 // MARK: Setup Methods
 
-extension WebSocketHandlerImpl {
-
+extension WebSocketManagerImpl {
     private func setupWebSocketRetry() {
         webSocketProvider?
-            .stateChanged
+            .connectionStateChanged
             .filter { $0 == .offline }
             .sink { [weak self] _ in self?.coordinator?.setRoot(.launch) }
             .store(in: &cancellable)
     }
+}
+
+// MARK: WebSocketManager
+
+extension WebSocketManagerImpl: WebSocketManager {
+    func start() {}
 }

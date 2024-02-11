@@ -8,7 +8,6 @@
 import Foundation
 
 public class FetcherRemoteDataSourceImpl {
-
     private let webSocketProvider: WebSocketProvider
 
     public init(webSocketProvider: WebSocketProvider) {
@@ -19,13 +18,12 @@ public class FetcherRemoteDataSourceImpl {
 // MARK: - FetcherRemoteDataSource
 
 extension FetcherRemoteDataSourceImpl: FetcherRemoteDataSource {
-
-    public func fetchConfig() async throws -> ServerConfig {
+    public func fetchServerConfig() async throws -> ServerConfig {
         let (_, config): (Int, ServerConfig) = try await webSocketProvider.send(message: FetchConfigMessage())
         return config
     }
 
-    public func fetchStates() async throws -> [GenericEntity] {
+    public func fetchEntities() async throws -> [GenericEntity] {
         let (_, states): (Int, [GenericEntity]) = try await webSocketProvider.send(message: FetchStateMessage())
         return states
     }

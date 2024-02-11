@@ -9,7 +9,6 @@ import Domain
 import Foundation
 
 public class DashboardRepositoryImpl {
-
     private let dashboardLocalDataSource: DashboardLocalDataSource
     private var dashboards: [Domain.Dashboard] = []
 
@@ -21,33 +20,17 @@ public class DashboardRepositoryImpl {
 // MARK: - DashboardRepository
 
 extension DashboardRepositoryImpl: Domain.DashboardRepository {
-
     public func fetchDashboards() async throws -> [Domain.Dashboard] {
         guard dashboards.isEmpty else {
             return dashboards
         }
-
         dashboards = try await dashboardLocalDataSource.dashboards().map { $0.toDomain() }
         return dashboards
     }
 
-    public func save(dashboard: [Domain.Dashboard]) async throws {
-        let data = dashboard.map { $0.toData() }
-        try await dashboardLocalDataSource.save(dashboards: data)
-    }
-}
-
-// MARK: - Domain.Dashboard to Data.Dashboard
-
-private extension Domain.Dashboard {
-
-    func toData() -> Dashboard {
-        let widgets = widgetConfigs.map { WidgetConfig(
-            id: $0.id,
-            uiType: $0.uiType,
-            entityID: $0.entityID,
-            customInfo: WidgetCustomInfo(title: $0.customInfo.title)
-        )}
-        return Dashboard(name: name, icon: icon, columns: columns, widgetConfigs: widgets)
+    public func save(dashboards: [Domain.Dashboard]) async throws {
+        try await dashboardLocalDataSource.save(
+            dashboards: dashboards.map { $0.toData() }
+        )
     }
 }

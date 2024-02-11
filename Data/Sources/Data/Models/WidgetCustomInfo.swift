@@ -8,6 +8,6 @@
 import Foundation
 
 public struct WidgetCustomInfo: Codable {
-
+    /// Custom title for the widget
     public let title: String
 }

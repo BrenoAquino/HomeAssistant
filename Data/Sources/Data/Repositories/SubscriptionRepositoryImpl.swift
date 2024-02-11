@@ -21,12 +21,11 @@ public class SubscriptionRepositoryImpl {
 // MARK: - SubscriptionRepository
 
 extension SubscriptionRepositoryImpl: SubscriptionRepository {
-
     public var stateChangedEvent: AnyPublisher<Domain.StateChangedEvent, Error> {
         subscriptionRemoteDataSource
             .event
             .decode(type: StateChangedEvent.self, decoder: JSONDecoder(), atKeyPath: "event")
-            .filter { $0.eventType == Domain.EventType.stateChanged.string }
+            .filter { $0.eventType == Domain.EventType.stateChanged.toData() }
             .compactMap { try? $0.toDomain() }
             .eraseToAnyPublisher()
     }
@@ -36,6 +35,6 @@ extension SubscriptionRepositoryImpl: SubscriptionRepository {
     }
 
     public func subscribeToEvents(eventType: Domain.EventType) async throws -> Int {
-        try await subscriptionRemoteDataSource.subscribeToEvents(eventType: eventType.string)
+        try await subscriptionRemoteDataSource.subscribeToEvents(eventType: eventType.toData())
     }
 }

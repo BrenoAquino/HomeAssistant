@@ -8,7 +8,6 @@
 import Foundation
 
 public protocol CommandRemoteDataSource {
-
-    func fireEvent<T: Encodable>(eventType: String, eventData: T?) async throws
+    /// Send a message to run a service
     func callService<T: Encodable>(domain: String, service: String, entityID: String?, serviceData: T?) async throws
 }

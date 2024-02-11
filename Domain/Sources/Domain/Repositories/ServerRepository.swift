@@ -8,6 +8,6 @@
 import Foundation
 
 public protocol ServerRepository {
-
+    /// Retrieve server config
     func fetchConfig() async throws -> ServerConfig
 }

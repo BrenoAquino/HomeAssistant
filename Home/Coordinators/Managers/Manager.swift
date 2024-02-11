@@ -7,10 +7,7 @@
 
 import Foundation
 
-protocol Handler {
+protocol Manager {
+    /// Start the manager and make the initial configuration
     func start()
-}
-
-extension Handler {
-    func start() {}
 }

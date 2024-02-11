@@ -8,7 +8,8 @@
 import Foundation
 
 public protocol FetcherRemoteDataSource {
-
-    func fetchConfig() async throws -> ServerConfig
-    func fetchStates() async throws -> [GenericEntity]
+    /// Retrieves the server configuration
+    func fetchServerConfig() async throws -> ServerConfig
+    /// Retrieves all devices with their states and configurations
+    func fetchEntities() async throws -> [GenericEntity]
 }

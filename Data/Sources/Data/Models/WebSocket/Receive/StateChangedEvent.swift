@@ -8,10 +8,13 @@
 import Foundation
 
 public struct StateChangedEvent: Decodable {
-
+    /// Type of the event
     let eventType: String
+    /// Entity that had the change
     let entityID: String
+    /// Old entity state
     let oldState: GenericEntity
+    /// New entity state
     let newState: GenericEntity
 
     enum CodingKeys: String, CodingKey {

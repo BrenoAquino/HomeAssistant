@@ -109,56 +109,51 @@ class Factory: ObservableObject {
 // MARK: Screens
 
 extension Factory: ScreenFactory {
-
-    func launchScreen() -> Screen {
-        let viewModel = LaunchViewModelImpl(
-            entityService: entityServiceInstance,
-            dashboardService: dashboardServiceInstance
-        )
-        return Screen(view: LaunchCoordinator(viewModel: viewModel))
+    func staticLaunchScreen() -> Screen {
+        Screen(view: StaticLaunchCoordinator())
     }
 
-    func staticLaunchScreen() -> Screen {
-        return Screen(view: StaticLaunchCoordinator())
+    func launchScreen() -> Screen {
+        Screen(view: LaunchCoordinator(viewModel: LaunchViewModelImpl(
+            entityService: entityServiceInstance,
+            dashboardService: dashboardServiceInstance
+        )))
     }
 
     func dashboardScreen() -> Screen {
-        let viewModel = DashboardViewModelImpl(
+        Screen(view: DashboardCoordinator(viewModel: DashboardViewModelImpl(
             dashboardService: dashboardServiceInstance,
             entityService: entityServiceInstance
-        )
-        return Screen(view: DashboardCoordinator(viewModel: viewModel))
+        )))
     }
 
     func dashboardEditScreen(mode: DashboardEditMode) -> Screen {
-        let viewModel = DashboardEditViewModelImpl(
+        Screen(view: DashboardEditCoordinator(viewModel: DashboardEditViewModelImpl(
             dashboardService: dashboardServiceInstance,
             mode: mode
-        )
-        return Screen(view: DashboardEditCoordinator(viewModel: viewModel))
+        )))
     }
 
     func widgetEdit(dashboard: Domain.Dashboard, mode: WidgetEditMode) -> Screen {
-        let viewModel = WidgetEditViewModelImpl(
+        Screen(view: WidgetEditCoordinator(viewModel: WidgetEditViewModelImpl(
             dashboardService: dashboardServiceInstance,
             entityService: entityServiceInstance,
             mode: mode,
             dashboard: dashboard
-        )
-        return Screen(view: WidgetEditCoordinator(viewModel: viewModel))
+        )))
     }
 
     func configScreen() -> Screen {
-        let viewModel = ConfigViewModelImpl(entityService: entityServiceInstance)
-        return Screen(view: ConfigCoordinator(viewModel: viewModel))
+        Screen(view: ConfigCoordinator(viewModel: ConfigViewModelImpl(
+            entityService: entityServiceInstance
+        )))
     }
 }
 
 // MARK: Handlers
 
-extension Factory: HandlerFactory {
-
-    func webSocketHandler(coordinator: Coordinator) -> WebSocketHandler {
-        WebSocketHandlerImpl(coordinator: coordinator, webSocketProvider: webSocketProviderInstance)
+extension Factory: ManagerFactory {
+    func webSocketManager(coordinator: Coordinator) -> WebSocketManager {
+        WebSocketManagerImpl(coordinator: coordinator, webSocketProvider: webSocketProviderInstance)
     }
 }

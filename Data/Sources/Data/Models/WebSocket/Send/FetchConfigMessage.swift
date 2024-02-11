@@ -8,6 +8,6 @@
 import Foundation
 
 struct FetchConfigMessage: Encodable {
-
+    /// WebSocket message type
     let type: WebSocketMessageType = .fetchConfig
 }

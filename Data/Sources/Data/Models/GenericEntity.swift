@@ -8,9 +8,11 @@
 import Foundation
 
 public struct GenericEntity: Decodable {
-
+    /// Entity ID
     public let id: String
+    /// Current entity state
     public let state: String
+    /// Metadata regarding the entity
     public let attributes: Attributes
 
     enum CodingKeys: String, CodingKey {
@@ -19,21 +21,29 @@ public struct GenericEntity: Decodable {
     }
 
     public struct Attributes: Decodable {
+        /// Entity name
         public let name: String
-
-        // Climate
+        /// Climate available modes
         public let hvacModes: [String]?
+        /// Climate's fan available modes
         public let fanModes: [String]?
+        /// Climate's minimum temperature
         public let minTemperature: Double?
+        /// Climate's maximum temperature
         public let maxTemperature: Double?
+        /// Climate's target temperature
         public let targetTemperature: Double?
+        /// Climate's temperature step
         public let temperatureStep: Double?
+        /// Climate current mode
         public let currentHvac: String?
+        /// Climate's fan current mode
         public let currentFanModel: String?
+        /// Climate current temperature
         public let currentTemperature: Double?
-
-        // Fan
+        /// Fan current speed (percentage)
         public let currentPercentage: Double?
+        /// Fan's speed step  (percentage)
         public let percentageStep: Double?
 
         enum CodingKeys: String, CodingKey {

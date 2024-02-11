@@ -9,8 +9,9 @@ import Domain
 import Foundation
 
 extension WidgetCustomInfo {
-
     func toDomain() -> Domain.WidgetCustomInfo {
-        Domain.WidgetCustomInfo(title: title)
+        Domain.WidgetCustomInfo(
+            title: title
+        )
     }
 }

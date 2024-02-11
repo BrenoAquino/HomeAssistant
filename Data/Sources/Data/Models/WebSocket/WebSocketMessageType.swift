@@ -8,7 +8,6 @@
 import Foundation
 
 public enum WebSocketMessageType: String, Codable {
-
     // MARK: Sending
     /// Send the access token to get an authenticated web socket session
     case auth
@@ -24,7 +23,7 @@ public enum WebSocketMessageType: String, Codable {
     case subscribeToEvents = "subscribe_events"
     /// Unsubscribe to receive messages when some event happens
     case unsubscribeToEvents = "unsubscribe_events"
-
+    
     // MARK: Receiving
     /// When the server requires an authentication
     case authRequired = "auth_required"

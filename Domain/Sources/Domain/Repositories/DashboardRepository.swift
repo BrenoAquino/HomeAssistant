@@ -8,7 +8,8 @@
 import Foundation
 
 public protocol DashboardRepository {
-
+    /// Retrieve all saved dashboards
     func fetchDashboards() async throws -> [Dashboard]
-    func save(dashboard: [Dashboard]) async throws
+    /// Save all dashboard and its configuration
+    func save(dashboards: [Dashboard]) async throws
 }

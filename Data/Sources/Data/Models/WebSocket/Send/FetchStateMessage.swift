@@ -8,6 +8,6 @@
 import Foundation
 
 struct FetchStateMessage: Encodable {
-
+    /// WebSocket message type
     let type: WebSocketMessageType = .fetchStates
 }

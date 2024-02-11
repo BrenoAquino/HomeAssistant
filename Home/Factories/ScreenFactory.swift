@@ -11,7 +11,6 @@ import DashboardEdit
 import WidgetEdit
 
 protocol ScreenFactory {
-
     func launchScreen() -> Screen
     func staticLaunchScreen() -> Screen
     func dashboardScreen() -> Screen
