@@ -14,8 +14,6 @@ import SwiftUI
 public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: EntityService>: DashboardViewModel {
     public var externalFlows: DashboardExternalFlow?
     private var cancellable: Set<AnyCancellable> = .init()
-    private var dashboardNameToDelete: String?
-    private var widgetIDToDelete: String?
 
     // MARK: Services
 
@@ -24,12 +22,9 @@ public class DashboardViewModelImpl<DashboardS: DashboardService, EntityS: Entit
 
     // MARK: Publishers
 
-    @Published public var editModel: Bool = false
     @Published public var dashboards: [Dashboard] = []
     @Published public var selectedDashboardName: String?
     @Published public var widgets: [WidgetData] = []
-    @Published public var removeDashboardAlert: Bool = false
-    @Published public var removeWidgetAlert: Bool = false
     @Published public var toastData: DefaultToastDataContent?
 
     // MARK: Gets
@@ -159,61 +154,6 @@ extension DashboardViewModelImpl {
     }
 }
 
-// MARK: - Public Methods
-
-extension DashboardViewModelImpl {
-    public func deleteRequestedDashboard() {
-        guard let dashboardNameToDelete else { return }
-        try? dashboardService.delete(dashboardName: dashboardNameToDelete)
-    }
-
-    public func cancelDashboardDeletion() {
-        dashboardNameToDelete = nil
-    }
-
-    public func deleteRequestedWidget() {
-        guard 
-            var currentDashboard,
-            let widgetIDToDelete
-        else { return }
-
-        currentDashboard.widgetConfigs.removeAll(where: {
-            $0.id == widgetIDToDelete
-        })
-
-        try? dashboardService.update(
-            dashboardName: currentDashboard.name,
-            dashboard: currentDashboard
-        )
-    }
-
-    public func cancelWidgetDeletion() {
-        widgetIDToDelete = nil
-    }
-}
-
-// MARK: Orders
-
-extension DashboardViewModelImpl {
-
-    public func didUpdateWidgetsOrder(_ widgets: [WidgetData]) {
-        guard
-            var currentDashboard = currentDashboard,
-            currentDashboard.widgetConfigs.map({ $0.id }) != widgets.map({ $0.config.id })
-        else { return }
-
-        currentDashboard.widgetConfigs = widgets.map { $0.config }
-        try? dashboardService.update(
-            dashboardName: currentDashboard.name,
-            dashboard: currentDashboard
-        )
-    }
-
-    public func didUpdateDashboardsOrder(_ dashboards: [Dashboard]) {
-        try? self.dashboardService.update(order: dashboards.map { $0.name })
-    }
-}
-
 // MARK: Clicks
 
 extension DashboardViewModelImpl {
@@ -221,7 +161,11 @@ extension DashboardViewModelImpl {
         externalFlows?.didSelectConfig()
     }
 
-    // Add
+    public func didClickEdit() {
+        guard let currentDashboard else { return }
+        externalFlows?.didSelectEditDashboard(currentDashboard)
+    }
+
     public func didClickAddDashboard() {
         externalFlows?.didSelectAddDashboard()
     }
@@ -229,29 +173,6 @@ extension DashboardViewModelImpl {
     public func didClickAddWidget() {
         guard let currentDashboard else { return }
         externalFlows?.didSelectAddWidget(currentDashboard)
-    }
-
-    // Edit
-    public func didClickEdit(dashboard: Dashboard) {
-        externalFlows?.didSelectEditDashboard(dashboard)
-        editModel = false
-    }
-
-    public func didClickEdit(widget: WidgetData) {
-        guard let currentDashboard else { return }
-        externalFlows?.didSelectEditWidget(widget, currentDashboard)
-        editModel = false
-    }
-
-    // Remove
-    public func didClickRemove(dashboard: Dashboard) {
-        dashboardNameToDelete = dashboard.name
-        removeDashboardAlert = true
-    }
-
-    public func didClickRemove(widget: WidgetData) {
-        widgetIDToDelete = widget.config.id
-        removeWidgetAlert = true
     }
 }
 

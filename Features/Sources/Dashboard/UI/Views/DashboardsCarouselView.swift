@@ -24,14 +24,9 @@ private enum Constants {
 }
 
 struct DashboardsCarouselView: View {
-
-    @Binding var editMode: Bool
-    @Binding var dashboards: [Dashboard]
+    let dashboards: [Dashboard]
     @Binding var selectedDashboardName: String?
 
-    let didUpdateOrder: (_ dashboards: [Dashboard]) -> Void
-    let didClickRemoveDashboard: (_ dashboard: Dashboard) -> Void
-    let didClickEditDashboard: (_ dashboard: Dashboard) -> Void
     let didClickAdd: () -> Void
 
     // MARK: Private States
@@ -55,69 +50,25 @@ struct DashboardsCarouselView: View {
     }
 
     private var add: some View {
-        squareContent("", "plus.circle", false)
-            .onTapGesture {
-                if !editMode {
-                    didClickAdd()
-                }
-            }
+        element("", "plus.circle", false)
+            .onTapGesture(perform: didClickAdd)
     }
 
     private var carousel: some View {
         ForEach(dashboards, id: \.name) { dashboard in
-            let shakeAnimation = Animation.easeInOut(duration: Constants.animationDuration).repeatForever(autoreverses: true)
             let isSelected = dashboard.name == selectedDashboardName
-
-            element(dashboard, isSelected)
-                .rotationEffect(.degrees(editMode ? Constants.shakeAnimationAngle : .zero))
-                .animation(editMode ? shakeAnimation : .default, value: editMode)
-                .onTapGesture {
-                    if editMode {
-                        didClickEditDashboard(dashboard)
-                    } else if !isSelected {
-                        selectedDashboardName = dashboard.name
-                    }
-                }
-                .onDrop(of: [.text], delegate: DashboardDropDelegate(
-                    dashboard: dashboard,
-                    dashboards: $dashboards,
-                    draggedItem: $draggedItem,
-                    isDragging: $isDragging,
-                    didUpdateOrder: didUpdateOrder
-                ))
-                .onDrag {
-                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                    editMode = true
-                    draggedItem = dashboard
-                    return NSItemProvider(item: nil, typeIdentifier: dashboard.name)
-                } preview: { EmptyView() }
-        }
-    }
-
-    private func element(
-        _ dashboard: Dashboard,
-        _ isSelected: Bool
-    ) -> some View {
-        ZStack(alignment: .top) {
-            squareContent(
+            element(
                 dashboard.name,
                 dashboard.icon,
                 isSelected
             )
-
-            SystemImages.remove
-                .imageScale(.large)
-                .frame(width: Constants.removeIconWidth, height: Constants.removeIconHeight)
-                .padding(.leading, -Constants.dashboardImageWidth / 2 - Constants.removeIconWidth / 5)
-                .opacity(editMode ? 1 : 0)
-                .animation(.default, value: editMode)
-                .onTapGesture {
-                    didClickRemoveDashboard(dashboard)
-                }
+            .onTapGesture {
+                selectedDashboardName = dashboard.name
+            }
         }
     }
 
-    private func squareContent(
+    private func element(
         _ title: String,
         _ icon: String,
         _ isSelected: Bool
@@ -141,36 +92,6 @@ struct DashboardsCarouselView: View {
         .padding(.leading, Constants.removeIconWidth / 3)
         .padding(.top, Constants.removeIconHeight / 3)
     }
-
-    private struct DashboardDropDelegate: DropDelegate {
-
-        let dashboard: Dashboard
-        @Binding var dashboards: [Dashboard]
-        @Binding var draggedItem: Dashboard?
-        @Binding var isDragging: Bool
-        let didUpdateOrder: (_ entities: [Dashboard]) -> Void
-
-        func performDrop(info: DropInfo) -> Bool {
-            isDragging = false
-            draggedItem = nil
-            didUpdateOrder(dashboards)
-            return true
-        }
-
-        func dropEntered(info: DropInfo) {
-            isDragging = true
-            guard
-                let draggedItem,
-                draggedItem.name != dashboard.name,
-                let from = dashboards.firstIndex(where: { $0.name == draggedItem.name }),
-                let to = dashboards.firstIndex(where: { $0.name == dashboard.name })
-            else { return }
-
-            withAnimation {
-                dashboards.move(fromOffsets: IndexSet(integer: from), toOffset: to > from ? to + 1 : to)
-            }
-        }
-    }
 }
 
 #if DEBUG
@@ -180,12 +101,8 @@ struct DashboardsCarouselView_Preview: PreviewProvider {
 
     static var previews: some View {
         DashboardsCarouselView(
-            editMode: .constant(false),
-            dashboards: .constant(Dashboard.all),
+            dashboards: Dashboard.all,
             selectedDashboardName: .constant("Bedroom"),
-            didUpdateOrder: { _ in },
-            didClickRemoveDashboard: { _ in },
-            didClickEditDashboard: { _ in },
             didClickAdd: { }
         )
     }

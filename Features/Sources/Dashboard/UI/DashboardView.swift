@@ -27,12 +27,8 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                 .padding(.horizontal, space: .horizontal)
 
             DashboardsCarouselView(
-                editMode: $viewModel.editModel,
-                dashboards: $viewModel.dashboards,
+                dashboards: viewModel.dashboards,
                 selectedDashboardName: $viewModel.selectedDashboardName,
-                didUpdateOrder: viewModel.didUpdateDashboardsOrder,
-                didClickRemoveDashboard: viewModel.didClickRemove,
-                didClickEditDashboard: viewModel.didClickEdit,
                 didClickAdd: viewModel.didClickAddDashboard
             )
             .padding(.top, space: .smallS)
@@ -42,11 +38,7 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
                 .padding(.horizontal, space: .horizontal)
 
             WidgetsGridView(
-                editMode: $viewModel.editModel,
-                widgets: $viewModel.widgets,
-                didUpdateWidgetsOrder: viewModel.didUpdateWidgetsOrder,
-                didClickRemoveWidget: viewModel.didClickRemove,
-                didClickEditWidget: viewModel.didClickEdit,
+                widgets: viewModel.widgets,
                 didClickUpdateLightState: viewModel.didClickUpdateLightState,
                 didClickUpdateFanState: viewModel.didClickUpdateFanState
             )
@@ -56,35 +48,12 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
         .navigationTitle(Localizable.hiThere.value)
         .toolbar {
             Group {
-                if viewModel.editModel {
-                    doneButton
-                } else {
-                    configButton
-                }
+                editButton
+                configButton
             }
             .foregroundColor(DSColor.label)
         }
         .toast(data: $viewModel.toastData)
-        .alert(Localizable.delete.value, isPresented: $viewModel.removeDashboardAlert, actions: {
-            Button(Localizable.cancel.value, role: .cancel, action: viewModel.cancelDashboardDeletion)
-            Button(Localizable.ok.value, role: .destructive, action: viewModel.deleteRequestedDashboard)
-        }, message: {
-            Localizable.deleteDashboardDescription.text
-        })
-        .alert(Localizable.delete.value, isPresented: $viewModel.removeWidgetAlert, actions: {
-            Button(Localizable.cancel.value, role: .cancel, action: viewModel.cancelWidgetDeletion)
-            Button(Localizable.ok.value, role: .destructive, action: viewModel.deleteRequestedWidget)
-        }, message: {
-            Localizable.deleteEntityDescription.text
-        })
-    }
-    
-    private var doneButton: some View {
-        Button {
-            viewModel.editModel = false
-        } label: {
-            Localizable.done.text
-        }
     }
 
     private var configButton: some View {
@@ -95,12 +64,22 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
         }
     }
 
+    private var editButton: some View {
+        Button {
+            viewModel.didClickConfig()
+        } label: {
+            SystemImages.edit
+        }
+    }
+
     private var deviceSection: some View {
-        HStack(spacing: .zero) {
+        HStack(spacing: .smallM) {
             Localizable.devices.text
                 .font(.title3)
                 .fontWeight(.semibold)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(alignment: .leading)
+
+            Spacer()
 
             Button(action: viewModel.didClickAddWidget) {
                 SystemImages.plus

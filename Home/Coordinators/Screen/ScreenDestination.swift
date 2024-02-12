@@ -13,7 +13,7 @@ import Foundation
 enum ScreenDestination {
     case launch
     case staticLaunch
-//    case dashboard
+    case dashboard
 //    case dashboardEdit(mode: DashboardEditMode)
 //    case widgetEdit(dashboard: Dashboard, mode: WidgetEditMode)
 //    case config
@@ -26,8 +26,8 @@ extension ScreenDestination {
             return factory.launchScreen()
         case .staticLaunch:
             return factory.staticLaunchScreen()
-//        case .dashboard:
-//            return factory.dashboardScreen()
+        case .dashboard:
+            return factory.dashboardScreen()
 //        case .dashboardEdit(let mode):
 //            return factory.dashboardEditScreen(mode: mode)
 //        case .widgetEdit(let dashboard, let mode):

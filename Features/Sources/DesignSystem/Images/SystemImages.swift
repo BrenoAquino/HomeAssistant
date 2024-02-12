@@ -19,7 +19,8 @@ public enum SystemImages {
     public static let config = Image(systemName: "gear")
     public static let visible = Image(systemName: "eye")
     public static let hidden = Image(systemName: "eye.slash")
-    public static let edit = Image(systemName: "pencil.circle.fill")
+    public static let editFill = Image(systemName: "pencil.circle.fill")
+    public static let edit = Image(systemName: "pencil")
     public static let leftArrow = Image(systemName: "arrow.left")
     public static let rightArrow = Image(systemName: "arrow.right")
 }

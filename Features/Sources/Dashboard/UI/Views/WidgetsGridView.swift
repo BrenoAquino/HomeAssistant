@@ -22,18 +22,10 @@ struct WidgetsGridView: View {
 
     private typealias WidgetViewData = (widget: WidgetData?, columns: Int, rows: Int)
 
-    @Binding var editMode: Bool
-    @Binding var widgets: [WidgetData]
-
-    let didUpdateWidgetsOrder: (_ widgets: [WidgetData]) -> Void
-    let didClickRemoveWidget: (_ widget: WidgetData) -> Void
-    let didClickEditWidget: (_ widget: WidgetData) -> Void
+    let widgets: [WidgetData]
 
     let didClickUpdateLightState: (_ lightEntity: LightEntity, _ newState: LightEntity.State) -> Void
     let didClickUpdateFanState: (_ fanEntity: FanEntity, _ newState: FanEntity.State) -> Void
-
-    @State private var draggedItem: WidgetData?
-    @State private var isDragging: Bool = false
 
     var body: some View {
         GeometryReader { proxy in
@@ -67,14 +59,11 @@ struct WidgetsGridView: View {
         _ widgets: [WidgetData],
         _ columnsNumber: Int
     ) -> [[WidgetViewData]] {
-
         var columnsCount: Int = .zero
         var currentRow: Int = .zero
         var matrix: [[WidgetViewData]] = [[]]
-
         for widget in widgets {
             let (columns, rows) = WidgetSize.units(for: widget.config.uiType, entity: widget.entity)
-
             if columnsCount + columns > columnsNumber {
                 let remainingColumns = columnsNumber - columnsCount
                 if remainingColumns > 0 {
@@ -88,11 +77,9 @@ struct WidgetsGridView: View {
             columnsCount += columns
             matrix[currentRow].append((widget, columns, rows))
         }
-
         if columnsCount < columnsNumber {
             matrix[currentRow].append((nil, columnsNumber - columnsCount, 1))
         }
-
         return matrix
     }
 
@@ -102,45 +89,19 @@ struct WidgetsGridView: View {
         _ columns: Int,
         _ rows: Int
     ) -> some View {
-        let shakeAnimation = Animation.easeInOut(duration: Constants.animationDuration).repeatForever(autoreverses: true)
         widgetElement(widget)
             .gridCellColumns(columns)
-            .rotationEffect(editMode ? .degrees(Constants.shakeAnimationAngle) : .zero)
-            .animation(editMode ? shakeAnimation : .default, value: editMode)
             .padding(.leading, -Constants.removeIconWidth / 3)
             .padding(.top, -Constants.removeIconHeight / 3)
-            .onDrop(of: [.text], delegate: WidgetDropDelegate(
-                widget: widget,
-                widgets: $widgets,
-                draggedItem: $draggedItem,
-                isDragging: $isDragging,
-                didUpdateOrder: didUpdateWidgetsOrder
-            ))
-            .onDrag {
-                draggedItem = widget
-                editMode = true
-                return NSItemProvider(object: widget.config.id as NSString)
-            } preview: { EmptyView() }
     }
 
     @ViewBuilder
     private func widgetElement(
         _ widget: WidgetData
     ) -> some View {
-        ZStack(alignment: .topLeading) {
-            widgetView(widget)
-                .padding(.leading, Constants.removeIconWidth / 3)
-                .padding(.top, Constants.removeIconHeight / 3)
-
-            SystemImages.remove
-                .imageScale(.large)
-                .frame(width: Constants.removeIconWidth, height: Constants.removeIconHeight)
-                .opacity(editMode ? 1 : 0)
-                .animation(.default, value: editMode)
-                .onTapGesture {
-                    didClickRemoveWidget(widget)
-                }
-        }
+        widgetView(widget)
+            .padding(.leading, Constants.removeIconWidth / 3)
+            .padding(.top, Constants.removeIconHeight / 3)
     }
 
     @ViewBuilder
@@ -168,12 +129,8 @@ struct WidgetsGridView: View {
                 customInfo: widgetData.config.customInfo,
                 lightEntity: lightEntity
             ) {
-                if editMode {
-                    didClickEditWidget(widgetData)
-                } else {
-                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                    didClickUpdateLightState($0, $1)
-                }
+                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                didClickUpdateLightState($0, $1)
             }
         }
     }
@@ -189,64 +146,18 @@ struct WidgetsGridView: View {
                 customInfo: widgetData.config.customInfo,
                 fanEntity: fanEntity
             ) {
-                if editMode {
-                    didClickEditWidget(widgetData)
-                } else {
-                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                    didClickUpdateFanState($0, $1)
-                }
+                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                didClickUpdateFanState($0, $1)
             }
         default:
             FanWidgetView(
                 customInfo: widgetData.config.customInfo,
                 fanEntity: fanEntity
             ) {
-                if editMode {
-                    didClickEditWidget(widgetData)
-                } else {
-                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                    didClickUpdateFanState($0, $1)
-                }
+                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                didClickUpdateFanState($0, $1)
             }
         }
-    }
-}
-
-// MARK: - DropDelegate
-
-private struct WidgetDropDelegate: DropDelegate {
-
-    let widget: WidgetData
-    @Binding var widgets: [WidgetData]
-    @Binding var draggedItem: WidgetData?
-    @Binding var isDragging: Bool
-    let didUpdateOrder: (_ widgets: [WidgetData]) -> Void
-
-    func performDrop(info: DropInfo) -> Bool {
-        isDragging = false
-        draggedItem = nil
-        didUpdateOrder(widgets)
-        return true
-    }
-
-    func dropEntered(info: DropInfo) {
-        isDragging = true
-        guard
-            let draggedItem,
-            let fromIndex = widgets.firstIndex(where: { $0.config.id == draggedItem.config.id }),
-            let toIndex = widgets.firstIndex(where: { $0.config.id == widget.config.id })
-        else { return }
-
-        withAnimation {
-            widgets.move(
-                fromOffsets: IndexSet(integer: fromIndex),
-                toOffset: toIndex > fromIndex ? toIndex + 1 : toIndex
-            )
-        }
-    }
-
-    func dropUpdated(info: DropInfo) -> DropProposal? {
-        return DropProposal(operation: .move)
     }
 }
 
@@ -269,11 +180,7 @@ struct WidgetsGridView_Preview: PreviewProvider {
     static var previews: some View {
 
         WidgetsGridView(
-            editMode: .constant(false),
-            widgets: .constant(widgets),
-            didUpdateWidgetsOrder: { _ in },
-            didClickRemoveWidget: { _ in },
-            didClickEditWidget: { _ in },
+            widgets: widgets,
             didClickUpdateLightState: { _, _ in },
             didClickUpdateFanState: { _, _ in }
         )

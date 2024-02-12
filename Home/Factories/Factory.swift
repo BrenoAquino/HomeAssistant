@@ -7,7 +7,7 @@
 
 import Domain
 import Data
-//import Dashboard
+import Dashboard
 import Launch
 //import DashboardEdit
 import Foundation
@@ -120,12 +120,12 @@ extension Factory: ScreenFactory {
         )))
     }
 
-//    func dashboardScreen() -> Screen {
-//        Screen(view: DashboardCoordinator(viewModel: DashboardViewModelImpl(
-//            dashboardService: dashboardServiceInstance,
-//            entityService: entityServiceInstance
-//        )))
-//    }
+    func dashboardScreen() -> Screen {
+        Screen(view: DashboardCoordinator(viewModel: DashboardViewModelImpl(
+            dashboardService: dashboardServiceInstance,
+            entityService: entityServiceInstance
+        )))
+    }
 //
 //    func dashboardEditScreen(mode: DashboardEditMode) -> Screen {
 //        Screen(view: DashboardEditCoordinator(viewModel: DashboardEditViewModelImpl(

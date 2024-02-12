@@ -13,15 +13,7 @@ import Preview
 
 class DashboardViewModelPreview: DashboardViewModel {
     var externalFlows: DashboardExternalFlow?
-    var toastData: DefaultToastDataContent?
-    var removeWidgetAlert: Bool = false
-    var removeDashboardAlert: Bool = false
-    var editModel: Bool = false
     var selectedDashboardName: String? = "Bedroom"
-    var dashboards: [Dashboard] = Dashboard.all
-    var currentDashboard: Dashboard? {
-        return dashboards[0]
-    }
     var widgets: [WidgetData] = [
         .init(
             config: .mock(entity: LightEntity.mockMainLight),
@@ -36,22 +28,13 @@ class DashboardViewModelPreview: DashboardViewModel {
             entity: LightEntity.mockLedCeilingLight
         ),
     ]
-    func deleteRequestedDashboard() {}
-    func cancelDashboardDeletion() {}
-    func deleteRequestedWidget() {}
-    func cancelWidgetDeletion() {}
-    func didUpdateEntitiesOrder(_ entities: [any Entity]) {}
-    func didUpdateDashboardsOrder(_ dashboards: [Dashboard]) {}
-    func didClickAddDashboard() {}
-    func didClickRemove(dashboard: Dashboard) {}
-    func didClickEdit(dashboard: Dashboard) {}
-    func didClickEdit(widget: WidgetData) {}
-    func didClickRemove(entity: any Entity) {}
+    var dashboards: [Dashboard] = Dashboard.all
+    var toastData: DefaultToastDataContent?
     func didClickConfig() {}
+    func didClickEdit() {}
+    func didClickAddDashboard() {}
+    func didClickAddWidget() {}
     func didClickUpdateLightState(_ lightEntity: LightEntity, newState: LightEntity.State) {}
     func didClickUpdateFanState(_ fanEntity: FanEntity, newState: FanEntity.State) {}
-    func didUpdateWidgetsOrder(_ widgets: [WidgetData]) {}
-    func didClickRemove(widget: WidgetData) {}
-    func didClickAddWidget() {}
 }
 #endif
