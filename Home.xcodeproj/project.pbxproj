@@ -11,6 +11,7 @@
 		5508EC952A65D28E00100E18 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5508EC942A65D28E00100E18 /* Coordinator.swift */; };
 		5508EC972A65D82300100E18 /* CoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5508EC962A65D82300100E18 /* CoordinatorView.swift */; };
 		551348AB2B7990730068915F /* WebSocketSendMessageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551348AA2B7990730068915F /* WebSocketSendMessageWrapper.swift */; };
+		551348AD2B79A6D00068915F /* WebSocketReceiveMessageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551348AC2B79A6CF0068915F /* WebSocketReceiveMessageWrapper.swift */; };
 		552783E52A64F5F200603EBA /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552783E42A64F5F200603EBA /* AppEnvironment.swift */; };
 		552783EF2A6500DB00603EBA /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 552783EE2A6500DB00603EBA /* Domain */; };
 		552783F12A6500E000603EBA /* Features in Frameworks */ = {isa = PBXBuildFile; productRef = 552783F02A6500E000603EBA /* Features */; };
@@ -45,6 +46,7 @@
 		5508EC942A65D28E00100E18 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		5508EC962A65D82300100E18 /* CoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorView.swift; sourceTree = "<group>"; };
 		551348AA2B7990730068915F /* WebSocketSendMessageWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketSendMessageWrapper.swift; sourceTree = "<group>"; };
+		551348AC2B79A6CF0068915F /* WebSocketReceiveMessageWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketReceiveMessageWrapper.swift; sourceTree = "<group>"; };
 		552783E02A64ECCD00603EBA /* Features */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Features; sourceTree = "<group>"; };
 		552783E42A64F5F200603EBA /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		552783F42A65027E00603EBA /* LaunchCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchCoordinator.swift; sourceTree = "<group>"; };
@@ -233,6 +235,7 @@
 			isa = PBXGroup;
 			children = (
 				551348AA2B7990730068915F /* WebSocketSendMessageWrapper.swift */,
+				551348AC2B79A6CF0068915F /* WebSocketReceiveMessageWrapper.swift */,
 				55E63B192A618C88002068A5 /* AuthenticationMessage.swift */,
 			);
 			path = Models;
@@ -337,6 +340,7 @@
 				55E98CC22A7898AE005AE77E /* ManagerFactory.swift in Sources */,
 				55E63B182A617164002068A5 /* URLSessionWebSocketTask+Stream.swift in Sources */,
 				5598DB912A677C5B00614AC0 /* DashboardEditCoordinator.swift in Sources */,
+				551348AD2B79A6D00068915F /* WebSocketReceiveMessageWrapper.swift in Sources */,
 				552783E52A64F5F200603EBA /* AppEnvironment.swift in Sources */,
 				55A0F2A62A6F0C7F00C29677 /* StaticLaunchCoordinator.swift in Sources */,
 			);
@@ -623,10 +627,12 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
 				MARKETING_VERSION = 1.0;
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = dev.brenoaquino.Home;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PREVIEW";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

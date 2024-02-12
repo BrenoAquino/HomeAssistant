@@ -13,10 +13,10 @@ let package = Package(
             targets: [
                 "DesignSystem",
                 "Launch",
-                "Dashboard",
-                "DashboardEdit",
-                "WidgetEdit",
-                "Config"
+//                "Dashboard",
+//                "DashboardEdit",
+//                "WidgetEdit",
+//                "Config",
             ]),
     ],
     dependencies: [
@@ -31,22 +31,22 @@ let package = Package(
             name: "Launch",
             dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
             resources: [.process("Resources")]),
-        .target(
-            name: "Dashboard",
-            dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
-            resources: [.process("Resources")]),
-        .target(
-            name: "DashboardEdit",
-            dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
-            resources: [.process("Resources")]),
-        .target(
-            name: "WidgetEdit",
-            dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
-            resources: [.process("Resources")]),
-        .target(
-            name: "Config",
-            dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
-            resources: [.process("Resources")]),
+//        .target(
+//            name: "Dashboard",
+//            dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
+//            resources: [.process("Resources")]),
+//        .target(
+//            name: "DashboardEdit",
+//            dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
+//            resources: [.process("Resources")]),
+//        .target(
+//            name: "WidgetEdit",
+//            dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
+//            resources: [.process("Resources")]),
+//        .target(
+//            name: "Config",
+//            dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
+//            resources: [.process("Resources")]),
         .target(
             name: "Preview",
             dependencies: ["Common", "Domain"]),

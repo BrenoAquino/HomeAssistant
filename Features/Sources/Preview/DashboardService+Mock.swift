@@ -5,7 +5,7 @@
 //  Created by Breno Aquino on 18/07/23.
 //
 
-#if DEBUG || PREVIEW
+//#if DEBUG || PREVIEW
 import Combine
 import Domain
 import Foundation
@@ -44,4 +44,4 @@ public class DashboardServiceMock: Domain.DashboardService {
     public func update(dashboardName: String, dashboard: Domain.Dashboard) throws {}
     public func update(order: [String]) throws {}
 }
-#endif
+//#endif

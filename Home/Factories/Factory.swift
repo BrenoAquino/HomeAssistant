@@ -7,13 +7,13 @@
 
 import Domain
 import Data
-import Dashboard
-import Core
-import DashboardEdit
+//import Dashboard
+import Launch
+//import DashboardEdit
 import Foundation
 import SwiftUI
-import Config
-import WidgetEdit
+//import Config
+//import WidgetEdit
 
 #if PREVIEW
 import Preview
@@ -120,40 +120,43 @@ extension Factory: ScreenFactory {
         )))
     }
 
-    func dashboardScreen() -> Screen {
-        Screen(view: DashboardCoordinator(viewModel: DashboardViewModelImpl(
-            dashboardService: dashboardServiceInstance,
-            entityService: entityServiceInstance
-        )))
-    }
-
-    func dashboardEditScreen(mode: DashboardEditMode) -> Screen {
-        Screen(view: DashboardEditCoordinator(viewModel: DashboardEditViewModelImpl(
-            dashboardService: dashboardServiceInstance,
-            mode: mode
-        )))
-    }
-
-    func widgetEdit(dashboard: Domain.Dashboard, mode: WidgetEditMode) -> Screen {
-        Screen(view: WidgetEditCoordinator(viewModel: WidgetEditViewModelImpl(
-            dashboardService: dashboardServiceInstance,
-            entityService: entityServiceInstance,
-            mode: mode,
-            dashboard: dashboard
-        )))
-    }
-
-    func configScreen() -> Screen {
-        Screen(view: ConfigCoordinator(viewModel: ConfigViewModelImpl(
-            entityService: entityServiceInstance
-        )))
-    }
+//    func dashboardScreen() -> Screen {
+//        Screen(view: DashboardCoordinator(viewModel: DashboardViewModelImpl(
+//            dashboardService: dashboardServiceInstance,
+//            entityService: entityServiceInstance
+//        )))
+//    }
+//
+//    func dashboardEditScreen(mode: DashboardEditMode) -> Screen {
+//        Screen(view: DashboardEditCoordinator(viewModel: DashboardEditViewModelImpl(
+//            dashboardService: dashboardServiceInstance,
+//            mode: mode
+//        )))
+//    }
+//
+//    func widgetEdit(dashboard: Domain.Dashboard, mode: WidgetEditMode) -> Screen {
+//        Screen(view: WidgetEditCoordinator(viewModel: WidgetEditViewModelImpl(
+//            dashboardService: dashboardServiceInstance,
+//            entityService: entityServiceInstance,
+//            mode: mode,
+//            dashboard: dashboard
+//        )))
+//    }
+//
+//    func configScreen() -> Screen {
+//        Screen(view: ConfigCoordinator(viewModel: ConfigViewModelImpl(
+//            entityService: entityServiceInstance
+//        )))
+//    }
 }
 
 // MARK: Handlers
 
 extension Factory: ManagerFactory {
     func webSocketManager(coordinator: Coordinator) -> WebSocketManager {
-        WebSocketManagerImpl(coordinator: coordinator, webSocketProvider: webSocketProviderInstance)
+        WebSocketManagerImpl(
+            coordinator: coordinator,
+            webSocketProvider: webSocketProviderInstance
+        )
     }
 }

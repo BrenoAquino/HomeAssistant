@@ -73,7 +73,6 @@ extension WebSocket {
                         fatalError("unknown message received")
                     }
                 }
-
             } catch {
                 await disconnect()
                 Logger.log(level: .error, "Error getting messages from the WebSocket: \(error.localizedDescription)")
@@ -141,14 +140,14 @@ extension WebSocket {
     }
 
     private func continuationHandler<Response: Decodable>(
-        _ continuation: CheckedContinuation<ResultWebSocketMessage<Response>, Error>,
+        _ continuation: CheckedContinuation<WebSocketReceiveMessageWrapper<Response>, Error>,
         _ messageID: Int
     ) {
         var hasValue = false
         responseCancellable = messageTopic
             .timeout(.seconds(10), scheduler: DispatchQueue.global())
             .filter { $0.header.id == messageID && $0.header.type == .result }
-            .tryCompactMap { try ResultWebSocketMessage<Response>(jsonData: $0.data) }
+            .tryCompactMap { try WebSocketReceiveMessageWrapper<Response>(jsonData: $0.data) }
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
@@ -223,7 +222,9 @@ extension WebSocket: WebSocketProvider {
         let data = try message.toJSON()
         try await webSocket?.send(.string(data))
 
-        let response: ResultWebSocketMessage<Response> = try await withCheckedThrowingContinuation { continuationHandler($0, id) }
+        let response: WebSocketReceiveMessageWrapper<Response> = try await withCheckedThrowingContinuation {
+            continuationHandler($0, id)
+        }
         if let result = response.result {
             return (id, result)
         } else if response.success, let emptyCodable = EmptyCodable() as? Response {

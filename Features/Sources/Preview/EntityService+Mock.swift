@@ -5,7 +5,7 @@
 //  Created by Breno Aquino on 17/07/23.
 //
 
-#if DEBUG || PREVIEW
+//#if DEBUG || PREVIEW
 import Combine
 import Domain
 import Foundation
@@ -53,4 +53,4 @@ public class EntityServiceMock: Domain.EntityService {
     public func update(hiddenEntityIDs: Set<String>) {}
     public func execute(service: EntityActionService, entityID: String) async throws {}
 }
-#endif
+//#endif

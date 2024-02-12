@@ -5,7 +5,7 @@
 //  Created by Breno Aquino on 11/02/24.
 //
 
-#if DEBUG || PREVIEW
+//#if DEBUG || PREVIEW
 import Domain
 import Foundation
 
@@ -21,4 +21,4 @@ extension WidgetConfig {
         )
     }
 }
-#endif
+//#endif

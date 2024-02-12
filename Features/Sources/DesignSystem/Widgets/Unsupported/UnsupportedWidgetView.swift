@@ -43,8 +43,7 @@ struct UnsupportedWidgetView_Preview: PreviewProvider {
 
     static var previews: some View {
         let size: CGFloat = 150
-        
-        UnsupportedWidgetView(customInfo: .init(title: EntityMock.climate.name))
+        UnsupportedWidgetView(customInfo: .init(title: "Light"))
             .frame(width: size, height: size)
     }
 }

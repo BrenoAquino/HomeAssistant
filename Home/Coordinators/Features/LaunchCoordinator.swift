@@ -6,10 +6,9 @@
 //
 
 import SwiftUI
-import Core
+import Launch
 
 struct LaunchCoordinator<ViewModel: LaunchViewModel>: View {
-
     @EnvironmentObject private var coordinator: Coordinator
     @State private var viewModel: ViewModel
 
@@ -19,7 +18,9 @@ struct LaunchCoordinator<ViewModel: LaunchViewModel>: View {
 
     var body: some View {
         LaunchView(viewModel: viewModel)
-            .task { viewModel.delegate = self }
+            .task {
+                viewModel.externalFlows = self
+            }
     }
 }
 
@@ -28,7 +29,7 @@ extension LaunchCoordinator: LaunchExternalFlow {
         if coordinator.block != nil {
             coordinator.dismissBlock()
         } else {
-            coordinator.setRoot(.dashboard)
+//            coordinator.setRoot(.dashboard)
         }
     }
 }
