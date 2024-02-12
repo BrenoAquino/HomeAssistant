@@ -183,9 +183,7 @@ extension WebSocket: URLSessionWebSocketDelegate {
         _ session: URLSession,
         webSocketTask: URLSessionWebSocketTask,
         didOpenWithProtocol protocol: String?
-    ) {
-        Logger.log(level: .debug, "Connected")
-    }
+    ) {}
 
     nonisolated func urlSession(
         _ session: URLSession,
