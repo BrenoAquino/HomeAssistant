@@ -8,7 +8,7 @@
 import Foundation
 
 public struct WidgetCustomInfo {
-
+    /// Widget title
     public var title: String
 
     public init(title: String) {
@@ -19,7 +19,6 @@ public struct WidgetCustomInfo {
 // MARK: - Hashable
 
 extension WidgetCustomInfo: Hashable {
-
     public func hash(into hasher: inout Hasher) {
         hasher.combine(title)
     }

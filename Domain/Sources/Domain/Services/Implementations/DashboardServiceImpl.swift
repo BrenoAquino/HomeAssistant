@@ -9,16 +9,10 @@ import Combine
 import Foundation
 
 public class DashboardServiceImpl {
-
-    // MARK: Variables
-
-    private var cachedOrder: [String] = []
-    private var cachedDashboards: [String : Dashboard] = [:]
-
     // MARK: Subjects
 
-    public private(set) var dashboardOrder: CurrentValueSubject<[String], Never> = .init([])
-    public private(set) var dashboards: CurrentValueSubject<[String : Dashboard], Never> = .init([:])
+    @Published public private(set) var dashboards: [String: Dashboard] = [:]
+    @Published public private(set) var dashboardOrder: [String] = []
 
     // MARK: Repositories
 
@@ -34,72 +28,64 @@ public class DashboardServiceImpl {
 // MARK: - Private Methods
 
 extension DashboardServiceImpl {
-
     private func persist() async throws {
-        let dashboardsSorted = cachedOrder.compactMap { cachedDashboards[$0] }
+        let dashboardsSorted = dashboardOrder.compactMap { dashboards[$0] }
         try await dashboardRepository.save(dashboards: dashboardsSorted)
-        let saveLog = dashboardsSorted.map { "\($0.name) (\($0.widgetConfigs.count) devices)" }.joined(separator: ", ")
-        Logger.log(level: .info, "Saved \(saveLog)")
     }
 }
 
 // MARK: - ConfigService
 
 extension DashboardServiceImpl: DashboardService {
-
+    public var dashboardOrderPublisher: AnyPublisher<[String], Never> {
+        $dashboardOrder.eraseToAnyPublisher()
+    }
+    
+    public var dashboardsPublisher: AnyPublisher<[String: Dashboard], Never> {
+        $dashboards.eraseToAnyPublisher()
+    }
+    
     public func load() async throws {
         let fetchedDashboards = (try? await dashboardRepository.fetchDashboards()) ?? []
-        cachedDashboards = fetchedDashboards.reduce(into: [:], { $0[$1.name] = $1 })
-        cachedOrder = fetchedDashboards.map { $0.name }
-
-        dashboards.send(cachedDashboards)
-        dashboardOrder.send(cachedOrder)
+        dashboards = fetchedDashboards.reduce(into: [:], { $0[$1.name] = $1 })
+        dashboardOrder = fetchedDashboards.map { $0.name }
     }
 
     public func add(dashboard: Dashboard) throws {
-        guard cachedDashboards[dashboard.name] == nil else {
+        guard dashboards[dashboard.name] == nil else {
             throw DashboardServiceError.dashboardAlreadyExists
         }
-        cachedDashboards[dashboard.name] = dashboard
-        cachedOrder.append(dashboard.name)
-
-        dashboards.send(cachedDashboards)
-        dashboardOrder.send(cachedOrder)
+        dashboards[dashboard.name] = dashboard
+        dashboardOrder.append(dashboard.name)
 
         Task { try? await persist() }
     }
 
     public func delete(dashboardName: String) {
-        cachedDashboards[dashboardName] = nil
-        cachedOrder.removeAll(where: { $0 == dashboardName })
-
-        dashboards.send(cachedDashboards)
-        dashboardOrder.send(cachedOrder)
+        dashboards[dashboardName] = nil
+        dashboardOrder.removeAll(where: { $0 == dashboardName })
 
         Task { try? await persist() }
     }
 
     public func update(dashboardName: String, dashboard: Dashboard) throws {
-        guard cachedDashboards[dashboardName] != nil else {
+        guard dashboards[dashboardName] != nil else {
             throw DashboardServiceError.dashboardDoesNotExist
         }
-        if dashboardName != dashboard.name, cachedDashboards[dashboard.name] != nil {
+        if dashboardName != dashboard.name, dashboards[dashboard.name] != nil {
             throw DashboardServiceError.dashboardAlreadyExists
         }
 
-        cachedDashboards[dashboardName] = dashboard
-        dashboards.send(cachedDashboards)
-
-        if dashboardName != dashboard.name, let index = cachedOrder.firstIndex(of: dashboardName) {
-            cachedOrder[index] = dashboard.name
-            dashboardOrder.send(cachedOrder)
+        dashboards[dashboardName] = dashboard
+        if dashboardName != dashboard.name, let index = dashboardOrder.firstIndex(of: dashboardName) {
+            dashboardOrder[index] = dashboard.name
         }
 
         Task { try? await persist() }
     }
 
     public func update(order: [String]) throws {
-        let dashboardNames = cachedDashboards.values.map { $0.name }
+        let dashboardNames = dashboards.values.map { $0.name }
         guard
             order.count == dashboardNames.count,
             Set(order) == Set(dashboardNames)
@@ -107,8 +93,7 @@ extension DashboardServiceImpl: DashboardService {
             throw DashboardServiceError.invalidDashboardOrder
         }
 
-        cachedOrder = order
-        dashboardOrder.send(cachedOrder)
+        dashboardOrder = order
 
         Task { try? await persist() }
     }

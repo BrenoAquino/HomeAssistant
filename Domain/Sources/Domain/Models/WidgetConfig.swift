@@ -8,10 +8,13 @@
 import Foundation
 
 public struct WidgetConfig {
-
+    /// Widget unique identifier
     public let id: String
+    /// Entity to be represented by the widget
     public let entityID: String
+    /// Identify for the ui variation
     public let uiType: String
+    /// Information to override entity metadata when show the widget
     public let customInfo: WidgetCustomInfo
 
     public init(
@@ -30,7 +33,6 @@ public struct WidgetConfig {
 // MARK: - Hashable
 
 extension WidgetConfig: Hashable {
-
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
         hasher.combine(uiType)

@@ -14,15 +14,12 @@ public class EntityServiceImpl {
 
     private var cancellable: Set<AnyCancellable> = []
     private var stateChangeSubscriptionID: Int?
-
-    private var cachedEntities: [String : any Entity] = [:]
-    private var cachedHiddenEntityIDs: Set<String> = []
+    public private(set) var domains: [EntityDomain] = .init(EntityDomain.allCases)
 
     // MARK: Subjects
 
-    public private(set) var hiddenEntityIDs: CurrentValueSubject<Set<String>, Never> = .init([])
-    public private(set) var entities: CurrentValueSubject<[String : any Entity], Never> = .init([:])
-    public private(set) var domains: CurrentValueSubject<[EntityDomain], Never> = .init(EntityDomain.allCases)
+    @Published public private(set) var hiddenEntityIDs: Set<String> = []
+    @Published public private(set) var entities: [String: any Entity] = [:]
 
     // MARK: Repositories
 
@@ -46,70 +43,64 @@ public class EntityServiceImpl {
 // MARK: - Private Methods
 
 extension EntityServiceImpl {
-
     private func insertEntity(_ entity: any Entity) {
         let id = entity.id
         switch entity {
         case let light as LightEntity:
-            cachedEntities[id] = light
+            entities[id] = light
         case let climate as ClimateEntity:
-            cachedEntities[id] = climate
+            entities[id] = climate
         case let `switch` as SwitchEntity:
-            cachedEntities[id] = `switch`
+            entities[id] = `switch`
         case let fan as FanEntity:
-            cachedEntities[id] = fan
+            entities[id] = fan
         default:
             break
         }
-        entities.send(cachedEntities)
-    }
-
-    private func setupSubscription() {
-        subscriptionRepository
-            .stateChangedEvent
-            .sink { _ in } receiveValue: { [weak self] stateChanged in
-                guard let self else { return }
-                guard let entity = self.cachedEntities[stateChanged.id] else { return }
-                self.cachedEntities[stateChanged.id] = entity.stateUpdated(stateChanged.newState) as any Entity
-                self.entities.send(cachedEntities)
-            }
-            .store(in: &cancellable)
     }
     
     private func persist() async throws {
-        try await entityRepository.save(hiddenEntityIDs: cachedHiddenEntityIDs)
-        Logger.log(level: .info, "Saved \(cachedHiddenEntityIDs.count) hidden entity IDs")
+        try await entityRepository.save(hiddenEntityIDs: hiddenEntityIDs)
     }
 }
 
 // MARK: - EntityService
 
 extension EntityServiceImpl: EntityService {
+    public var hiddenEntityIDsPublisher: AnyPublisher<Set<String>, Never> {
+        $hiddenEntityIDs.eraseToAnyPublisher()
+    }
+    
+    public var entitiesPublisher: AnyPublisher<[String : any Entity], Never> {
+        $entities.eraseToAnyPublisher()
+    }
 
-    public func startTracking() async throws {
+    public func load() async throws {
         try await entityRepository.fetchStates().forEach { [self] in insertEntity($0) }
         stateChangeSubscriptionID = try await subscriptionRepository.subscribeToEvents(eventType: .stateChanged)
+        hiddenEntityIDs = (try? await entityRepository.fetchHiddenEntityIDs()) ?? []
+    }
 
-        let fetchedHiddenEntities = try? await entityRepository.fetchHiddenEntityIDs()
-        cachedHiddenEntityIDs = fetchedHiddenEntities ?? []
-        hiddenEntityIDs.send(cachedHiddenEntityIDs)
-
-        setupSubscription()
+    public func startTracking() async throws {
+        subscriptionRepository
+            .stateChangedEvent
+            .sink { _ in } receiveValue: { [weak self] stateChanged in
+                guard let entity = self?.entities[stateChanged.id] else { return }
+                self?.entities[stateChanged.id] = entity.stateUpdated(stateChanged.newState) as any Entity
+            }
+            .store(in: &cancellable)
     }
 
     public func update(hiddenEntityIDs: Set<String>) {
-        cachedHiddenEntityIDs = hiddenEntityIDs
-        self.hiddenEntityIDs.send(cachedHiddenEntityIDs)
-
+        self.hiddenEntityIDs = hiddenEntityIDs
         Task { try? await persist() }
     }
 
     public func update(entityID: String, entity: any Entity) async throws {
-        guard cachedEntities[entityID] != nil else {
-            throw EntityServiceError.missingElement
+        guard entities[entityID] != nil else {
+            throw EntityServiceError.missingEntity
         }
-        cachedEntities[entityID] = entity
-        entities.send(cachedEntities)
+        entities[entityID] = entity
     }
 
     public func execute(service: EntityActionService, entityID: String) async throws {
