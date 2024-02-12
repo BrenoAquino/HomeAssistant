@@ -9,11 +9,9 @@ import Domain
 import Data
 import Dashboard
 import Launch
-//import DashboardEdit
+import Config
 import Foundation
 import SwiftUI
-//import Config
-//import WidgetEdit
 
 #if PREVIEW
 import Preview
@@ -126,6 +124,12 @@ extension Factory: ScreenFactory {
             entityService: entityServiceInstance
         )))
     }
+
+    func configScreen() -> Screen {
+        Screen(view: ConfigCoordinator(viewModel: ConfigViewModelImpl(
+            entityService: entityServiceInstance
+        )))
+    }
 //
 //    func dashboardEditScreen(mode: DashboardEditMode) -> Screen {
 //        Screen(view: DashboardEditCoordinator(viewModel: DashboardEditViewModelImpl(
@@ -140,12 +144,6 @@ extension Factory: ScreenFactory {
 //            entityService: entityServiceInstance,
 //            mode: mode,
 //            dashboard: dashboard
-//        )))
-//    }
-//
-//    func configScreen() -> Screen {
-//        Screen(view: ConfigCoordinator(viewModel: ConfigViewModelImpl(
-//            entityService: entityServiceInstance
 //        )))
 //    }
 }

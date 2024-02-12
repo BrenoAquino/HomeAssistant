@@ -14,9 +14,9 @@ let package = Package(
                 "DesignSystem",
                 "Launch",
                 "Dashboard",
+                "Config",
 //                "DashboardEdit",
 //                "WidgetEdit",
-//                "Config",
             ]),
     ],
     dependencies: [
@@ -35,16 +35,16 @@ let package = Package(
             name: "Dashboard",
             dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
             resources: [.process("Resources")]),
+        .target(
+            name: "Config",
+            dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
+            resources: [.process("Resources")]),
 //        .target(
 //            name: "DashboardEdit",
 //            dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
 //            resources: [.process("Resources")]),
 //        .target(
 //            name: "WidgetEdit",
-//            dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
-//            resources: [.process("Resources")]),
-//        .target(
-//            name: "Config",
 //            dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
 //            resources: [.process("Resources")]),
         .target(

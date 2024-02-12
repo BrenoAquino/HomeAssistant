@@ -66,7 +66,7 @@ public struct DashboardView<ViewModel: DashboardViewModel>: View {
 
     private var editButton: some View {
         Button {
-            viewModel.didClickConfig()
+            viewModel.didClickEdit()
         } label: {
             SystemImages.edit
         }

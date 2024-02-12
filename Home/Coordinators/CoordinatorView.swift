@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct CoordinatorView: View {
-
     @Environment(\.scenePhase) var scenePhase
     @ObservedObject private var coordinator: Coordinator = .init(root: .launch)
 
