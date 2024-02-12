@@ -11,8 +11,7 @@ import Preview
 import SwiftUI
 
 class LaunchViewModelPreview: LaunchViewModel {
-
-    var delegate: LaunchExternalFlow?
+    var externalFlows: LaunchExternalFlow?
     var state: LaunchViewModelState
     var toastData: DefaultToastDataContent?
 
@@ -20,7 +19,7 @@ class LaunchViewModelPreview: LaunchViewModel {
         self.state = state
     }
 
-    func startConfiguration() async {
+    func configure() async {
         await MainActor.run {
             self.state = .loading
         }

@@ -12,7 +12,7 @@ let package = Package(
             name: "Features",
             targets: [
                 "DesignSystem",
-                "Core",
+                "Launch",
                 "Dashboard",
                 "DashboardEdit",
                 "WidgetEdit",
@@ -28,7 +28,7 @@ let package = Package(
             name: "DesignSystem",
             dependencies: ["Common", "Domain"]),
         .target(
-            name: "Core",
+            name: "Launch",
             dependencies: ["Common", "DesignSystem", "Preview", "Domain"],
             resources: [.process("Resources")]),
         .target(

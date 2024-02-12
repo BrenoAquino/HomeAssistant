@@ -8,7 +8,6 @@
 import SwiftUI
 
 extension Image {
-
     init(packageResource resource: Resources) {
         guard
             let path = Bundle.module.path(forResource: resource.name, ofType: resource.fileType),

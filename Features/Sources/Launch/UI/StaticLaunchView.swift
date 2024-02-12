@@ -32,9 +32,7 @@ public struct StaticLaunchView: View {
 
 #if DEBUG
 struct StaticLaunchView_Preview: PreviewProvider {
-
     static var previews: some View {
-
         StaticLaunchView()
     }
 }

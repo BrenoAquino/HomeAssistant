@@ -29,16 +29,11 @@ public struct LaunchView<ViewModel: LaunchViewModel>: View {
 
             Spacer()
 
-            if viewModel.state == .loading {
-                LoadingView()
-                    .tint(DSColor.label)
-                    .opacityTransition()
-            } else {
-                Button(Localizable.tryAgain.value) {
-                    Task { await viewModel.startConfiguration() }
-                }
-                .foregroundColor(DSColor.link)
-                .opacityTransition()
+            switch viewModel.state {
+            case .loading:
+                loadingState
+            case .error:
+                errorState
             }
 
             Spacer()
@@ -47,8 +42,24 @@ public struct LaunchView<ViewModel: LaunchViewModel>: View {
         .background(DSColor.background)
         .toast(data: $viewModel.toastData)
         .task {
-            await viewModel.startConfiguration()
+            await viewModel.configure()
         }
+    }
+
+    private var loadingState: some View {
+        LoadingView()
+            .tint(DSColor.label)
+            .opacityTransition()
+    }
+
+    private var errorState: some View {
+        Button(Localizable.tryAgain.value) {
+            Task {
+                await viewModel.configure()
+            }
+        }
+        .foregroundColor(DSColor.link)
+        .opacityTransition()
     }
 }
 

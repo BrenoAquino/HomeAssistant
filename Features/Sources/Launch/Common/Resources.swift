@@ -12,7 +12,6 @@ enum Resources {
 }
 
 extension Resources {
-
     var name: String {
         switch self {
         case .whiteLogo:

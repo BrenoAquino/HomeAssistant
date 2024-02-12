@@ -9,7 +9,6 @@ import DesignSystem
 import SwiftUI
 
 enum Localizable: String, CommonLocalizable {
-
     case tryAgain = "try_again"
     case connectionError = "connection_error"
 }
