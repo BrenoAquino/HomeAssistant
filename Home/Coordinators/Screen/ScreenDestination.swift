@@ -6,7 +6,7 @@
 //
 
 import Domain
-//import DashboardEdit
+import DashboardWizard
 //import WidgetEdit
 import Foundation
 
@@ -15,7 +15,7 @@ enum ScreenDestination {
     case staticLaunch
     case dashboard
     case config
-//    case dashboardEdit(mode: DashboardEditMode)
+    case dashboardWizard(mode: DashboardWizardMode)
 //    case widgetEdit(dashboard: Dashboard, mode: WidgetEditMode)
 }
 
@@ -30,8 +30,8 @@ extension ScreenDestination {
             return factory.dashboardScreen()
         case .config:
             return factory.configScreen()
-//        case .dashboardEdit(let mode):
-//            return factory.dashboardEditScreen(mode: mode)
+        case .dashboardWizard(let mode):
+            return factory.dashboardWizardScreen(mode: mode)
 //        case .widgetEdit(let dashboard, let mode):
 //            return factory.widgetEdit(dashboard: dashboard, mode: mode)
         }

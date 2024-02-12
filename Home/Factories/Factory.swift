@@ -7,9 +7,10 @@
 
 import Domain
 import Data
-import Dashboard
 import Launch
+import Dashboard
 import Config
+import DashboardWizard
 import Foundation
 import SwiftUI
 
@@ -130,14 +131,14 @@ extension Factory: ScreenFactory {
             entityService: entityServiceInstance
         )))
     }
-//
-//    func dashboardEditScreen(mode: DashboardEditMode) -> Screen {
-//        Screen(view: DashboardEditCoordinator(viewModel: DashboardEditViewModelImpl(
-//            dashboardService: dashboardServiceInstance,
-//            mode: mode
-//        )))
-//    }
-//
+
+    func dashboardWizardScreen(mode: DashboardWizardMode) -> Screen {
+        Screen(view: DashboardWizardCoordinator(viewModel: DashboardWizardViewModelImpl(
+            dashboardService: dashboardServiceInstance,
+            mode: mode
+        )))
+    }
+
 //    func widgetEdit(dashboard: Domain.Dashboard, mode: WidgetEditMode) -> Screen {
 //        Screen(view: WidgetEditCoordinator(viewModel: WidgetEditViewModelImpl(
 //            dashboardService: dashboardServiceInstance,

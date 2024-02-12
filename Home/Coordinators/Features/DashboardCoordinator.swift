@@ -31,7 +31,7 @@ extension DashboardCoordinator: DashboardExternalFlow {
     }
 
     func didSelectAddDashboard() -> Void {
-
+        coordinator.push(.dashboardWizard(mode: .creation))
     }
 
     func didSelectAddWidget(_ dashboard: Dashboard) -> Void {
