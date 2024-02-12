@@ -9,7 +9,7 @@
 import Domain
 import Foundation
 
-extension WidgetConfig {
+public extension WidgetConfig {
     static func mock(entity: any Entity, uiType: String = "default") -> Self {
         .init(
             id: entity.id + "_widget",

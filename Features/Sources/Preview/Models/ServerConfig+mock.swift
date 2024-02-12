@@ -9,7 +9,7 @@
 import Domain
 import Foundation
 
-extension ServerConfig {
+public extension ServerConfig {
     static let mock = ServerConfig(
         locationName: "Home",
         state: .online

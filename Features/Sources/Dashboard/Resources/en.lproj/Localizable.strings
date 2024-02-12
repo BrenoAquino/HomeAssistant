@@ -1,0 +1,23 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Breno Aquino on 17/07/23.
+  
+*/
+
+"hi_there" = "Hello there!";
+"welcome" = "Welcome to your smart Home";
+"done" = "Done";
+"devices" = "Devices";
+"unsupported" = "Unsupported";
+"cancel" = "Cancel";
+"delete" = "Remove";
+"delete_dashboard_description" = "This action cannot be undone. Are you sure you want to delete this dashboard?";
+"delete_entity_description" = "This action cannot be undone. Are you sure you want to remove this device from this dashboard?";
+"ok" = "Yes";
+"delete_success" = "Dashboard Removed";
+"dashboard_reorder_error" = "It was not possible reorder dashboards";
+"entity_reorder_error" = "It was not possible reorder entities";
+"light_error" = "It was not possible to communicate with the light";
+"fan_error" = "It was not possible to communicate with the fan";

@@ -9,7 +9,7 @@
 import Domain
 import Foundation
 
-extension Domain.ClimateEntity {
+public extension Domain.ClimateEntity {
     static let mock: Self = .init(
         id: "climate.air_conditioner",
         name: "Air Conditioner",

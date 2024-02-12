@@ -9,7 +9,7 @@
 import Domain
 import Foundation
 
-extension Domain.Dashboard {
+public extension Domain.Dashboard {
     static let mockBedroom: Self = .init(
         name: "Bedroom",
         icon: "bed.double",
@@ -57,6 +57,19 @@ extension Domain.Dashboard {
         widgetConfigs: [
             .mock(entity: LightEntity.mockMainLight),
         ]
+    )
+
+    static let all: [Self] = [
+        .mockBedroom,
+        .mockLiving,
+        .mockKitchen,
+        .mockGarden,
+        .mockSecurity,
+    ]
+
+    static var allDict: [String: Dashboard] = all.reduce(
+        into: [:],
+        { $0[$1.name] = $1 }
     )
 }
 //#endif

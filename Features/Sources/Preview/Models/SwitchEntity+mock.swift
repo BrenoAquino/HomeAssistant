@@ -9,7 +9,7 @@
 import Domain
 import Foundation
 
-extension Domain.SwitchEntity {
+public extension Domain.SwitchEntity {
     static let mockCoffeeMachine: Self = .init(
         id: "switch.coffee_machine",
         name: "Coffee Machine",

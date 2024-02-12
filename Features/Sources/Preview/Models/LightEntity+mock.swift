@@ -9,7 +9,7 @@
 import Domain
 import Foundation
 
-extension Domain.LightEntity {
+public extension Domain.LightEntity {
     static let mockMainLight: Self = .init(
         id: "light.main_light",
         name: "Main Light",
@@ -25,6 +25,12 @@ extension Domain.LightEntity {
     static let mockLedCeilingLight: Self = .init(
         id: "light.led_ceiling",
         name: "Led Ceiling",
+        state: .on
+    )
+
+    static let mockLightGarage: Self = .init(
+        id: "light.garage",
+        name: "Garage Light",
         state: .on
     )
 }
